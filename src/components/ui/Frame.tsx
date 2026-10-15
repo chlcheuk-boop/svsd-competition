@@ -130,7 +130,7 @@ export function ToastHost({ children }: { children: ReactNode }) {
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: 8, x: '-50%' }}
           >
-            <span>{toast.text}</span>
+            <span>{toast.text}{toast.action && " ·"}</span>
             {toast.action && (
               <button
                 onClick={() => {

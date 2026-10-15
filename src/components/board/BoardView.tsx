@@ -410,6 +410,7 @@ export default function BoardView(props: BoardViewProps) {
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
       onPointerLeave={() => setCursor(null)}
+      onDragStart={(e) => e.preventDefault()}
       style={{ backgroundPosition: `${cam.x}px ${cam.y}px`, backgroundSize: `${22 * cam.z}px ${22 * cam.z}px` }}
     >
       <div className="board-world" style={{ transform: `translate(${cam.x}px, ${cam.y}px) scale(${cam.z})` }}>

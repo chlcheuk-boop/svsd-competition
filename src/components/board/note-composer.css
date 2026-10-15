@@ -1,0 +1,141 @@
+.note-composer {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  z-index: 70;
+  width: min(680px, calc(100vw - 32px));
+  background: var(--peach);
+  padding: 28px 32px 24px;
+  box-shadow: var(--shadow-lift);
+  clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
+}
+.nc-fold {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(225deg, transparent 50%, var(--peach-deep) 50%);
+}
+.nc-close {
+  position: absolute;
+  top: 16px;
+  right: 52px;
+  color: var(--tangerine-deep);
+  padding: 4px;
+  border-radius: 50%;
+}
+.nc-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--ink);
+}
+.nc-sub {
+  margin: 2px 0 16px;
+  font-size: 11px;
+  color: var(--tangerine-deep);
+}
+.nc-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.nc-types .chip {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: var(--peach-deep);
+  cursor: pointer;
+}
+.nc-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+}
+.nc-drop {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 10px;
+  background: var(--card-white);
+  box-shadow: var(--shadow-paper);
+  transform: rotate(-2deg);
+  transition: transform 0.2s;
+}
+.nc-drop:hover,
+.nc-drop.over {
+  transform: rotate(0) scale(1.02);
+}
+.nc-drop.over {
+  outline: 2px dashed var(--tangerine);
+}
+.nc-drop .mono {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+.nc-preview {
+  height: 170px;
+  overflow: hidden;
+}
+.nc-preview.small {
+  height: 110px;
+  margin-top: 14px;
+}
+.nc-quote {
+  width: 100%;
+  border: 0;
+  outline: none;
+  resize: none;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 19px;
+  line-height: 28px;
+  background-color: rgba(255, 255, 255, 0.45);
+  padding: 8px 10px;
+}
+.nc-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.note-composer .field-label {
+  color: var(--tangerine-deep);
+}
+.note-composer .line-input {
+  border-bottom-color: var(--peach-deep);
+}
+.nc-origin {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+}
+.nc-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+.nc-hint {
+  margin-right: auto;
+  font-size: 11px;
+  color: var(--tangerine-deep);
+}
+@media (max-width: 760px) {
+  .nc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.nc-types .chip[aria-pressed='true'] {
+  background: var(--tangerine);
+  border-color: var(--tangerine);
+  color: #fff;
+}
