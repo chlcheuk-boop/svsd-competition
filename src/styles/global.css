@@ -1,0 +1,217 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tangerine);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.serif {
+  font-family: var(--serif);
+  font-weight: 300;
+}
+.mono {
+  font-family: var(--mono);
+  letter-spacing: 0.02em;
+}
+.mono-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* paper grain on the desk */
+.paper-grain {
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(46, 44, 42, 0.07) 0.8px, transparent 0.9px);
+  background-size: 22px 22px;
+}
+
+/* Page shell for non-canvas pages */
+.page {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 96px 24px 140px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 13px;
+  transition: transform 0.15s var(--ease-paper), background 0.15s, box-shadow 0.15s;
+}
+.btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.btn-primary {
+  background: var(--tangerine);
+  color: #fff;
+  box-shadow: 0 2px 0 var(--tangerine-deep);
+}
+.btn-primary:hover {
+  background: #e8683b;
+}
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  border: 1px solid var(--rule);
+  background: var(--card-white);
+}
+.btn-ghost:hover {
+  background: var(--peach);
+  border-color: var(--peach-deep);
+}
+.btn-quiet {
+  color: var(--ink-soft);
+  padding: 0 8px;
+}
+.btn-quiet:hover {
+  color: var(--ink);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.chip[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.chip.lime {
+  background: var(--lime);
+  border-color: var(--lime-deep);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 128px;
+  transform: translateX(-50%);
+  z-index: 90;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  padding: 10px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow-lift);
+}
+.toast button {
+  color: var(--peach);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(249, 248, 246, 0.72);
+  backdrop-filter: blur(2px);
+  z-index: 60;
+}
+
+.field-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.line-input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(46, 44, 42, 0.18);
+  background: transparent;
+  padding: 6px 0;
+  outline: none;
+}
+.line-input:focus {
+  border-bottom-color: var(--tangerine);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}

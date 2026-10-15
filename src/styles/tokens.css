@@ -1,0 +1,31 @@
+:root {
+  --paper: #f9f8f6;
+  --paper-deep: #f1eee9;
+  --ink: #2e2c2a;
+  --ink-soft: #6e6862;
+  --rule: #e6e1da;
+
+  --tangerine: #e05e31;
+  --tangerine-deep: #c24c24;
+  --peach: #f6d3bd;
+  --peach-deep: #ecbc9d;
+  --lime: #c9d671;
+  --lime-deep: #b2c055;
+  --sky: #b5d6f3;
+  --sky-deep: #92bfe6;
+  --pink: #ee7a93;
+  --pink-deep: #d95f7a;
+  --card-white: #fdfcfa;
+
+  --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  --shadow-paper: 0 1px 1px rgba(46, 44, 42, 0.04), 0 2px 6px rgba(46, 44, 42, 0.05),
+    0 8px 18px -10px rgba(46, 44, 42, 0.12);
+  --shadow-lift: 0 2px 2px rgba(46, 44, 42, 0.04), 0 10px 24px -6px rgba(46, 44, 42, 0.14),
+    0 22px 40px -22px rgba(46, 44, 42, 0.2);
+
+  --radius-s: 3px;
+  --ease-paper: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
