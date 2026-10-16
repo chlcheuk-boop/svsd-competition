@@ -226,7 +226,7 @@ export default function BoardView(props: BoardViewProps) {
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
-      if (t.closest('input, textarea, [contenteditable]')) return;
+      if (t.closest?.('input, textarea, [contenteditable]')) return;
       if (e.code === 'Space') {
         setSpaceDown(true);
         e.preventDefault();

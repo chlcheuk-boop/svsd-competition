@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import BoardView, { connectionMidpoint, type BoardTool, type FocusRequest } from '../components/board/BoardView';
 import { WhyEditor } from '../components/board/WhyEditor';
@@ -78,15 +78,53 @@ export default function BoardPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* undo history for strings: what Ctrl+Z walks back */
+  const history = useRef<Array<{ kind: 'add'; id: string } | { kind: 'snip'; connections: Connection[] }>>([]);
+
+  const undo = () => {
+    const last = history.current.pop();
+    if (!last) return toast({ text: 'nothing to undo' });
+    if (last.kind === 'add') {
+      dispatch({ type: 'removeConnections', ids: [last.id] });
+      if (whyFor?.id === last.id) setWhyFor(null);
+      toast({ text: 'undid · string removed' });
+    } else {
+      dispatch({ type: 'restoreConnections', connections: last.connections });
+      toast({ text: 'undid · string tied back' });
+    }
+  };
+
   /* keyboard tool shortcuts */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest('input, textarea')) return;
-      if (e.metaKey || e.ctrlKey) return;
-      if (e.key === 'y') pickTool('yarn');
-      if (e.key === 'x') pickTool('scissors');
-      if (e.key === 'n') pickTool('note');
-      if (e.key === 't') toggleThreads();
+      const target = e.target as HTMLElement;
+      const key = e.key.toLowerCase();
+      const mod = e.ctrlKey || e.metaKey;
+      if (target.closest?.('input, textarea')) {
+        // an empty why tag means the string itself is what you want to undo
+        const emptyWhy = target.id === 'why-input' && !(target as HTMLTextAreaElement).value;
+        if (!(mod && key === 'z' && !e.shiftKey && emptyWhy)) return;
+      }
+      if (mod) {
+        if (key === 'z' && !e.shiftKey) {
+          e.preventDefault();
+          undo();
+        } else if (key === 's') {
+          e.preventDefault();
+          pickTool('scissors', true);
+        } else if (key === 'y') {
+          e.preventDefault();
+          pickTool('yarn', true);
+        } else if (key === 'n') {
+          e.preventDefault();
+          pickTool('note', true);
+        }
+        return;
+      }
+      if (key === 'y') pickTool('yarn');
+      if (key === 'x') pickTool('scissors');
+      if (key === 'n') pickTool('note');
+      if (key === 't') toggleThreads();
       if (e.key === 'Escape') {
         setMode('select');
         setDraft(null);
@@ -99,11 +137,11 @@ export default function BoardPage() {
 
   const dismissArrow = () => !state.arrowSeen && dispatch({ type: 'patch', patch: { arrowSeen: true } });
 
-  const pickTool = (t: Mode) => {
+  const pickTool = (t: Mode, force = false) => {
     dismissArrow();
     setWhyFor(null);
     setDraft(null);
-    setMode((m) => (m === t ? 'select' : t));
+    setMode((m) => (m === t && !force ? 'select' : t));
   };
 
   /* replay filtering */
@@ -180,12 +218,14 @@ export default function BoardPage() {
     }
     const c: Connection = { id: uid('c'), from, to, color: state.yarnColor, addedAt: today() };
     dispatch({ type: 'addConnection', connection: c });
+    history.current.push({ kind: 'add', id: c.id });
     setWhyFor({ id: c.id, isNew: true });
   };
 
   const onSnip = (ids: string[]) => {
     const removed = state.connections.filter((c) => ids.includes(c.id));
     dispatch({ type: 'removeConnections', ids });
+    history.current.push({ kind: 'snip', connections: removed });
     if (whyFor && ids.includes(whyFor.id)) setWhyFor(null);
     toast(
       { text: 'snipped', action: { label: 'undo', run: () => dispatch({ type: 'restoreConnections', connections: removed }) } },

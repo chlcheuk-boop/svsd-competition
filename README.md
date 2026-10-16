@@ -30,6 +30,7 @@ To reset before presenting, go to **Settings → Demo**. You can reset the board
 - Shift-click any chain of tied cards (no length limit, each pair just needs a string) (or use **Make a thread** in the side panel) to publish a thread. The **threads** tool shows every thread traced on the board in its own color. Threads open as a vertical story with one continuous yarn running down the page.
 - **Time replay** is in the side panel and on the Profile.
 - **Ripple view** is in the side panel for anything a past match influenced.
+- Shortcuts: <kbd>Ctrl</kbd>+<kbd>Y</kbd> yarn, <kbd>Ctrl</kbd>+<kbd>S</kbd> scissors, <kbd>Ctrl</kbd>+<kbd>N</kbd> new note, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo the last string you tied or snipped (⌘ works too on Mac). The single keys `y`, `x`, `n`, `t` still work.
 - Pan by dragging empty space or holding space. Zoom with ctrl/⌘ + scroll, the zoom control, or `+` / `-`.
 
 ## Swapping in real media
