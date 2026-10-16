@@ -119,7 +119,7 @@ export default function BoardView(props: BoardViewProps) {
     const padX = 120;
     const padTop = 110;
     const padBottom = 150;
-    const z = Math.max(0.3, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
+    const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
     const target = {
       z,
       x: (vw - (b.maxX - b.minX) * z) / 2 - b.minX * z,
@@ -184,7 +184,7 @@ export default function BoardView(props: BoardViewProps) {
     const group = frame.ids.map((i) => byId.get(i)).filter(Boolean) as Media[];
     if (!group.length) return;
     const b = boundsOf(group);
-    const z = Math.max(0.3, Math.min(1.1, (el.clientWidth - 520) / (b.maxX - b.minX), (el.clientHeight - 300) / (b.maxY - b.minY)));
+    const z = Math.max(0.15, Math.min(1.1, (el.clientWidth - 520) / (b.maxX - b.minX), (el.clientHeight - 300) / (b.maxY - b.minY)));
     flyTo({ x: (b.minX + b.maxX) / 2 - 120 / z, y: (b.minY + b.maxY) / 2 }, z);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frame?.nonce]);
@@ -201,7 +201,7 @@ export default function BoardView(props: BoardViewProps) {
     const px = sx ?? el.clientWidth / 2;
     const py = sy ?? el.clientHeight / 2;
     userMoved.current = true;
-    const z = Math.min(2.4, Math.max(0.3, c.z * factor));
+    const z = Math.min(2.4, Math.max(0.15, c.z * factor));
     const k = z / c.z;
     setCam({ z, x: px - (px - c.x) * k, y: py - (py - c.y) * k });
   }, []);

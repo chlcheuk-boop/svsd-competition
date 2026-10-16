@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
 import { PASSPORT_STAMPS } from '../data/stamps';
+import { MORE_CONNECTIONS, MORE_MEDIA } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 
 const KEY = 'rhyme.state.v1';
@@ -11,6 +12,8 @@ export interface AppState {
   onboarded: boolean;
   arrowSeen: boolean;
   tutorialSeen: boolean;
+  /** saved boards from before the desk grew get the new references merged in once */
+  boardEdition: number;
   matchesSeen: boolean;
   matchesDealt: boolean;
   media: Media[];
@@ -33,8 +36,9 @@ export function initialState(): AppState {
     tutorialSeen: false,
     matchesSeen: false,
     matchesDealt: false,
-    media: MAYA_MEDIA,
-    connections: MAYA_CONNECTIONS,
+    media: [...MAYA_MEDIA, ...MORE_MEDIA],
+    connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS],
+    boardEdition: 2,
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
     matchState: Object.fromEntries(MATCHES.map((m) => [m.personId, { flipped: false, status: 'new' } as MatchState])),
@@ -60,7 +64,15 @@ function load(): AppState {
     if (!raw) return initialState();
     const parsed = JSON.parse(raw) as AppState;
     if (parsed.version !== 1) return initialState();
-    return { ...initialState(), ...parsed };
+    const merged = { ...initialState(), ...parsed };
+    if ((parsed.boardEdition ?? 0) < 2) {
+      const haveM = new Set(merged.media.map((m) => m.id));
+      const moreConn = /^c(1[4-9]|[2-5]\d)$/; // the example strings, replaced wholesale with the current set
+      merged.media = [...merged.media, ...MORE_MEDIA.filter((m) => !haveM.has(m.id))];
+      merged.connections = [...merged.connections.filter((c) => !moreConn.test(c.id)), ...MORE_CONNECTIONS];
+      merged.boardEdition = 2;
+    }
+    return merged;
   } catch {
     return initialState();
   }
