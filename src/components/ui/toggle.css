@@ -1,0 +1,46 @@
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+.toggle-text {
+  display: flex;
+  flex-direction: column;
+}
+.toggle-hint {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.toggle {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--rule);
+  transition: background 0.2s;
+}
+.toggle .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--card-white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s var(--ease-paper);
+}
+.toggle.on {
+  background: var(--tangerine);
+}
+.toggle.on .knob {
+  transform: translateX(20px);
+}
+input:focus-visible + .toggle {
+  outline: 2px solid var(--tangerine);
+  outline-offset: 3px;
+}

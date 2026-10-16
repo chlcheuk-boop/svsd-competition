@@ -271,7 +271,7 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
               style={{ left: `${slot.x + ((h >> 3) % 6) - 3}%`, top: `${slot.y + ((h >> 5) % 5) - 2}%`, width: w }}
               initial={s.fresh && freshPress ? { scale: 1.9, opacity: 0, rotate: rot - 10 } : false}
               animate={{ scale: 1, opacity: faded ? 0.14 : 1, rotate: rot }}
-              transition={s.fresh ? { type: 'spring', stiffness: 420, damping: 13, delay: 0.5 } : { duration: 0.3 }}
+              transition={s.fresh ? { type: 'spring', stiffness: 420, damping: 13, delay: 1.05 } : { duration: 0.3 }}
               whileHover={{ scale: 1.05, rotate: rot * 0.6 }}
               onClick={() => onStamp(s)}
             >

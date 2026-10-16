@@ -27,7 +27,7 @@ export interface AppState {
 export function initialState(): AppState {
   return {
     version: 1,
-    onboarded: true,
+    onboarded: false,
     arrowSeen: false,
     matchesSeen: false,
     matchesDealt: false,

@@ -1,0 +1,167 @@
+.settings-form {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--card-white);
+  padding: 40px 48px 32px;
+  box-shadow: var(--shadow-paper);
+  position: relative;
+}
+.settings-form::before {
+  /* punched margin */
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 28px;
+  bottom: 28px;
+  width: 8px;
+  background: radial-gradient(circle at 4px 4px, var(--paper) 3.4px, transparent 4px) 0 0 / 8px 64px repeat-y;
+}
+.settings-form h1 {
+  margin: 6px 0 24px;
+  font-size: 40px;
+  font-weight: 300;
+}
+.settings-form fieldset {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+  padding: 18px 0 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settings-form legend {
+  float: left;
+  width: 100%;
+  font-size: 26px;
+  font-weight: 300;
+  margin-bottom: 6px;
+  padding: 0;
+}
+.settings-form legend + * {
+  clear: both;
+}
+.helper {
+  margin: 0 0 6px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+}
+.radio {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.radio.on {
+  border-color: var(--tangerine);
+  background: #fff7f2;
+}
+.radio input {
+  accent-color: var(--tangerine);
+  margin-top: 3px;
+}
+.radio span {
+  display: flex;
+  flex-direction: column;
+}
+.radio .mono {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.settings-threads {
+  margin-top: 8px;
+}
+.segmented {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.segmented .chip {
+  cursor: pointer;
+  height: 30px;
+  padding: 0 14px;
+}
+.quad-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.quad {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+}
+.quad input {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  accent-color: var(--ink);
+}
+.quad.on {
+  background: var(--q);
+  border-color: transparent;
+}
+.quad .serif {
+  font-size: 18px;
+}
+.quad .mono {
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+.quad.on .mono {
+  color: var(--ink);
+  opacity: 0.75;
+}
+.quad:has(input:focus-visible) {
+  outline: 2px solid var(--tangerine);
+  outline-offset: 2px;
+}
+.import-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--rule);
+}
+.import-row strong {
+  display: block;
+  font-weight: 500;
+}
+.import-row .mono {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.swatch-row {
+  display: flex;
+  gap: 10px;
+  margin: 4px 0 10px;
+}
+.demo-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+@media (max-width: 640px) {
+  .settings-form {
+    padding: 28px 24px;
+  }
+  .quad-grid {
+    grid-template-columns: 1fr;
+  }
+}
