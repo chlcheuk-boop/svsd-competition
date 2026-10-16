@@ -56,8 +56,7 @@ export const PASSPORT_STAMPS: PassportStamp[] = [
 export const KENJI_GIFT_MEDIA: Media = {
   id: 'mk1', type: 'image', title: 'Shinjuku handbill, 1969', subtitle: 'from Kenji’s board',
   origin: 'Kenji tied this in during our Crossing', tags: ['protest', 'print', '70s'],
-  // sits between the rings, just outside the Expo poster it gets tied to
-  x: -808, y: -176, rot: -3, shape: 'punched', tint: 'white',
+  x: -190, y: 300, rot: -3, shape: 'punched', tint: 'white',
   art: { kind: 'stencil', colors: [ART.cream, ART.red, ART.ink], seed: 21 },
   addedAt: '2026-10-15', via: 'kenji',
 };
