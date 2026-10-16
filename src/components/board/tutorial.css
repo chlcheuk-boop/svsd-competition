@@ -1,0 +1,121 @@
+.tutorial {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+}
+.tut-catcher {
+  position: absolute;
+  inset: 0;
+}
+.tut-spot {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px var(--tangerine), 0 0 0 9999px rgba(249, 248, 246, 0.78);
+  pointer-events: none;
+}
+.tut-spot.none {
+  box-shadow: 0 0 0 9999px rgba(249, 248, 246, 0.78);
+}
+.tut-card {
+  position: fixed;
+  padding: 22px 24px 18px;
+  background: var(--card-white);
+  box-shadow: var(--shadow-lift), 0 30px 60px -30px rgba(46, 44, 42, 0.35);
+}
+.tut-pin {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--tangerine);
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.15), 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+.tut-art {
+  height: 90px;
+  margin: -4px -6px 8px;
+  background: var(--paper);
+  border-radius: 3px;
+}
+.tut-art svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.tut-kicker {
+  font-size: 11px;
+  color: var(--tangerine);
+}
+.tut-card h2 {
+  margin: 2px 0 8px;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.1;
+}
+.tut-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.tut-body em {
+  font-family: var(--serif);
+  font-size: 16px;
+}
+.tut-body b {
+  font-weight: 500;
+}
+kbd {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 1px 5px;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--paper);
+}
+.tut-why {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: var(--peach);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.tut-why .mono {
+  display: block;
+  font-style: normal;
+  font-size: 10px;
+  color: var(--tangerine-deep);
+  margin-bottom: 2px;
+}
+.tut-why em {
+  font-style: normal;
+}
+.tut-foot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 16px;
+}
+.tut-dots {
+  display: flex;
+  gap: 5px;
+  margin-right: auto;
+}
+.tut-dots button {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rule);
+}
+.tut-dots button.on {
+  background: var(--tangerine);
+  width: 18px;
+  border-radius: 4px;
+}
+.tut-foot .btn {
+  height: 32px;
+}

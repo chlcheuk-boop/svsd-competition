@@ -21,7 +21,9 @@ Open http://localhost:5173. It is designed for a 1440×900 presentation screen a
 4. Press **Yarn** to start a Crossing. Tie two of Kenji's cards and write a why (it's required). Kenji ties one back. Press **see it on your board** to land on his stamped string.
 5. Open the **Passport** and click the cover. Kenji's comment is the fresh stamp marked "new". Click it, then **show on my board** to jump back to that string.
 
-To reset before presenting, go to **Settings → Demo**. You can reset the board and matches, or replay onboarding.
+After onboarding, a short board tour spotlights each tool: connections and their whys, snipping, notes, threads, matching and the passport.
+
+To reset before presenting, go to **Settings → Demo**. You can reset the board and matches, replay onboarding, or replay the board tour.
 
 ## Other features
 

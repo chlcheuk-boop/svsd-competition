@@ -9,6 +9,7 @@ import { FirstArrow, ReplayBar, ThreadComposer, findLink, useReplay } from '../c
 import { Toolbar, useToast } from '../components/ui/Frame';
 import { IconNote, IconScissors, IconThread, IconYarn } from '../components/ui/icons';
 import { ThreadsDrawer, THREAD_COLORS } from '../components/board/ThreadsDrawer';
+import { Tutorial } from '../components/board/Tutorial';
 import { accentVar } from '../components/ui/MiniStamp';
 import { today, uid, useStore } from '../store/store';
 import { sizeOf, type Pt } from '../lib/geometry';
@@ -410,7 +411,10 @@ export default function BoardPage() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>{!state.arrowSeen && <FirstArrow onDismiss={dismissArrow} />}</AnimatePresence>
+      <AnimatePresence>{state.tutorialSeen && !state.arrowSeen && <FirstArrow onDismiss={dismissArrow} />}</AnimatePresence>
+      {!state.tutorialSeen && (
+        <Tutorial onDone={() => dispatch({ type: 'patch', patch: { tutorialSeen: true, arrowSeen: true } })} />
+      )}
 
       <Toolbar
         tools={[

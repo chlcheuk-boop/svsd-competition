@@ -10,6 +10,7 @@ export interface AppState {
   version: 1;
   onboarded: boolean;
   arrowSeen: boolean;
+  tutorialSeen: boolean;
   matchesSeen: boolean;
   matchesDealt: boolean;
   media: Media[];
@@ -29,6 +30,7 @@ export function initialState(): AppState {
     version: 1,
     onboarded: false,
     arrowSeen: false,
+    tutorialSeen: false,
     matchesSeen: false,
     matchesDealt: false,
     media: MAYA_MEDIA,

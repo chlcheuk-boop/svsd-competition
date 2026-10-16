@@ -141,6 +141,10 @@ export default function SettingsPage() {
               dispatch({ type: 'reset', onboarded: false });
               nav('/welcome');
             }}>replay onboarding</button>
+            <button type="button" className="btn btn-ghost" onClick={() => {
+              dispatch({ type: 'patch', patch: { tutorialSeen: false } });
+              nav('/');
+            }}>replay board tour</button>
           </div>
         </fieldset>
       </form>

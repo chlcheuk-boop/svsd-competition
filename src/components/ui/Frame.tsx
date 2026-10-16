@@ -22,6 +22,7 @@ export function TopNav() {
           to={it.to}
           className={({ isActive }) => `nav-round ${isActive || loc.pathname.startsWith(it.to) ? 'active' : ''}`}
           aria-label={it.label}
+          data-nav={it.to.slice(1)}
         >
           {it.icon}
           {it.dot && <span className="nav-dot" aria-label="new matches" />}
