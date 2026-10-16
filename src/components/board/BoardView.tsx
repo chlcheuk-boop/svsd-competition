@@ -46,6 +46,10 @@ export interface BoardViewProps {
   glow?: Set<string>;
   backdrop?: Board | null;
   focus?: FocusRequest | null;
+  /** Fly the camera to fit a group of cards (e.g. one thread). */
+  frame?: { ids: string[]; nonce: number } | null;
+  /** Colored traces drawn under specific strings (e.g. threads). */
+  traces?: { connectionIds: string[]; color: Accent }[];
   placeGhost?: Media | null;
   /** Rendered above the canvas in screen space; receives a world→screen mapper. */
   screenOverlay?: (toScreen: (p: Pt) => Pt, cam: Camera) => ReactNode;
@@ -75,7 +79,7 @@ export default function BoardView(props: BoardViewProps) {
   const {
     media, connections, tool, yarnColor, editable = true, maskPrefix, onMove, onConnect, onSnip, onCardClick,
     onPlace, onTagClick, onBackgroundClick, selectedId, pathSelection = [], emphasis, glow, backdrop, focus,
-    placeGhost, screenOverlay, initialCamera, onCamera,
+    frame, traces, placeGhost, screenOverlay, initialCamera, onCamera,
   } = props;
 
   const viewport = useRef<HTMLDivElement>(null);
@@ -173,6 +177,23 @@ export default function BoardView(props: BoardViewProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focus?.nonce]);
+
+  useEffect(() => {
+    const el = viewport.current;
+    if (!frame || !el) return;
+    const group = frame.ids.map((i) => byId.get(i)).filter(Boolean) as Media[];
+    if (!group.length) return;
+    const b = boundsOf(group);
+    const z = Math.max(0.3, Math.min(1.1, (el.clientWidth - 520) / (b.maxX - b.minX), (el.clientHeight - 300) / (b.maxY - b.minY)));
+    flyTo({ x: (b.minX + b.maxX) / 2 - 120 / z, y: (b.minY + b.maxY) / 2 }, z);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [frame?.nonce]);
+
+  const traceColor = useMemo(() => {
+    const m = new Map<string, Accent>();
+    traces?.forEach((t) => t.connectionIds.forEach((id) => m.set(id, t.color)));
+    return m;
+  }, [traces]);
 
   const zoomAt = useCallback((factor: number, sx?: number, sy?: number) => {
     const el = viewport.current!;
@@ -493,6 +514,9 @@ export default function BoardView(props: BoardViewProps) {
             const op = dimmed(c.id) ? 0.16 : 1;
             return (
               <g key={c.id} opacity={op} style={{ transition: 'opacity .3s' }}>
+                {traceColor.has(c.id) && (
+                  <path d={d} fill="none" style={{ stroke: YARN_HEX[traceColor.get(c.id)!].base }} strokeWidth={13} strokeLinecap="round" opacity={0.28} mask={`url(#${maskPrefix}-${c.id})`} />
+                )}
                 {(isGlow || isPulse) && (
                   <path d={d} fill="none" className={isPulse ? 'yarn-pulse' : 'yarn-glow'} strokeWidth={14} strokeLinecap="round" mask={`url(#${maskPrefix}-${c.id})`} />
                 )}

@@ -25,7 +25,7 @@ To reset before presenting, go to **Settings → Demo**. You can reset the board
 
 ## Other features
 
-- Shift-click 3 to 7 tied cards (or use **Make a thread** in the side panel) to publish a thread. Threads open as a vertical story with one continuous yarn running down the page.
+- Shift-click any chain of tied cards (no length limit, each pair just needs a string) (or use **Make a thread** in the side panel) to publish a thread. The **threads** tool shows every thread traced on the board in its own color. Threads open as a vertical story with one continuous yarn running down the page.
 - **Time replay** is in the side panel and on the Profile.
 - **Ripple view** is in the side panel for anything a past match influenced.
 - Pan by dragging empty space or holding space. Zoom with ctrl/⌘ + scroll, the zoom control, or `+` / `-`.

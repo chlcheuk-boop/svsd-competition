@@ -117,7 +117,7 @@ export default function ProfilePage() {
             ))}
             <div className="pf-thread empty">
               <IconThread size={26} />
-              <p className="serif">Shift-click three to seven tied cards on your board to make a new thread.</p>
+              <p className="serif">Shift-click any chain of tied cards on your board to make a new thread.</p>
               <button className="btn btn-ghost" onClick={() => nav('/')}>go to board</button>
             </div>
           </div>

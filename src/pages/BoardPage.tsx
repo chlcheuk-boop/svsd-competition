@@ -7,7 +7,8 @@ import { NoteComposer } from '../components/board/NoteComposer';
 import { SidePanel } from '../components/board/SidePanel';
 import { FirstArrow, ReplayBar, ThreadComposer, findLink, useReplay } from '../components/board/BoardExtras';
 import { Toolbar, useToast } from '../components/ui/Frame';
-import { IconNote, IconScissors, IconYarn } from '../components/ui/icons';
+import { IconNote, IconScissors, IconThread, IconYarn } from '../components/ui/icons';
+import { ThreadsDrawer, THREAD_COLORS } from '../components/board/ThreadsDrawer';
 import { accentVar } from '../components/ui/MiniStamp';
 import { today, uid, useStore } from '../store/store';
 import { sizeOf, type Pt } from '../lib/geometry';
@@ -57,6 +58,9 @@ export default function BoardPage() {
   const [ripple, setRipple] = useState<string | null>(null);
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
   const [focus, setFocus] = useState<FocusRequest | null>(null);
+  const [threadsView, setThreadsView] = useState(false);
+  const [activeThread, setActiveThread] = useState<string | null>(null);
+  const [frame, setFrame] = useState<{ ids: string[]; nonce: number } | null>(null);
 
   const dates = useReplay(state.media, state.connections);
 
@@ -81,6 +85,7 @@ export default function BoardPage() {
       if (e.key === 'y') pickTool('yarn');
       if (e.key === 'x') pickTool('scissors');
       if (e.key === 'n') pickTool('note');
+      if (e.key === 't') toggleThreads();
       if (e.key === 'Escape') {
         setMode('select');
         setDraft(null);
@@ -112,8 +117,46 @@ export default function BoardPage() {
     return state.connections.filter((c) => c.addedAt <= replayDate && ids.has(c.from) && ids.has(c.to));
   }, [state.connections, visibleMedia, replayDate]);
 
+  /* threads view: each of Maya's threads traced in its own color */
+  const myThreads = useMemo(() => state.threads.filter((t) => t.owner === 'maya'), [state.threads]);
+  const threadParts = useMemo(
+    () =>
+      myThreads.map((t, i) => {
+        const ids = t.mediaIds.filter((id) => state.media.some((m) => m.id === id));
+        const connectionIds = ids
+          .slice(1)
+          .map((id, k) => findLink(state.connections, ids[k], id)?.id)
+          .filter(Boolean) as string[];
+        return { thread: t, ids, connectionIds, color: THREAD_COLORS[i % THREAD_COLORS.length] };
+      }),
+    [myThreads, state.media, state.connections],
+  );
+  const shownParts = threadsView ? threadParts.filter((p) => !activeThread || p.thread.id === activeThread) : [];
+  const traces = shownParts.map((p) => ({ connectionIds: p.connectionIds, color: p.color }));
+
+  function toggleThreads() {
+    dismissArrow();
+    setActiveThread(null);
+    if (!threadsView) setFrame({ ids: threadParts.flatMap((p) => p.ids), nonce: Date.now() });
+    setThreadsView(!threadsView);
+  }
+
+  const pickThread = (id: string | null) => {
+    setActiveThread(id);
+    const part = threadParts.find((p) => p.thread.id === id);
+    setFrame({ ids: part ? part.ids : threadParts.flatMap((p) => p.ids), nonce: Date.now() });
+  };
+
   /* ripple emphasis */
   const emphasis = useMemo(() => {
+    if (!ripple && threadsView) {
+      const s = new Set<string>();
+      shownParts.forEach((p) => {
+        p.ids.forEach((id) => s.add(id));
+        p.connectionIds.forEach((id) => s.add(id));
+      });
+      return s;
+    }
     if (!ripple) return null;
     const s = new Set<string>();
     state.media.forEach((m) => m.via === ripple && s.add(m.id));
@@ -125,7 +168,8 @@ export default function BoardPage() {
       }
     });
     return s;
-  }, [ripple, state.media, state.connections]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ripple, state.media, state.connections, threadsView, activeThread, threadParts]);
 
   /* actions */
   const onConnect = (from: string, to: string) => {
@@ -161,7 +205,7 @@ export default function BoardPage() {
   const onCardClick = (id: string, { shift }: { shift: boolean }) => {
     if (shift) {
       setSelected(null);
-      setPath((p) => (p.includes(id) ? p.slice(0, p.indexOf(id)) : p.length >= 7 ? p : [...p, id]));
+      setPath((p) => (p.includes(id) ? p.slice(0, p.indexOf(id)) : [...p, id]));
       return;
     }
     setPath([]);
@@ -171,7 +215,7 @@ export default function BoardPage() {
   const autoThreadFrom = (start: string) => {
     const seq = [start];
     let cur = start;
-    while (seq.length < 5) {
+    for (;;) {
       const next = state.connections
         .filter((c) => c.from === cur || c.to === cur)
         .map((c) => ({ id: c.from === cur ? c.to : c.from, why: !!c.why }))
@@ -181,8 +225,8 @@ export default function BoardPage() {
       seq.push(next.id);
       cur = next.id;
     }
-    if (seq.length < 3) {
-      toast({ text: 'a thread needs at least 3 tied cards' });
+    if (seq.length < 2) {
+      toast({ text: 'tie this card to something first: a thread just needs a string' });
       return;
     }
     setPath(seq);
@@ -256,9 +300,11 @@ export default function BoardPage() {
           setWhyFor(null);
         }}
         selectedId={selected}
-        pathSelection={path}
+        pathSelection={threadsView && activeThread && !path.length ? shownParts[0]?.ids ?? [] : path}
         emphasis={emphasis}
         focus={focus}
+        frame={frame}
+        traces={traces}
         placeGhost={mode === 'place' ? draft : null}
         screenOverlay={screenOverlay}
       />
@@ -273,11 +319,11 @@ export default function BoardPage() {
             <span>
               {path.length} in a row{' '}
               <span className="mono">
-                {pathBroken > 0 ? `· ${pathBroken} and ${pathBroken + 1} aren't tied` : path.length < 3 ? '· shift-click 3 to 7 tied cards' : '· ready'}
+                {pathBroken > 0 ? `· ${pathBroken} and ${pathBroken + 1} aren't tied` : path.length < 2 ? '· shift-click a card tied to this one' : '· ready'}
               </span>
             </span>
             <button className="btn btn-quiet" onClick={() => setPath([])}>clear</button>
-            <button className="btn btn-primary" disabled={path.length < 3 || pathBroken > 0} onClick={() => setComposeThread(true)}>
+            <button className="btn btn-primary" disabled={path.length < 2 || pathBroken > 0} onClick={() => setComposeThread(true)}>
               make a thread
             </button>
           </motion.div>
@@ -352,6 +398,18 @@ export default function BoardPage() {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {threadsView && (
+          <ThreadsDrawer
+            parts={threadParts}
+            active={activeThread}
+            onPick={pickThread}
+            onOpen={(id) => nav(`/thread/${id}`)}
+            onClose={toggleThreads}
+          />
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>{!state.arrowSeen && <FirstArrow onDismiss={dismissArrow} />}</AnimatePresence>
 
       <Toolbar
@@ -359,6 +417,7 @@ export default function BoardPage() {
           { id: 'yarn', label: 'yarn', icon: <IconYarn />, active: mode === 'yarn', onClick: () => pickTool('yarn') },
           { id: 'scissors', label: 'scissors', icon: <IconScissors />, active: mode === 'scissors', onClick: () => pickTool('scissors') },
           { id: 'note', label: 'note', icon: <IconNote />, active: mode === 'note' || mode === 'place', onClick: () => pickTool('note') },
+          { id: 'threads', label: 'threads', icon: <IconThread />, active: threadsView, onClick: toggleThreads },
         ]}
       >
         {mode === 'yarn' && (
