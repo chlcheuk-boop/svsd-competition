@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
-import { PASSPORT_STAMPS } from '../data/stamps';
+import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
 import { MORE_CONNECTIONS, MORE_MEDIA } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 
@@ -38,7 +38,7 @@ export function initialState(): AppState {
     matchesDealt: false,
     media: [...MAYA_MEDIA, ...MORE_MEDIA],
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS],
-    boardEdition: 2,
+    boardEdition: 4,
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
     matchState: Object.fromEntries(MATCHES.map((m) => [m.personId, { flipped: false, status: 'new' } as MatchState])),
@@ -72,6 +72,15 @@ function load(): AppState {
       merged.connections = [...merged.connections.filter((c) => !moreConn.test(c.id)), ...MORE_CONNECTIONS];
       merged.boardEdition = 2;
     }
+    if (merged.boardEdition === 3) {
+      // edition 3 briefly laid the desk out in rings; put the example cards back on the grid
+      const home = new Map([...MAYA_MEDIA, ...MORE_MEDIA, KENJI_GIFT_MEDIA].map((m) => [m.id, m]));
+      merged.media = merged.media.map((m) => {
+        const h = home.get(m.id);
+        return h ? { ...m, x: h.x, y: h.y } : m;
+      });
+    }
+    merged.boardEdition = 4;
     return merged;
   } catch {
     return initialState();
