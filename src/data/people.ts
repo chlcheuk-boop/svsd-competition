@@ -12,6 +12,7 @@ export const MAYA = {
 };
 
 export const PEOPLE: Record<string, Person> = {
+  maya: { id: 'maya', name: 'Maya Lin-Okafor', city: 'Philadelphia', craft: 'design student', color: 'peach', initial: 'M' },
   // weekly matches
   lena: { id: 'lena', name: 'Lena Hoffmann', city: 'Berlin', craft: 'graphic designer', color: 'sky', initial: 'L' },
   kenji: { id: 'kenji', name: 'Kenji Morita', city: 'Osaka', craft: 'illustrator', color: 'tangerine', initial: 'K' },
