@@ -110,6 +110,25 @@ const ArtPassport = () => (
   </svg>
 );
 
+const Key = ({ x, w = 30, label, hot }: { x: number; w?: number; label: string; hot?: boolean }) => (
+  <g>
+    <rect x={x} y="30" width={w} height="30" rx="5" fill={hot ? 'var(--peach)' : 'var(--card-white)'} stroke="var(--rule)" />
+    <rect x={x} y="56" width={w} height="4" rx="2" fill="rgba(46,44,42,.08)" />
+    <text x={x + w / 2} y="50" textAnchor="middle" fontSize="11" fontFamily="IBM Plex Mono" fill={hot ? 'var(--tangerine-deep)' : 'var(--ink)'}>{label}</text>
+  </g>
+);
+
+const ArtKeys = () => (
+  <svg viewBox="0 0 220 90" aria-hidden="true">
+    <Key x={14} w={46} label="ctrl" hot />
+    <text x="68" y="50" fontSize="14" fill="var(--ink-soft)">+</text>
+    <Key x={82} label="Y" />
+    <Key x={116} label="S" />
+    <Key x={150} label="N" />
+    <Key x={184} label="Z" hot />
+  </svg>
+);
+
 const ArtDone = () => (
   <svg viewBox="0 0 220 90" aria-hidden="true">
     <YarnStrand d="M20 60 C 60 10, 90 90, 130 40 S 180 30, 200 50" color="tangerine" />
@@ -164,6 +183,25 @@ const STEPS: Step[] = [
     art: <ArtPassport />,
   },
   {
+    target: '.toolbar',
+    kicker: '7 · keyboard shortcuts',
+    title: 'Keep your hands on the desk',
+    body: (
+      <span className="tut-keys">
+        <span><kbd>Ctrl</kbd>+<kbd>Y</kbd></span><span>pick up the yarn</span>
+        <span><kbd>Ctrl</kbd>+<kbd>S</kbd></span><span>pick up the scissors</span>
+        <span><kbd>Ctrl</kbd>+<kbd>N</kbd></span><span>write a new note</span>
+        <span><kbd>Ctrl</kbd>+<kbd>Z</kbd></span><span>undo the last string you tied or snipped</span>
+        <span><kbd>T</kbd></span><span>show or hide your threads</span>
+        <span><kbd>Esc</kbd></span><span>put the tool down</span>
+        <span><kbd>Space</kbd> + drag</span><span>pan around the board</span>
+        <span><kbd>Ctrl</kbd> + scroll</span><span>zoom in and out</span>
+      </span>
+    ),
+    why: <>On a Mac, <em>⌘</em> works in place of Ctrl. Ctrl+Z can be pressed again to keep stepping back.</>,
+    art: <ArtKeys />,
+  },
+  {
     target: null,
     kicker: 'that’s the desk',
     title: 'Start by tying something.',
@@ -213,8 +251,8 @@ export function Tutorial({ onDone }: { onDone: () => void }) {
   } else {
     const left = Math.min(Math.max(16, rect.left + rect.width / 2 - W / 2), window.innerWidth - W - 16);
     style = rect.top > window.innerHeight / 2
-      ? { left, bottom: window.innerHeight - rect.top + PAD + 18 }
-      : { left: Math.max(16, Math.min(rect.left - 8, window.innerWidth - W - 16)), top: rect.bottom + PAD + 18 };
+      ? { left, bottom: window.innerHeight - rect.top + PAD + 18, maxHeight: rect.top - PAD - 18 - 16 }
+      : { left: Math.max(16, Math.min(rect.left - 8, window.innerWidth - W - 16)), top: rect.bottom + PAD + 18, maxHeight: window.innerHeight - rect.bottom - PAD - 18 - 16 };
   }
 
   return (
