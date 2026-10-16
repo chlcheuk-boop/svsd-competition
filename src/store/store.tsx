@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
-import { PASSPORT_STAMPS } from '../data/stamps';
+import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
 import { MORE_CONNECTIONS, MORE_MEDIA } from '../data/mayaMore';
+import { arrangeDesk } from '../data/deskLayout';
 import { MATCHES } from '../data/matches';
 
 const KEY = 'rhyme.state.v1';
@@ -36,9 +37,9 @@ export function initialState(): AppState {
     tutorialSeen: false,
     matchesSeen: false,
     matchesDealt: false,
-    media: [...MAYA_MEDIA, ...MORE_MEDIA],
+    media: arrangeDesk([...MAYA_MEDIA, ...MORE_MEDIA]),
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS],
-    boardEdition: 2,
+    boardEdition: 3,
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
     matchState: Object.fromEntries(MATCHES.map((m) => [m.personId, { flipped: false, status: 'new' } as MatchState])),
@@ -71,6 +72,11 @@ function load(): AppState {
       merged.media = [...merged.media, ...MORE_MEDIA.filter((m) => !haveM.has(m.id))];
       merged.connections = [...merged.connections.filter((c) => !moreConn.test(c.id)), ...MORE_CONNECTIONS];
       merged.boardEdition = 2;
+    }
+    if (merged.boardEdition < 3) {
+      // the desk moved from a grid onto rings
+      merged.media = arrangeDesk(merged.media).map((m) => (m.id === KENJI_GIFT_MEDIA.id ? { ...m, x: KENJI_GIFT_MEDIA.x, y: KENJI_GIFT_MEDIA.y } : m));
+      merged.boardEdition = 3;
     }
     return merged;
   } catch {
