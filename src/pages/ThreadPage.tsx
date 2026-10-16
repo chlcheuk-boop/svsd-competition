@@ -43,6 +43,10 @@ export default function ThreadPage() {
   const wrap = useRef<HTMLDivElement>(null);
   const [path, setPath] = useState<{ d: string; h: number; stitches: { x: number; y: number }[] }>({ d: '', h: 0, stitches: [] });
 
+  useLayoutEffect(() => {
+    wrap.current?.closest('.page')?.scrollTo(0, 0);
+  }, [id]);
+
   const items = thread ? thread.mediaIds.map((mid) => u.media.get(mid)).filter(Boolean) as Media[] : [];
 
   // Lay one continuous yarn down the page, through every media frame.
@@ -56,8 +60,9 @@ export default function ThreadPage() {
         return { top: { x: r.left - base.left + r.width / 2, y: r.top - base.top + 6 }, bottom: { x: r.left - base.left + r.width / 2, y: r.bottom - base.top - 6 }, left: r.left - base.left, right: r.right - base.left };
       });
       if (!anchors.length) return;
-      const titleEl = el.querySelector<HTMLElement>('.tv-head');
-      const startY = titleEl ? titleEl.getBoundingClientRect().bottom - base.top - 10 : 0;
+      const heads = el.querySelectorAll<HTMLElement>('.tv-head > *');
+      const lastHead = heads[heads.length - 1];
+      const startY = lastHead ? lastHead.getBoundingClientRect().bottom - base.top + 18 : 0;
       let d = `M ${base.width / 2} ${startY} C ${base.width / 2 - 120} ${startY + 40}, ${anchors[0].top.x + 140} ${anchors[0].top.y - 60}, ${anchors[0].top.x} ${anchors[0].top.y}`;
       const stitches: { x: number; y: number }[] = [];
       anchors.forEach((a, i) => {
