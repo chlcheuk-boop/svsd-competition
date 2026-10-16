@@ -10,6 +10,13 @@ export function InkFilters() {
           <feColorMatrix in="blotch" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="mask" />
           <feComposite in="rough" in2="mask" operator="in" />
         </filter>
+        <filter id="ink-soft" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="5" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="0.9" xChannelSelector="R" yChannelSelector="G" result="rough" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="11" result="blotch" />
+          <feColorMatrix in="blotch" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.55" result="mask" />
+          <feComposite in="rough" in2="mask" operator="in" />
+        </filter>
         <filter id="rough-edge" x="-5%" y="-5%" width="110%" height="110%">
           <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="1" seed="2" result="n" />
           <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" />
