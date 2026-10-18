@@ -1,0 +1,346 @@
+/*
+ * Phone and small-tablet overrides. Loaded after every page stylesheet so it wins ties.
+ * Desktop (1440×900) stays the reference; this only reshapes things that don't fit.
+ */
+
+/* ---------- tablets and narrow windows ---------- */
+@media (max-width: 900px) {
+  /* the threads drawer on someone's board becomes a sheet instead of disappearing */
+  .threads-drawer {
+    display: flex;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    top: auto;
+    bottom: 104px;
+    max-height: 46vh;
+  }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 640px) {
+  body {
+    font-size: 13px;
+  }
+
+  /* frame */
+  .topnav {
+    top: 12px;
+    left: 12px;
+    gap: 6px;
+  }
+  .nav-round {
+    width: 40px;
+    height: 40px;
+  }
+  .nav-round svg {
+    width: 20px;
+    height: 20px;
+  }
+  .nav-tip {
+    display: none;
+  }
+  .nav-home {
+    margin-left: 2px;
+    padding: 6px 6px;
+    font-size: 11px;
+  }
+  .avatar-btn {
+    top: 12px;
+    right: 12px;
+  }
+  .avatar-btn .avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* toolbar: a shorter strip that fits four tools on a phone */
+  .toolbar-wrap {
+    bottom: 10px;
+    max-width: calc(100vw - 16px);
+  }
+  .toolbar {
+    gap: 2px;
+    padding: 8px 8px 10px;
+  }
+  .tool {
+    width: 64px;
+    height: 56px;
+    gap: 3px;
+  }
+  .tool .tool-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  .tool-label {
+    font-size: 10px;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .tool.active {
+    transform: translateY(-6px) rotate(-1.5deg);
+  }
+  .tool-popover {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: calc(100vw - 24px);
+  }
+  .toast {
+    bottom: 96px;
+    max-width: calc(100vw - 24px);
+  }
+
+  /* board chrome: pinch replaces the zoom buttons */
+  .zoom-control {
+    display: none;
+  }
+  .tool-popover .swatch {
+    width: 20px;
+    height: 20px;
+  }
+  .tool-popover {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+  .tool-popover > .mono-label {
+    display: none;
+  }
+  .board-hint,
+  .path-bar {
+    top: 62px;
+    max-width: calc(100vw - 24px);
+    white-space: normal;
+    text-align: center;
+  }
+  .path-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 16px;
+    padding: 8px 12px;
+  }
+  .side-panel {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-height: 72vh;
+    padding: 18px 18px 22px;
+    border-radius: 10px 10px 4px 4px;
+  }
+  .sp-media {
+    height: 170px;
+  }
+  .threads-view {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    top: auto;
+    bottom: 96px;
+    max-height: 56vh;
+  }
+  .replay-bar {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    margin-left: 0;
+    bottom: 92px;
+  }
+  .why-editor {
+    width: min(320px, calc(100vw - 32px));
+  }
+  .thread-composer {
+    padding: 22px 18px 18px;
+  }
+  .tc-title {
+    font-size: 30px;
+  }
+  .note-composer {
+    padding: 22px 18px 18px;
+  }
+  .nc-title {
+    font-size: 26px;
+  }
+  .nc-preview {
+    height: 130px;
+  }
+  .nc-actions {
+    flex-wrap: wrap;
+  }
+  .nc-hint {
+    width: 100%;
+  }
+
+  /* matches */
+  .matches-page {
+    padding: 70px 12px 120px;
+    gap: 8px;
+  }
+  .matches-head h1 {
+    font-size: 38px;
+  }
+  .matches-head > p {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  .legend {
+    display: none;
+  }
+  .tarot-field {
+    width: 100%;
+    transform: none;
+  }
+  .axis .mono {
+    font-size: 9px;
+  }
+  .focus-layer {
+    padding: 12px 0 100px;
+  }
+
+  /* someone else's board */
+  .mb-header {
+    top: 60px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    white-space: normal;
+  }
+  .mb-header .chip {
+    display: none;
+  }
+  .crossing-banner {
+    top: 118px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    padding: 12px 14px;
+  }
+  .crossing-banner p {
+    font-size: 15px;
+    margin: 4px 0 8px;
+  }
+  .crossing-banner .btn {
+    height: 32px;
+  }
+  .drawer-tab {
+    top: 126px;
+    right: 16px;
+    z-index: 48;
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+  .threads-drawer {
+    bottom: 92px;
+    left: 8px;
+    right: 8px;
+  }
+  .stamp-composer {
+    width: min(320px, calc(100vw - 24px));
+    height: min(320px, calc(100vw - 24px));
+    padding: 40px;
+  }
+
+  /* passport */
+  .book {
+    top: 66px;
+    --bh: calc(100dvh - 176px);
+  }
+  .stamp-expanded {
+    padding: 24px 20px;
+    gap: 16px;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+  }
+  .se-full {
+    font-size: 18px;
+  }
+  .pp-id,
+  .pp-who {
+    padding: 26px 22px;
+  }
+  .pp-themes {
+    font-size: 24px;
+  }
+  .pp-id-row {
+    gap: 14px;
+  }
+  .pp-who h2 {
+    font-size: 24px;
+  }
+
+  /* pages */
+  .page {
+    padding: 72px 14px 120px;
+  }
+  .thread-page {
+    padding-top: 80px;
+  }
+  .tv-head {
+    padding-bottom: 60px;
+  }
+  .tv-intro {
+    font-size: 18px;
+  }
+  .tv-media {
+    width: 92%;
+    padding: 10px 10px 14px;
+  }
+  .tv-why {
+    padding: 60px 0;
+    max-width: 86%;
+  }
+  .tv-quote blockquote {
+    font-size: 28px;
+    line-height: 42px;
+    background-size: 26px 42px;
+  }
+  .pf-head {
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .pf-head h1 {
+    font-size: 38px;
+  }
+  .pf-bio {
+    font-size: 18px;
+  }
+  .pf-threads {
+    grid-template-columns: 1fr;
+  }
+  .fingerprint {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .fingerprint svg {
+    width: 100%;
+  }
+  .settings-form {
+    padding: 26px 18px;
+  }
+  .settings-form h1 {
+    font-size: 30px;
+  }
+  .import-row {
+    flex-wrap: wrap;
+  }
+
+  /* onboarding */
+  .onboarding {
+    padding: 64px 14px 32px;
+  }
+  .ob-import {
+    width: 100%;
+    min-height: 0;
+  }
+  .ob-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .ob-why {
+    flex-wrap: wrap;
+  }
+  .ob-why input {
+    width: 100%;
+    flex-basis: 100%;
+  }
+}

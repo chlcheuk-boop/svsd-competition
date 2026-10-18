@@ -71,7 +71,7 @@ export default function ThreadPage() {
         d += ` M ${a.bottom.x} ${a.bottom.y}`;
         const next = anchors[i + 1];
         if (next) {
-          const swing = i % 2 ? 1 : -1;
+          const swing = (i % 2 ? 1 : -1) * Math.min(1, base.width / 860);
           const span = next.top.y - a.bottom.y;
           d += ` C ${a.bottom.x + swing * 260} ${a.bottom.y + span * 0.35}, ${next.top.x + swing * 260} ${next.top.y - span * 0.35}, ${next.top.x} ${next.top.y}`;
         } else {

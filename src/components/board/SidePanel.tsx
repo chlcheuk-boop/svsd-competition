@@ -23,6 +23,7 @@ interface Props {
 }
 
 export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose, onJump, onRipple, onMakeThread, onReplay, onRemove, readOnly }: Props) {
+  const phone = window.innerWidth < 640; // slides up as a sheet on phones
   const byId = new Map(media.map((x) => [x.id, x]));
   const mine = connections.filter((c) => c.from === m.id || c.to === m.id);
   const connIds = new Set(mine.map((c) => c.id));
@@ -33,9 +34,9 @@ export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose
     <motion.aside
       className="side-panel"
       aria-label={`${m.title} details`}
-      initial={{ x: 420, rotate: 2 }}
-      animate={{ x: 0, rotate: 0 }}
-      exit={{ x: 440, rotate: 2 }}
+      initial={phone ? { y: 500 } : { x: 420, rotate: 2 }}
+      animate={phone ? { y: 0 } : { x: 0, rotate: 0 }}
+      exit={phone ? { y: 520 } : { x: 440, rotate: 2 }}
       transition={{ type: 'spring', stiffness: 260, damping: 30 }}
       onPointerDown={(e) => e.stopPropagation()}
     >

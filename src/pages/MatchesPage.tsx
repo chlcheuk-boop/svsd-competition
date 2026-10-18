@@ -10,11 +10,11 @@ import { QUADRANT_INFO, TarotBack, TarotIllustration } from '../components/tarot
 import { Thumb } from '../components/ui/Thumb';
 import { accentVar } from '../components/ui/MiniStamp';
 import type { MatchProfile, Quadrant } from '../types';
+import { useViewport } from '../lib/useViewport';
 import './matches.css';
 
 const CARD_W = 172;
 const illoColor = (q: Quadrant) => (q === 2 ? 'var(--tangerine)' : 'var(--ink)');
-const CARD_H = Math.round(CARD_W * 1.75);
 
 function SmallFace({ mp }: { mp: MatchProfile }) {
   const p = person(mp.personId)!;
@@ -38,16 +38,16 @@ function SmallFace({ mp }: { mp: MatchProfile }) {
 }
 
 function TarotCard({
-  mp, flipped, dimmed, index, dealt, onClick, passed,
+  cardW, mp, flipped, dimmed, index, dealt, onClick, passed,
 }: {
-  mp: MatchProfile; flipped: boolean; dimmed: boolean; index: number; dealt: boolean; onClick: () => void; passed: boolean;
+  cardW: number; mp: MatchProfile; flipped: boolean; dimmed: boolean; index: number; dealt: boolean; onClick: () => void; passed: boolean;
 }) {
   const info = QUADRANT_INFO[mp.quadrant];
   const p = person(mp.personId)!;
   return (
     <motion.button
       className={`tarot ${dimmed ? 'dimmed' : ''} ${passed ? 'passed' : ''}`}
-      style={{ width: CARD_W, height: CARD_H }}
+      style={{ width: cardW, height: Math.round(cardW * 1.75) }}
       initial={dealt ? false : { x: (1.5 - index) * 60, y: 520, rotate: -20 + index * 12, opacity: 0 }}
       animate={{ x: 0, y: 0, rotate: [-1.5, 1, -0.5, 1.2][index], opacity: 1 }}
       transition={{ type: 'spring', stiffness: 120, damping: 17, delay: dealt ? 0 : 0.25 + index * 0.18 }}
@@ -78,7 +78,9 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
   const p = person(mp.personId)!;
   const info = QUADRANT_INFO[mp.quadrant];
   const byId = new Map(mp.board.media.map((m) => [m.id, m]));
-  const h = Math.max(520, Math.min(800, window.innerHeight - 190));
+  const phone = window.innerWidth < 640;
+  const fitH = Math.min(800, window.innerHeight - (phone ? 120 : 190), (window.innerWidth - 24) * 1.75);
+  const h = phone ? fitH : Math.max(520, fitH);
   const w = Math.round(h / 1.75);
   const scale = h / 800;
   return (
@@ -160,6 +162,8 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
 }
 
 export default function MatchesPage() {
+  const vp = useViewport();
+  const cardW = vp.phone ? Math.min(CARD_W, Math.floor((vp.w - 24) / 2 - 22)) : CARD_W;
   const { state, dispatch } = useStore();
   const nav = useNavigate();
   const toast = useToast();
@@ -210,7 +214,7 @@ export default function MatchesPage() {
         </ul>
       </header>
 
-      <div className="tarot-field">
+      <div className="tarot-field" style={vp.phone ? { height: 2 * (Math.round(cardW * 1.75) + 44) } : undefined}>
         <div className="axis axis-x" aria-hidden="true">
           <span className="mono axis-end left">similar</span>
           <span className="mono axis-title">how you connect →</span>
@@ -227,6 +231,7 @@ export default function MatchesPage() {
             return (
               <div key={mp.personId} className={`tarot-cell q${mp.quadrant}`}>
                 <TarotCard
+                  cardW={cardW}
                   mp={mp}
                   index={i}
                   dealt={dealt && dealKey === 0}

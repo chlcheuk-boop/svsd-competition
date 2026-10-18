@@ -116,15 +116,21 @@ export default function BoardView(props: BoardViewProps) {
     const b = boundsOf(media);
     const vw = el.clientWidth;
     const vh = el.clientHeight;
-    const padX = 120;
-    const padTop = 110;
-    const padBottom = 150;
+    const phone = vw < 640;
+    const padX = phone ? 12 : 120;
+    const padTop = phone ? 70 : 110;
+    const padBottom = phone ? 110 : 150;
     const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
-    const target = {
+    let target = {
       z,
       x: (vw - (b.maxX - b.minX) * z) / 2 - b.minX * z,
       y: padTop + (vh - padTop - padBottom - (b.maxY - b.minY) * z) / 2 - b.minY * z,
     };
+    if (phone && z < 0.3) {
+      // a whole wide desk is unreadable on a phone: fit its height, start at the left edge, pan sideways
+      const zh = Math.min(0.6, Math.max(0.3, (vh - padTop - padBottom) / (b.maxY - b.minY)));
+      target = { z: zh, x: padX - b.minX * zh, y: padTop + (vh - padTop - padBottom - (b.maxY - b.minY) * zh) / 2 - b.minY * zh };
+    }
     if (!animated) return setCam(target);
     const from = { ...camRef.current };
     animate(0, 1, { duration: 0.6, ease: [0.2, 0.8, 0.2, 1], onUpdate: (t) => setCam({
@@ -252,20 +258,86 @@ export default function BoardView(props: BoardViewProps) {
   }, [tool]);
 
   /* ---------- pointer handling ---------- */
+  /* ---------- two-finger pinch to zoom (touch) ---------- */
+  const touches = useRef(new Map<number, Pt>());
+  const pinch = useRef<{ d0: number; c0: Camera; mid0: Pt } | null>(null);
+
+  const releaseTouch = (e: React.PointerEvent) => {
+    const t = e.target as Element;
+    if (e.pointerType === 'touch' && t.hasPointerCapture?.(e.pointerId)) t.releasePointerCapture(e.pointerId);
+  };
+
+  const onPointerDownCapture = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'touch') return;
+    touches.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (touches.current.size === 2) {
+      const [a, b] = [...touches.current.values()];
+      const r = viewport.current!.getBoundingClientRect();
+      pinch.current = {
+        d0: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+        c0: { ...camRef.current },
+        mid0: { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top },
+      };
+      userMoved.current = true;
+      setPending(null);
+      setDragging(null);
+    }
+  };
+
+  useEffect(() => {
+    const move = (ev: PointerEvent) => {
+      if (!touches.current.has(ev.pointerId)) return;
+      touches.current.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      const p = pinch.current;
+      if (!p || touches.current.size < 2 || !viewport.current) return;
+      const [a, b] = [...touches.current.values()];
+      const r = viewport.current.getBoundingClientRect();
+      const mid = { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top };
+      const z = Math.min(2.4, Math.max(0.15, p.c0.z * (Math.hypot(a.x - b.x, a.y - b.y) / p.d0)));
+      // keep the world point under the starting midpoint under the fingers
+      const wx = (p.mid0.x - p.c0.x) / p.c0.z;
+      const wy = (p.mid0.y - p.c0.y) / p.c0.z;
+      setCam({ z, x: mid.x - wx * z, y: mid.y - wy * z });
+    };
+    const up = (ev: PointerEvent) => {
+      touches.current.delete(ev.pointerId);
+      if (touches.current.size < 2) {
+        // let the release of the last finger finish before handlers check the flag
+        window.setTimeout(() => {
+          if (touches.current.size < 2) pinch.current = null;
+        }, 0);
+      }
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+    return () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+  }, []);
+
   const startPan = (e: React.PointerEvent) => {
     const sx = e.clientX;
     const sy = e.clientY;
     const c0 = { ...camRef.current };
     let moved = false;
     const move = (ev: PointerEvent) => {
+      if (ev.pointerId !== e.pointerId) return;
+      if (pinch.current) {
+        moved = true;
+        return;
+      }
       if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 3) moved = userMoved.current = true;
       setCam({ ...c0, x: c0.x + ev.clientX - sx, y: c0.y + ev.clientY - sy });
     };
-    const up = () => {
+    const up = (ev: PointerEvent) => {
+      if (ev.pointerId !== e.pointerId) return;
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       viewport.current?.classList.remove('panning');
-      if (!moved) onBackgroundClick?.();
+      if (!moved && !pinch.current) onBackgroundClick?.();
     };
     viewport.current?.classList.add('panning');
     window.addEventListener('pointermove', move);
@@ -305,10 +377,15 @@ export default function BoardView(props: BoardViewProps) {
       setPending({ from: m.id, pt, click: false });
       const sx = e.clientX;
       const sy = e.clientY;
-      const move = (ev: PointerEvent) => setPending((p) => (p ? { ...p, pt: toWorld(ev.clientX, ev.clientY) } : p));
+      const move = (ev: PointerEvent) => {
+        if (ev.pointerId !== e.pointerId || pinch.current) return;
+        setPending((p) => (p ? { ...p, pt: toWorld(ev.clientX, ev.clientY) } : p));
+      };
       const up = (ev: PointerEvent) => {
+        if (ev.pointerId !== e.pointerId) return;
         window.removeEventListener('pointermove', move);
         window.removeEventListener('pointerup', up);
+        if (pinch.current) return setPending(null);
         const movedFar = Math.hypot(ev.clientX - sx, ev.clientY - sy) > 8;
         if (finishYarn(m.id, ev.clientX, ev.clientY)) return;
         // click without drag: keep the thread in hand until the next card
@@ -321,6 +398,7 @@ export default function BoardView(props: BoardViewProps) {
     }
 
     if (tool === 'scissors') {
+      releaseTouch(e);
       snipping.current = true;
       const up = () => {
         snipping.current = false;
@@ -340,6 +418,7 @@ export default function BoardView(props: BoardViewProps) {
     let moved = false;
     const shift = e.shiftKey;
     const move = (ev: PointerEvent) => {
+      if (ev.pointerId !== e.pointerId || pinch.current) return;
       const dx = (ev.clientX - sx) / camRef.current.z;
       const dy = (ev.clientY - sy) / camRef.current.z;
       if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) < DRAG_THRESHOLD) return;
@@ -348,11 +427,12 @@ export default function BoardView(props: BoardViewProps) {
       setDragging(m.id);
       onMove?.(m.id, Math.round(ox + dx), Math.round(oy + dy));
     };
-    const up = () => {
+    const up = (ev: PointerEvent) => {
+      if (ev.pointerId !== e.pointerId) return;
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       setDragging(null);
-      if (!moved) onCardClick?.(m.id, { shift });
+      if (!moved && !pinch.current) onCardClick?.(m.id, { shift });
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -370,6 +450,7 @@ export default function BoardView(props: BoardViewProps) {
       return;
     }
     if (tool === 'scissors') {
+      releaseTouch(e);
       snipping.current = true;
       const up = () => {
         snipping.current = false;
@@ -428,6 +509,7 @@ export default function BoardView(props: BoardViewProps) {
     <div
       ref={viewport}
       className={`board-viewport paper-grain ${cursorClass}`}
+      onPointerDownCapture={onPointerDownCapture}
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
       onPointerLeave={() => setCursor(null)}
@@ -542,6 +624,7 @@ export default function BoardView(props: BoardViewProps) {
                     onPointerLeave={() => setCut((x) => (x?.id === c.id ? null : x))}
                     onPointerDown={(e) => {
                       e.stopPropagation();
+                      releaseTouch(e);
                       snipping.current = true;
                       const up = () => {
                         snipping.current = false;

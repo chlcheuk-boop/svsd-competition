@@ -384,3 +384,31 @@
     zoom: 0.7;
   }
 }
+
+/* phones: one page at a time */
+.book.phone-book {
+  --bw: calc(100vw - 24px);
+  width: var(--bw);
+  transform: translateX(-50%);
+  perspective: 1600px;
+}
+.phone-cover,
+.phone-leaf {
+  position: absolute;
+  inset: 0;
+}
+.phone-cover {
+  border-radius: 6px 14px 14px 6px;
+}
+.phone-leaf .pp-page {
+  border-radius: 6px;
+}
+.phone-pager {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -22px;
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}

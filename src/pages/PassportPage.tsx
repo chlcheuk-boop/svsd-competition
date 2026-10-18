@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store';
 import { Avatar, Toolbar } from '../components/ui/Frame';
@@ -9,6 +9,7 @@ import { MiniStamp, accentVar } from '../components/ui/MiniStamp';
 import { MAYA, person } from '../data/people';
 import { QUADRANT_INFO } from '../components/tarot/TarotArt';
 import type { PassportStamp } from '../types';
+import { useViewport } from '../lib/useViewport';
 import './passport.css';
 
 const PER_PAGE = 5;
@@ -57,6 +58,11 @@ export default function PassportPage() {
   const [expanded, setExpanded] = useState<PassportStamp | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
+  // phones read the passport one page at a time
+  const { phone } = useViewport();
+  const [page, setPage] = useState(0);
+  const [pdir, setPdir] = useState(1);
+  const swipe = useRef<number | null>(null);
 
   const stamps = useMemo(() => [...state.stamps].sort((a, b) => (a.date < b.date ? 1 : -1)), [state.stamps]);
   const people = useMemo(() => Array.from(new Set(stamps.map((s) => s.personId))), [stamps]);
@@ -77,6 +83,14 @@ export default function PassportPage() {
   };
 
   const turn = (dir: 'next' | 'prev') => {
+    if (phone) {
+      if (!open) return dir === 'next' && setOpen(true);
+      const n = page + (dir === 'next' ? 1 : -1);
+      if (n < 0 || n >= pages.length) return;
+      setPdir(dir === 'next' ? 1 : -1);
+      setPage(n);
+      return;
+    }
     if (turning || !open) return;
     if (dir === 'next' && spread >= spreads - 1) return;
     if (dir === 'prev' && spread <= 0) return;
@@ -95,6 +109,7 @@ export default function PassportPage() {
 
   const openBook = () => {
     if (open || opening) return;
+    if (phone) return setOpen(true);
     setOpening(true);
   };
 
@@ -108,6 +123,108 @@ export default function PassportPage() {
       </div>
     );
   };
+
+  const coverFace = (
+    <>
+      <span className="cover-name serif">Rhyme</span>
+      <svg className="cover-emblem" width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+        <circle cx="48" cy="48" r="40" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="48" cy="48" r="33" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3" />
+        <path d="M22 54 C 34 30, 46 70, 58 44 S 74 40, 76 46" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <circle cx="22" cy="54" r="2.5" fill="currentColor" />
+        <circle cx="76" cy="46" r="2.5" fill="currentColor" />
+      </svg>
+      <span className="cover-title mono">P A S S P O R T</span>
+      <span className="cover-hint mono">{phone ? 'tap to open' : 'click to open'}</span>
+    </>
+  );
+
+  const atStart = phone ? page === 0 : spread === 0;
+  const atEnd = phone ? page >= pages.length - 1 : spread >= spreads - 1;
+
+  const modal = (
+    <AnimatePresence>
+      {expanded && (
+        <ExpandedStamp
+          s={expanded}
+          onClose={() => setExpanded(null)}
+          onShow={() => expanded.target && nav(`/?focus=${expanded.target.kind}:${expanded.target.id}`)}
+        />
+      )}
+    </AnimatePresence>
+  );
+
+  const toolbar = (
+    <Toolbar
+      tools={[
+        { id: 'prev', label: 'previous page', icon: <IconArrowLeft />, disabled: !open || atStart, onClick: () => turn('prev') },
+        { id: 'next', label: open ? 'next page' : 'open', icon: <IconArrowRight />, disabled: open && atEnd, onClick: () => (open ? turn('next') : openBook()) },
+        { id: 'filter', label: filter ? person(filter)!.name.split(' ')[0].toLowerCase() : 'by person', icon: <IconPerson />, active: filterOpen || !!filter, onClick: () => setFilterOpen((o) => !o) },
+      ]}
+    >
+      {filterOpen && (
+        <motion.div key="pf" className="tool-popover pp-filter" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }}>
+          <button className="chip" aria-pressed={!filter} onClick={() => setFilter(null)}>everyone</button>
+          {people.map((pid) => (
+            <button key={pid} className="chip" aria-pressed={filter === pid} onClick={() => {
+              setFilter(pid);
+              if (!open) openBook();
+            }}>
+              <MiniStamp personId={pid} size={16} /> {person(pid)!.name.split(' ')[0]}
+            </button>
+          ))}
+        </motion.div>
+      )}
+    </Toolbar>
+  );
+
+  if (phone) {
+    return (
+      <div className="passport-page">
+        <div
+          className="book phone-book"
+          onPointerDown={(e) => (swipe.current = e.clientX)}
+          onPointerUp={(e) => {
+            if (swipe.current === null) return;
+            const dx = e.clientX - swipe.current;
+            swipe.current = null;
+            if (Math.abs(dx) > 50) turn(dx < 0 ? 'next' : 'prev');
+          }}
+        >
+          <AnimatePresence initial={false} custom={pdir}>
+            {!open ? (
+              <motion.button
+                key="cover"
+                className="cover phone-cover"
+                onClick={() => setOpen(true)}
+                exit={{ rotateY: -100, opacity: 0 }}
+                transition={{ duration: 0.6, ease: [0.45, 0.05, 0.25, 1] }}
+                style={{ originX: 0 }}
+                aria-label="Open passport"
+              >
+                {coverFace}
+              </motion.button>
+            ) : (
+              <motion.div
+                key={page}
+                className="phone-leaf"
+                initial={{ rotateY: pdir > 0 ? 70 : -70, opacity: 0 }}
+                animate={{ rotateY: 0, opacity: 1 }}
+                exit={{ rotateY: pdir > 0 ? -70 : 70, opacity: 0 }}
+                transition={{ duration: 0.45, ease: [0.45, 0.05, 0.25, 1] }}
+                style={{ originX: pdir > 0 ? 0 : 1 }}
+              >
+                {renderPage(pages[page], page % 2 ? 'right' : 'left')}
+              </motion.div>
+            )}
+          </AnimatePresence>
+          {open && <span className="phone-pager mono">{page + 1} / {pages.length} · swipe to turn</span>}
+        </div>
+        {modal}
+        {toolbar}
+      </div>
+    );
+  }
 
   const L = pages[spread * 2];
   const R = pages[spread * 2 + 1];
@@ -143,16 +260,7 @@ export default function PassportPage() {
             }}
           >
             <button className="leaf-face front cover" onClick={openBook} aria-label="Open passport">
-              <span className="cover-name serif">Rhyme</span>
-              <svg className="cover-emblem" width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
-                <circle cx="48" cy="48" r="40" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <circle cx="48" cy="48" r="33" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3" />
-                <path d="M22 54 C 34 30, 46 70, 58 44 S 74 40, 76 46" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <circle cx="22" cy="54" r="2.5" fill="currentColor" />
-                <circle cx="76" cy="46" r="2.5" fill="currentColor" />
-              </svg>
-              <span className="cover-title mono">P A S S P O R T</span>
-              <span className="cover-hint mono">click to open</span>
+              {coverFace}
             </button>
             <div className="leaf-face back">{renderPage(pages[0], 'left')}</div>
           </motion.div>
@@ -179,37 +287,8 @@ export default function PassportPage() {
         </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {expanded && (
-          <ExpandedStamp
-            s={expanded}
-            onClose={() => setExpanded(null)}
-            onShow={() => expanded.target && nav(`/?focus=${expanded.target.kind}:${expanded.target.id}`)}
-          />
-        )}
-      </AnimatePresence>
-
-      <Toolbar
-        tools={[
-          { id: 'prev', label: 'previous page', icon: <IconArrowLeft />, disabled: !open || spread === 0, onClick: () => turn('prev') },
-          { id: 'next', label: open ? 'next page' : 'open', icon: <IconArrowRight />, disabled: open && spread >= spreads - 1, onClick: () => (open ? turn('next') : openBook()) },
-          { id: 'filter', label: filter ? person(filter)!.name.split(' ')[0].toLowerCase() : 'by person', icon: <IconPerson />, active: filterOpen || !!filter, onClick: () => setFilterOpen((o) => !o) },
-        ]}
-      >
-        {filterOpen && (
-          <motion.div key="pf" className="tool-popover pp-filter" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }}>
-            <button className="chip" aria-pressed={!filter} onClick={() => setFilter(null)}>everyone</button>
-            {people.map((pid) => (
-              <button key={pid} className="chip" aria-pressed={filter === pid} onClick={() => {
-                setFilter(pid);
-                if (!open) openBook();
-              }}>
-                <MiniStamp personId={pid} size={16} /> {person(pid)!.name.split(' ')[0]}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </Toolbar>
+      {modal}
+      {toolbar}
     </div>
   );
 }

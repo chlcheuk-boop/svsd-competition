@@ -37,7 +37,7 @@ export default function MatchBoardPage() {
   const [tray, setTray] = useState(false);
   const [stampOpen, setStampOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>('idle');
-  const [drawer, setDrawer] = useState(true);
+  const [drawer, setDrawer] = useState(window.innerWidth > 900);
   // A connection drawn on someone else's board stays pending until its why is written.
   const [pending, setPending] = useState<Connection | null>(null);
 

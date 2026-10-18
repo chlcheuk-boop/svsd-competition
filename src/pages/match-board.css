@@ -233,9 +233,6 @@
   margin-top: 10px;
 }
 @media (max-width: 900px) {
-  .threads-drawer {
-    display: none;
-  }
   .crossing-banner {
     width: calc(100vw - 48px);
   }

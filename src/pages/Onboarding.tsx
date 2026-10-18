@@ -161,11 +161,18 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
   const stage = useRef<HTMLDivElement>(null);
   const [a, b] = PAIRS[round].map((id) => byId.get(id)!) as [Media, Media];
 
-  const W = 860;
-  const left: Pt = { x: 40, y: 40 };
-  const right: Pt = { x: W - 40 - sizeOf(b).w, y: 60 };
-  const anchorA: Pt = { x: left.x + sizeOf(a).w - 18, y: left.y + sizeOf(a).h / 2 };
-  const anchorB: Pt = { x: right.x + 18, y: right.y + sizeOf(b).h / 2 };
+  // side by side on wide screens; stacked on phones so the cards stay full size
+  const stacked = window.innerWidth < 640;
+  const W = stacked ? 360 : 860;
+  const H = stacked ? 520 : 340;
+  const left: Pt = stacked ? { x: 16, y: 10 } : { x: 40, y: 40 };
+  const right: Pt = stacked ? { x: W - 16 - sizeOf(b).w, y: H - 10 - sizeOf(b).h } : { x: W - 40 - sizeOf(b).w, y: 60 };
+  const anchorA: Pt = stacked
+    ? { x: left.x + sizeOf(a).w / 2, y: left.y + sizeOf(a).h - 18 }
+    : { x: left.x + sizeOf(a).w - 18, y: left.y + sizeOf(a).h / 2 };
+  const anchorB: Pt = stacked
+    ? { x: right.x + sizeOf(b).w / 2, y: right.y + 18 }
+    : { x: right.x + 18, y: right.y + sizeOf(b).h / 2 };
 
   useEffect(() => {
     setPhase('idle');
@@ -190,7 +197,7 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       const p = toLocal(ev);
-      const hit = p.x > right.x - 20 && p.y > right.y - 20 && p.y < right.y + sizeOf(b).h + 20;
+      const hit = p.x > right.x - 20 && p.x < right.x + sizeOf(b).w + 20 && p.y > right.y - 20 && p.y < right.y + sizeOf(b).h + 20;
       setPhase(hit ? 'tied' : 'idle');
       setCursor(null);
     };
@@ -228,10 +235,10 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
     <div className="ob-game">
       <span className="mono-label">connect these two · {round + 1} of {PAIRS.length}</span>
       <h2 className="serif">Do these rhyme for you?</h2>
-      <p className="mono ob-note">drag the thread from the left card to the right one, or snip if they don’t connect.</p>
+      <p className="mono ob-note">drag the thread from the {stacked ? 'top' : 'left'} card to the {stacked ? 'bottom' : 'right'} one, or snip if they don’t connect.</p>
 
-      <div className="ob-stage" ref={stage} style={{ aspectRatio: `${W} / 340` }}>
-        <svg viewBox={`0 0 ${W} 340`} className="ob-stage-svg">
+      <div className="ob-stage" ref={stage} style={{ aspectRatio: `${W} / ${H}`, maxWidth: stacked ? 360 : undefined }}>
+        <svg viewBox={`0 0 ${W} ${H}`} className="ob-stage-svg">
           <foreignObject x={left.x} y={left.y} width={sizeOf(a).w + 10} height={sizeOf(a).h + 10}>
             <div style={{ transform: `rotate(${a.rot}deg)`, margin: 4 }}><MediaCard m={a} /></div>
           </foreignObject>
