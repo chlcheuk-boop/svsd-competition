@@ -1,11 +1,9 @@
 import type { ArtSpec, CardShape, CardTint, Connection, MatchProfile, Media, MediaType, Thread } from '../types';
 import { ART } from './maya';
+import { SHAPE_FOR } from '../lib/mediaKinds';
 
 type Opts = Partial<Pick<Media, 'origin' | 'tags' | 'rot' | 'shape' | 'tint' | 'quote' | 'ref' | 'url'>>;
 
-const SHAPE_FOR: Record<MediaType, CardShape> = {
-  image: 'polaroid', music: 'punched', text: 'sticky', video: 'folded', object: 'polaroid', link: 'folded',
-};
 
 function mk(
   id: string, type: MediaType, title: string, subtitle: string, art: ArtSpec | undefined,

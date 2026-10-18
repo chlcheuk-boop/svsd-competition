@@ -11,14 +11,24 @@ import { YarnStrand } from '../components/board/Yarn';
 import { fmtMonth } from '../components/board/BoardView';
 import { MAYA, person } from '../data/people';
 import type { Media } from '../types';
+import { fmtEventDate, isWords } from '../lib/mediaKinds';
 import './thread.css';
 
 function BigMedia({ m }: { m: Media }) {
-  if (m.type === 'text') {
+  if (isWords(m.type)) {
     return (
       <div className={`tv-quote tint-${m.tint}`}>
-        <blockquote className="serif lined">{m.quote ?? m.title}</blockquote>
-        {m.subtitle && <span className="mono">— {m.subtitle}</span>}
+        <blockquote className={`serif lined ${m.type === 'moment' ? 'is-moment' : ''}`}>{m.quote ?? m.title}</blockquote>
+        {m.subtitle && <span className="mono">{m.type === 'text' ? '— ' : ''}{m.subtitle}</span>}
+      </div>
+    );
+  }
+  if (m.type === 'event') {
+    const d = fmtEventDate(m.when);
+    return (
+      <div className="tv-event">
+        <span className="mono">{d.month}</span>
+        <span className="serif">{d.day}</span>
       </div>
     );
   }
@@ -145,8 +155,9 @@ export default function ThreadPage() {
                 <BigMedia m={m} />
                 <figcaption>
                   <strong>{m.title}</strong>
-                  {m.subtitle && m.type !== 'text' && <span>{m.subtitle}</span>}
+                  {m.subtitle && !isWords(m.type) && <span>{m.subtitle}</span>}
                   {m.origin && <em className="serif">{m.origin}</em>}
+                  {m.why && <span className="tv-own-why serif">{m.why}</span>}
                 </figcaption>
                 {m.via && <span className="tv-stamp"><MiniStamp personId={m.via} size={30} /></span>}
               </motion.figure>

@@ -1,28 +1,28 @@
 import type { Accent, ArtSpec, CardShape, CardTint, Connection, Media, MediaType } from '../types';
 import { ART } from './maya';
+import { SHAPE_FOR, isWords } from '../lib/mediaKinds';
 
 /**
  * The rest of Maya's desk: three more neighborhoods around the original board.
  * Right: Japanese print and color theory. Below: Philly streets and type. Bottom-right: slow sound and film.
  */
 
-const SHAPE: Record<MediaType, CardShape> = {
-  image: 'polaroid', object: 'polaroid', music: 'punched', text: 'sticky', video: 'folded', link: 'folded',
-};
 
 function n(
   id: string, type: MediaType, title: string, subtitle: string, origin: string, x: number, y: number, addedAt: string,
-  art?: ArtSpec, o: { tags?: string[]; tint?: CardTint; shape?: CardShape; rot?: number; url?: string } = {},
+  art?: ArtSpec, o: { tags?: string[]; tint?: CardTint; shape?: CardShape; rot?: number; url?: string; why?: string; when?: string } = {},
 ): Media {
   const seed = Number(id.replace(/\D/g, ''));
   return {
     id, type, title, subtitle, origin, x, y, addedAt, art,
     tags: o.tags ?? [],
     rot: o.rot ?? ((seed * 37) % 80) / 10 - 4,
-    shape: o.shape ?? SHAPE[type],
-    tint: o.tint ?? (type === 'text' ? 'peach' : 'white'),
-    quote: type === 'text' ? title : undefined,
+    shape: o.shape ?? SHAPE_FOR[type],
+    tint: o.tint ?? (isWords(type) ? 'peach' : 'white'),
+    quote: isWords(type) ? title : undefined,
     url: o.url,
+    why: o.why,
+    when: o.when,
   };
 }
 const a = (kind: ArtSpec['kind'], colors: string[], seed: number): ArtSpec => ({ kind, colors, seed });
@@ -143,3 +143,57 @@ export const MORE_CONNECTIONS: Connection[] = [
   c('c55', 'm48', 'm46', 'the seat I would have sat in', 'pink', '2026-09-15'),
   c('c56', 'm48', 'm27', 'numbers and letters that lost their buildings', 'tangerine', '2026-09-16'),
 ];
+
+
+/* ---- above: Maya's own life, not references ---- */
+const MAP = (seed: number): ArtSpec => ({ kind: 'map', colors: ['#E9E2D3', ART.sky, ART.peach, ART.tangerine], seed });
+
+export const LIFE_MEDIA: Media[] = [
+  n('m49', 'place', 'Rittenhouse Square, north bench', 'Rittenhouse', 'where I read between classes', 120, -330, '2025-03-08',
+    MAP(49), { tags: ['philly', 'quiet'], why: 'the one place in the city that makes me slow down' }),
+  n('m50', 'photo', 'Shadow of the El on Market St', 'my phone, 5pm', 'waiting for the light to change', 430, -360, '2025-10-14',
+    a('stripes', ['#8F8A83', ART.cream, '#5E5A55', ART.cream, '#8F8A83'], 50), { tags: ['philly', 'grid', 'light'], why: 'the city drew a grid on the sidewalk for me' }),
+  n('m51', 'event', 'First Friday, Old City', 'galleries on 2nd St', 'went alone, stayed till close', 740, -320, '2026-10-02',
+    undefined, { when: '2026-10-02', tags: ['philly', 'art'], why: 'the first time I went somewhere alone and didn’t feel alone' }),
+  n('m52', 'moment', 'Someone hand-lettered “WET PAINT” better than any font I own.', 'Fitler Square, a Tuesday', 'walking to the bus', 1050, -350, '2026-05-12',
+    undefined, { tint: 'lime', tags: ['type', 'street'], why: 'proof that care beats tools' }),
+  n('m53', 'place', 'Paper Jam riso studio', 'Fishtown', 'Priya took me for my birthday', 1360, -330, '2025-09-29',
+    MAP(53), { tags: ['risograph', 'philly'], why: 'where I learned colors misbehave on purpose' }),
+  n('m54', 'photo', 'Mom’s handwriting on a grocery list', 'kitchen counter', 'stuck to the fridge for a month', 1880, -330, '2025-12-24',
+    a('gradient', [ART.cream, '#E9E2D3', ART.peach], 54), { tags: ['type', 'family'], why: 'the first typeface I ever learned to read' }),
+  n('m55', 'event', 'Zine fest, table 14', 'Philly Zine Fest', 'traded three of mine', 2190, -320, '2026-04-26',
+    undefined, { when: '2026-04-26', tags: ['risograph', 'print', 'philly'], why: 'I traded three zines and came home with a whole new palette' }),
+  n('m56', 'moment', 'The 6am El sounds like one long held note.', 'platform at 46th St', 'every weekday this fall', 2500, -350, '2026-09-08',
+    undefined, { tint: 'sky', tags: ['sound', 'transit', 'quiet'], why: 'my alarm clock and my metronome' }),
+];
+
+export const LIFE_CONNECTIONS: Connection[] = [
+  c('c57', 'm49', 'm5', 'both tell me to do less, better', 'lime', '2025-03-15'),
+  c('c58', 'm50', 'm14', 'the grid I draw on paper is already on the street', 'sky', '2025-10-15'),
+  c('c59', 'm50', 'm7', 'the same walk, two kinds of shadow', 'tangerine', '2025-10-16'),
+  c('c60', 'm51', 'm2', 'a whole street of two-color energy', 'tangerine', '2026-10-03'),
+  c('c61', 'm52', 'm11', 'the street finds its own uses for paint', 'pink', '2026-05-13'),
+  c('c62', 'm53', 'm55', 'the studio, then the table where it all went', 'pink', '2026-04-27'),
+  c('c63', 'm55', 'm18', 'Philly’s zine fest, Tokyo’s zine fair: same tables, different ink', 'pink', '2026-04-28'),
+  c('c64', 'm54', 'm17', 'two things that lived on our fridge', 'peach', '2025-12-25'),
+  c('c65', 'm56', 'm23', 'ambient music, except it’s a train', 'sky', '2026-09-09'),
+];
+
+/** Maya's own reasons for her references, separate from any string. */
+export const MEDIA_WHYS: Record<string, string> = {
+  m1: 'the reason I started collecting at all',
+  m2: 'my aunt’s wall is where I learned a poster could be a room',
+  m3: 'the sound of being driven somewhere safe',
+  m4: 'it taught me that color can hold a feeling for you',
+  m5: 'my rule for crits, and for packing',
+  m6: 'proof that design can fit in a pocket',
+  m7: 'my 7am meditation',
+  m12: 'the first thing I made that felt like mine',
+  m14: 'I learned the city through this map before I learned it on foot',
+  m29: 'a shop that’s gone and a sign that refuses to be',
+  m31: 'I keep it because it expired the day I moved here',
+  m35: 'lunch with mom, every December',
+  m46: 'my grandmother laughed at the same moments I did',
+};
+
+export const withWhys = (media: Media[]) => media.map((m) => (m.why || !MEDIA_WHYS[m.id] ? m : { ...m, why: MEDIA_WHYS[m.id] }));

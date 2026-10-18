@@ -8,7 +8,10 @@ import { Stamp, stampSize } from '../components/passport/Stamp';
 import { MiniStamp, accentVar } from '../components/ui/MiniStamp';
 import { MAYA, person } from '../data/people';
 import { QUADRANT_INFO } from '../components/tarot/TarotArt';
-import type { PassportStamp } from '../types';
+import type { Media, PassportStamp } from '../types';
+import { universe } from '../lib/lookup';
+import { Thumb } from '../components/ui/Thumb';
+import { PAST_GIVEN } from '../data/stamps';
 import { useViewport } from '../lib/useViewport';
 import './passport.css';
 
@@ -145,10 +148,12 @@ export default function PassportPage() {
   const modal = (
     <AnimatePresence>
       {expanded && (
-        <ExpandedStamp
+        <PersonRecap
           s={expanded}
+          state={state}
           onClose={() => setExpanded(null)}
-          onShow={() => expanded.target && nav(`/?focus=${expanded.target.kind}:${expanded.target.id}`)}
+          onShow={(t) => nav(`/?focus=${t.kind}:${t.id}`)}
+          onPick={openStamp}
         />
       )}
     </AnimatePresence>
@@ -432,16 +437,53 @@ function WhoPeople({ state }: { state: ReturnType<typeof useStore>['state'] }) {
   );
 }
 
-function ExpandedStamp({ s, onClose, onShow }: { s: PassportStamp; onClose: () => void; onShow: () => void }) {
+const fmtDay = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const KIND_LABEL: Record<PassportStamp['kind'], string> = {
+  crossing: 'a why from a Crossing',
+  critique: 'a critique on a thread',
+  stamp: 'a note left on your board',
+};
+
+/** Clicking a stamp opens the whole history with that person: notes, media and strings, both ways. */
+function PersonRecap({ s, state, onClose, onShow, onPick }: {
+  s: PassportStamp;
+  state: ReturnType<typeof useStore>['state'];
+  onClose: () => void;
+  onShow: (target: NonNullable<PassportStamp['target']>) => void;
+  onPick: (s: PassportStamp) => void;
+}) {
   const p = person(s.personId)!;
-  const kind = s.kind === 'crossing' ? 'a why from a Crossing' : s.kind === 'critique' ? 'a critique on a thread' : 'a stamp left on your board';
+  const first = p.name.split(' ')[0];
+  const u = universe(state);
+  const title = (id: string) => u.media.get(id)?.title ?? 'a card';
+
+  const notes = state.stamps.filter((x) => x.personId === p.id).sort((a, b) => (a.date < b.date ? -1 : 1));
+  const theirMedia = state.media.filter((m) => m.via === p.id);
+  const theirStrings = state.connections.filter((c) => c.via === p.id);
+  const contrib = state.contributions[p.id];
+  const past = PAST_GIVEN[p.id];
+  const myMedia = [
+    ...(past?.mediaIds.map((id) => state.media.find((m) => m.id === id)).filter(Boolean) as Media[] ?? []),
+    ...(contrib?.media ?? []),
+  ];
+  const myStrings = [
+    ...(past?.strings ?? []).map((x) => ({ a: x.a, b: x.b, why: x.why, date: x.date })),
+    ...(contrib?.connections ?? []).map((c) => ({ a: title(c.from), b: title(c.to), why: c.why ?? '', date: c.addedAt })),
+  ];
+  const since = notes[0]?.date;
+  const counts = [
+    `${notes.length} note${notes.length === 1 ? '' : 's'}`,
+    `${theirStrings.length + myStrings.length} strings`,
+    `${theirMedia.length + myMedia.length} things traded`,
+  ];
+
   return (
     <>
       <motion.div className="scrim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
       <motion.div
-        className="stamp-expanded"
+        className="person-recap"
         role="dialog"
-        aria-label={`Stamp from ${p.name}`}
+        aria-label={`Your history with ${p.name}`}
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 30, opacity: 0 }}
@@ -449,18 +491,87 @@ function ExpandedStamp({ s, onClose, onShow }: { s: PassportStamp; onClose: () =
         <button className="sp-close" onClick={onClose} aria-label="Close">
           <IconClose size={18} />
         </button>
-        <motion.div className="se-stamp" initial={{ scale: 1.4, rotate: -14 }} animate={{ scale: 1, rotate: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 14 }}>
-          <Stamp s={s} scale={1.25} />
-        </motion.div>
-        <div className="se-body">
-          <span className="mono-label">{kind} · {QUADRANT_INFO[s.quadrant].numeral} {QUADRANT_INFO[s.quadrant].name}</span>
-          <p className="serif se-full">{s.full}</p>
-          <span className="mono se-who">{p.name} · {p.craft} · {p.city}</span>
-          {s.target && (
-            <button className="btn btn-primary" onClick={onShow}>
-              show on my board
-            </button>
-          )}
+
+        <aside className="pr-side">
+          <motion.div key={s.id} className="se-stamp" initial={{ scale: 1.4, rotate: -14 }} animate={{ scale: 1, rotate: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 14 }}>
+            <Stamp s={s} />
+          </motion.div>
+          <div className="pr-who">
+            <Avatar size={44} label={p.initial} color={accentVar(p.color)} ink={p.color === 'tangerine' || p.color === 'pink' ? '#fff' : 'var(--ink)'} />
+            <div>
+              <h2 className="serif">{p.name}</h2>
+              <span className="mono">{p.craft} · {p.city} · {QUADRANT_INFO[s.quadrant].numeral} {QUADRANT_INFO[s.quadrant].name}</span>
+            </div>
+          </div>
+          {since && <p className="mono pr-since">crossing paths since {fmtDay(since)}</p>}
+          <p className="mono pr-counts">{counts.join(' · ')}</p>
+        </aside>
+
+        <div className="pr-main">
+          <section className="pr-this">
+            <span className="mono-label">{KIND_LABEL[s.kind]} · {fmtDay(s.date)}</span>
+            <p className="serif">{s.full}</p>
+            {s.target && (
+              <button className="btn btn-primary" onClick={() => onShow(s.target!)}>show on my board</button>
+            )}
+          </section>
+
+          <section>
+            <h3 className="mono-label">every note from {first}</h3>
+            <ol className="pr-notes">
+              {notes.map((n) => (
+                <li key={n.id}>
+                  <button className={n.id === s.id ? 'on' : ''} onClick={() => onPick(n)}>
+                    <span className="mono">{fmtDay(n.date)} · {n.kind}</span>
+                    <span className="serif">“{n.excerpt}”</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="pr-two">
+            <div>
+              <h3 className="mono-label">{first} brought you</h3>
+              {theirMedia.length === 0 && theirStrings.length === 0 && <p className="pr-empty serif">nothing yet, just notes</p>}
+              <ul className="pr-media">
+                {theirMedia.map((m) => (
+                  <li key={m.id}>
+                    <Thumb m={m} size={44} />
+                    <span><strong>{m.title}</strong>{m.origin && <em className="serif">{m.origin}</em>}</span>
+                  </li>
+                ))}
+              </ul>
+              <ul className="pr-strings">
+                {theirStrings.map((c) => (
+                  <li key={c.id}>
+                    <span className="mono">{title(c.from)} ⟶ {title(c.to)}</span>
+                    {c.why && <span className="serif">{c.why.replace(new RegExp(`^${first}: `), '')}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="mono-label">you brought {first}</h3>
+              {myMedia.length === 0 && myStrings.length === 0 && <p className="pr-empty serif">nothing yet. a Crossing would change that.</p>}
+              <ul className="pr-media">
+                {myMedia.map((m) => (
+                  <li key={m.id}>
+                    <Thumb m={m} size={44} />
+                    <span><strong>{m.title}</strong><em className="serif">from your board</em></span>
+                  </li>
+                ))}
+              </ul>
+              <ul className="pr-strings">
+                {myStrings.map((x, i) => (
+                  <li key={i}>
+                    <span className="mono">{x.a} ⟶ {x.b}</span>
+                    {x.why && <span className="serif">{x.why}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
         </div>
       </motion.div>
     </>

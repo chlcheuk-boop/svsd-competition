@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
 import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
-import { MORE_CONNECTIONS, MORE_MEDIA } from '../data/mayaMore';
+import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 
 const KEY = 'rhyme.state.v1';
@@ -36,9 +36,9 @@ export function initialState(): AppState {
     tutorialSeen: false,
     matchesSeen: false,
     matchesDealt: false,
-    media: [...MAYA_MEDIA, ...MORE_MEDIA],
-    connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS],
-    boardEdition: 4,
+    media: withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA]),
+    connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
+    boardEdition: 5,
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
     matchState: Object.fromEntries(MATCHES.map((m) => [m.personId, { flipped: false, status: 'new' } as MatchState])),
@@ -50,7 +50,7 @@ export function initialState(): AppState {
       shareMode: 'threads',
       frequency: 'weekly',
       quadrants: { 1: true, 2: true, 3: true, 4: true },
-      imports: { arena: false, pinterest: false, folder: false },
+      capture: { camera: true, library: true, location: false },
       defaultYarn: 'tangerine',
       reduceMotion: false,
     },
@@ -65,6 +65,7 @@ function load(): AppState {
     const parsed = JSON.parse(raw) as AppState;
     if (parsed.version !== 1) return initialState();
     const merged = { ...initialState(), ...parsed };
+    merged.settings = { ...initialState().settings, ...parsed.settings };
     if ((parsed.boardEdition ?? 0) < 2) {
       const haveM = new Set(merged.media.map((m) => m.id));
       const moreConn = /^c(1[4-9]|[2-5]\d)$/; // the example strings, replaced wholesale with the current set
@@ -80,7 +81,14 @@ function load(): AppState {
         return h ? { ...m, x: h.x, y: h.y } : m;
       });
     }
-    merged.boardEdition = 4;
+    if (merged.boardEdition < 5) {
+      // her own life joins the desk: places, photos, events, things she noticed, and her reasons
+      const haveM = new Set(merged.media.map((m) => m.id));
+      const haveC = new Set(merged.connections.map((c) => c.id));
+      merged.media = withWhys([...merged.media, ...LIFE_MEDIA.filter((m) => !haveM.has(m.id))]);
+      merged.connections = [...merged.connections, ...LIFE_CONNECTIONS.filter((c) => !haveC.has(c.id))];
+    }
+    merged.boardEdition = 5;
     return merged;
   } catch {
     return initialState();

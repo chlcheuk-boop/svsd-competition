@@ -1,5 +1,6 @@
 import type { Media } from '../../types';
 import { MediaArt } from '../board/MediaArt';
+import { fmtEventDate, isWords } from '../../lib/mediaKinds';
 
 /** Small square swatch of a media item, used in lists and match cards. */
 export function Thumb({ m, size = 52, title = true }: { m: Media; size?: number; title?: boolean }) {
@@ -20,10 +21,19 @@ export function Thumb({ m, size = 52, title = true }: { m: Media; size?: number;
         fontFamily: 'var(--serif)',
         fontSize: Math.max(9, size / 6),
         lineHeight: 1.1,
-        padding: m.type === 'text' ? 4 : 0,
+        padding: isWords(m.type) ? 4 : 0,
       }}
     >
-      {m.type === 'text' ? `“${m.quote ?? m.title}”` : <MediaArt art={m.art} imageData={m.imageData} title={m.title} />}
+      {isWords(m.type) ? (
+        m.type === 'text' ? `“${m.quote ?? m.title}”` : m.quote ?? m.title
+      ) : m.type === 'event' ? (
+        <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', background: 'var(--tangerine)', color: '#fff', fontFamily: 'var(--mono)', fontSize: Math.max(8, size / 6), lineHeight: 1.1 }}>
+          {fmtEventDate(m.when).month}
+          <span style={{ fontFamily: 'var(--serif)', fontSize: size / 2.6 }}>{fmtEventDate(m.when).day}</span>
+        </span>
+      ) : (
+        <MediaArt art={m.art} imageData={m.imageData} title={m.title} />
+      )}
     </span>
   );
 }

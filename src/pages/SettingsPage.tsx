@@ -10,19 +10,12 @@ import { YARN_COLORS } from './BoardPage';
 import type { Quadrant, Settings } from '../types';
 import './settings.css';
 
-const IMPORTS: { id: keyof Settings['imports']; name: string; note: string }[] = [
-  { id: 'arena', name: 'Are.na', note: 'channels become clusters; connections stay yours to tie' },
-  { id: 'pinterest', name: 'Pinterest', note: 'boards come in as loose cards, no strings attached' },
-  { id: 'folder', name: 'Local folder', note: 'drop a folder of images; origin lines left blank for you' },
-];
-
 export default function SettingsPage() {
   const { state, dispatch } = useStore();
   const nav = useNavigate();
   const toast = useToast();
   const s = state.settings;
   const set = (patch: Partial<Settings>) => dispatch({ type: 'settings', patch });
-  const [importing, setImporting] = useState<string | null>(null);
 
   return (
     <div className="page settings-page">
@@ -79,31 +72,14 @@ export default function SettingsPage() {
         </fieldset>
 
         <fieldset>
-          <legend className="serif">Imports</legend>
-          <p className="mono helper">mocked in this prototype · nothing leaves your machine</p>
-          {IMPORTS.map((imp) => (
-            <div key={imp.id} className="import-row">
-              <div>
-                <strong>{imp.name}</strong>
-                <span className="mono">{imp.note}</span>
-              </div>
-              <button
-                type="button"
-                className={`btn ${s.imports[imp.id] ? 'btn-ghost' : 'btn-primary'}`}
-                onClick={() => {
-                  if (s.imports[imp.id]) return set({ imports: { ...s.imports, [imp.id]: false } });
-                  setImporting(imp.id);
-                  window.setTimeout(() => {
-                    setImporting(null);
-                    set({ imports: { ...s.imports, [imp.id]: true } });
-                    toast({ text: `${imp.name} connected · 0 new cards (demo)` });
-                  }, 1200);
-                }}
-              >
-                {importing === imp.id ? 'connecting…' : s.imports[imp.id] ? 'disconnect' : 'connect'}
-              </button>
-            </div>
-          ))}
+          <legend className="serif">Capture</legend>
+          <p className="mono helper">Rhyme never fills your desk from a public feed. things come from your life, or from the few people you cross paths with.</p>
+          <Toggle label="Camera" hint="take a photo straight onto your board" checked={s.capture?.camera ?? true}
+            onChange={(v) => set({ capture: { ...s.capture, camera: v } })} />
+          <Toggle label="Photo library" hint="pick from your camera roll" checked={s.capture?.library ?? true}
+            onChange={(v) => set({ capture: { ...s.capture, library: v } })} />
+          <Toggle label="Location" hint="fill in where you are when you add a place" checked={s.capture?.location ?? false}
+            onChange={(v) => set({ capture: { ...s.capture, location: v } })} />
         </fieldset>
 
         <fieldset>

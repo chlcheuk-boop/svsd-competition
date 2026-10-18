@@ -1,4 +1,5 @@
-export type MediaType = 'image' | 'music' | 'text' | 'video' | 'object' | 'link';
+/** Things from your own life (photo, place, event, moment) sit alongside media (the rest). */
+export type MediaType = 'photo' | 'place' | 'event' | 'moment' | 'image' | 'music' | 'text' | 'video' | 'object' | 'link';
 export type CardShape = 'punched' | 'sticky' | 'folded' | 'polaroid';
 export type Accent = 'tangerine' | 'peach' | 'lime' | 'sky' | 'pink' | 'ink';
 export type CardTint = 'white' | 'peach' | 'lime' | 'sky' | 'deep';
@@ -6,7 +7,7 @@ export type Quadrant = 1 | 2 | 3 | 4;
 
 /** Generated placeholder art. Swap for `imageData` when a real upload exists. */
 export interface ArtSpec {
-  kind: 'bauhaus' | 'gradient' | 'stripes' | 'sun' | 'grid' | 'arch' | 'waves' | 'neon' | 'swatch' | 'token' | 'stencil' | 'dots';
+  kind: 'bauhaus' | 'gradient' | 'stripes' | 'sun' | 'grid' | 'arch' | 'waves' | 'neon' | 'swatch' | 'token' | 'stencil' | 'dots' | 'map';
   colors: string[];
   seed: number;
 }
@@ -18,6 +19,10 @@ export interface Media {
   /** artist / author / domain / label depending on type */
   subtitle?: string;
   origin?: string;
+  /** why this matters to you, on its own (separate from any string's why) */
+  why?: string;
+  /** ISO date for events */
+  when?: string;
   tags: string[];
   x: number;
   y: number;
@@ -104,7 +109,8 @@ export interface Settings {
   shareMode: 'fingerprint' | 'threads';
   frequency: 'weekly' | 'biweekly' | 'monthly';
   quadrants: Record<Quadrant, boolean>;
-  imports: { arena: boolean; pinterest: boolean; folder: boolean };
+  /** where new things can come from: only your own devices, never a public feed */
+  capture: { camera: boolean; library: boolean; location: boolean };
   defaultYarn: Accent;
   reduceMotion: boolean;
 }

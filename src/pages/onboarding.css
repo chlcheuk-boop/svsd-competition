@@ -183,3 +183,20 @@
   color: var(--ink-soft);
   margin: 0;
 }
+.ob-lede {
+  max-width: 620px;
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.ob-lede em {
+  color: var(--tangerine);
+}
+.ob-import strong {
+  font-size: 22px;
+  line-height: 1.15;
+}
+.ob-example {
+  margin-top: auto;
+}

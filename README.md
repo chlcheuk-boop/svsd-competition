@@ -1,6 +1,6 @@
 # Rhyme
 
-A visual-reference app where creatives connect the media they love with yarn, tell the story behind each connection, and meet four people a week, dealt as tarot cards.
+A board for building your own identity out of your actual life: the places you go, photos you take, events you show up to, small things you notice, and the media you love. You tie them together with yarn and write why, both for each string and for each thing on its own. Instead of a feed of everyone, you meet four people a week, dealt as tarot cards, and the inspiration they bring gets added to your life with its story attached.
 
 This is a clickable, high-fidelity prototype. It has no backend: all data is mocked in `src/data/`, and state is saved to `localStorage`.
 
@@ -25,7 +25,18 @@ After onboarding, a short board tour spotlights each tool: connections and their
 
 To reset before presenting, go to **Settings → Demo**. You can reset the board and matches, replay onboarding, or replay the board tour.
 
+## What goes on the board
+
+The **note** tool adds things from your life or media:
+
+- **From your life:** a photo (take one with the camera or pick one from your library), a place (with "use where I am"), an event (with a date), or something you noticed.
+- **Media:** image, music, film or video, quote, link, or object.
+
+Every entry can have its own **why it matters to you**. It shows when you open the card, and you can write or edit it there.
+
 ## Other features
+
+- In the **Passport**, clicking a stamp opens your whole history with that person: every note they left, the strings each of you tied on the other's board, and what you traded.
 
 - Shift-click any chain of tied cards (no length limit, each pair just needs a string) (or use **Make a thread** in the side panel) to publish a thread. The **threads** tool shows every thread traced on the board in its own color. Threads open as a vertical story with one continuous yarn running down the page.
 - **Time replay** is in the side panel and on the Profile.

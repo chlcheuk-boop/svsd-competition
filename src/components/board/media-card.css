@@ -254,3 +254,38 @@
 .shape-punched .type-label {
   display: none;
 }
+
+/* written notes: a thing you noticed reads as handwriting, not a quotation */
+.sticky-quote.is-moment {
+  font-style: italic;
+  font-size: 18px;
+}
+
+/* events: a ticket with a torn-off date */
+.punched-event {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.event-date {
+  flex: 0 0 64px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--tangerine);
+  color: #fff;
+  border-radius: 3px;
+  box-shadow: inset 0 -6px 0 rgba(0, 0, 0, 0.08);
+}
+.event-date .mono {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+.event-date .serif {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 400;
+}

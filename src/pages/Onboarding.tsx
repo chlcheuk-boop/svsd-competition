@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStore, today, uid } from '../store/store';
 import { MediaCard } from '../components/board/MediaCard';
 import { YarnStrand } from '../components/board/Yarn';
-import { IconScissors, IconUpload } from '../components/ui/icons';
+import { IconScissors } from '../components/ui/icons';
 import { bezierPath, sagCurve, sizeOf, type Pt } from '../lib/geometry';
 import { MAYA_MEDIA } from '../data/maya';
 import type { Media } from '../types';
@@ -58,10 +58,10 @@ export default function Onboarding() {
               />
             </svg>
             <motion.h1 className="serif" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-              Your taste is a story. Let’s start telling it.
+              Your life is a story. Let’s start telling it.
             </motion.h1>
             <motion.p className="mono" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-              rhyme · a desk for the things you love and the strings between them
+              rhyme · a desk for the places, things and moments that make you you
             </motion.p>
             <motion.button className="btn btn-primary ob-cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} onClick={() => setStep('import')}>
               begin
@@ -72,8 +72,8 @@ export default function Onboarding() {
         {step === 'import' && (
           <motion.section key="i" className="ob-step" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
             <span className="mono-label">step one</span>
-            <h2 className="serif">Bring what you’ve already collected.</h2>
-            <ImportCards onNext={() => setStep('game')} />
+            <h2 className="serif">Not the whole internet. Just your life.</h2>
+            <LifePrompts onNext={() => setStep('game')} />
           </motion.section>
         )}
 
@@ -99,7 +99,7 @@ export default function Onboarding() {
               <br />
               <em>{ties ? `${ties} of them are brand new.` : 'Some things don’t rhyme, and that’s fine.'}</em>
             </h2>
-            <p className="serif">Every why you write is what matching reads. On Sunday, four people arrive.</p>
+            <p className="serif">Every why you write is what matching reads. On Sunday, four people arrive: chosen for you, not everyone.</p>
             <button className="btn btn-primary ob-cta" onClick={finish}>open my board</button>
           </motion.section>
         )}
@@ -108,45 +108,40 @@ export default function Onboarding() {
   );
 }
 
-function ImportCards({ onNext }: { onNext: () => void }) {
-  const [busy, setBusy] = useState<string | null>(null);
-  const [done, setDone] = useState<string[]>([]);
-  const sources = [
-    { id: 'arena', name: 'Are.na', count: 38, note: 'channels become clusters' },
-    { id: 'pinterest', name: 'Pinterest', count: 112, note: 'boards come in as loose cards' },
-    { id: 'folder', name: 'A local folder', count: 24, note: 'images, scans, screenshots' },
+function LifePrompts({ onNext }: { onNext: () => void }) {
+  const [picked, setPicked] = useState<string[]>([]);
+  const prompts = [
+    { id: 'place', kind: 'a place', prompt: 'somewhere you keep going back to', example: 'Rittenhouse Square, north bench' },
+    { id: 'photo', kind: 'a photo', prompt: 'something from your camera roll you can’t delete', example: 'the shadow of the El on Market St' },
+    { id: 'moment', kind: 'something you noticed', prompt: 'a sound, a sign, a stranger, this week', example: 'the 6am El sounds like one long held note' },
   ];
   return (
     <>
+      <p className="serif ob-lede">
+        Other boards fill up with what everyone else is posting. Yours starts with what you actually live: places, photos, events, the small things you notice. Each one gets its own <em>why</em>.
+      </p>
       <div className="ob-imports">
-        {sources.map((s, i) => {
-          const isDone = done.includes(s.id);
+        {prompts.map((p, i) => {
+          const on = picked.includes(p.id);
           return (
             <motion.button
-              key={s.id}
-              className={`ob-import ${isDone ? 'done' : ''}`}
+              key={p.id}
+              className={`ob-import ${on ? 'done' : ''}`}
               style={{ rotate: [-2, 1.5, -1][i] }}
               whileHover={{ y: -4, rotate: 0 }}
-              onClick={() => {
-                if (isDone || busy) return;
-                setBusy(s.id);
-                window.setTimeout(() => {
-                  setBusy(null);
-                  setDone((d) => [...d, s.id]);
-                }, 1300);
-              }}
+              aria-pressed={on}
+              onClick={() => setPicked((x) => (on ? x.filter((y) => y !== p.id) : [...x, p.id]))}
             >
-              <IconUpload size={22} />
-              <strong className="serif">{s.name}</strong>
-              <span className="mono">{busy === s.id ? 'reading…' : isDone ? `${s.count} found · we picked 16 to start` : s.note}</span>
-              {busy === s.id && <motion.span className="ob-bar" initial={{ width: 0 }} animate={{ width: '100%' }} transition={{ duration: 1.2 }} />}
+              <span className="mono">{p.kind}</span>
+              <strong className="serif">{p.prompt}</strong>
+              <span className="mono ob-example">{on ? 'noted · add it with the note tool' : `like: ${p.example}`}</span>
             </motion.button>
           );
         })}
       </div>
-      <p className="mono ob-note">imports are mocked in this prototype. you’ll start with Maya’s desk.</p>
+      <p className="mono ob-note">nothing is pulled from a public feed. you’ll start with Maya’s desk in this prototype.</p>
       <button className="btn btn-primary ob-cta" onClick={onNext}>
-        {done.length ? 'next: tie a few things together' : 'I’ll add as I go'}
+        next: tie a few things together
       </button>
     </>
   );

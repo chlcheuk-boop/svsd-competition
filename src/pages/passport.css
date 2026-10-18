@@ -330,39 +330,8 @@
   font-style: italic;
   font-size: 16px;
 }
-
-.stamp-expanded {
-  position: fixed;
-  inset: 0;
-  margin: auto;
-  height: fit-content;
-  width: min(720px, calc(100vw - 32px));
-  z-index: 70;
-  background: var(--paper-deep);
-  box-shadow: var(--shadow-lift);
-  padding: 36px;
-  display: flex;
-  gap: 32px;
-  align-items: center;
-}
 .se-stamp {
   flex: none;
-}
-.se-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-}
-.se-full {
-  margin: 0;
-  font-size: 22px;
-  line-height: 1.4;
-  font-weight: 300;
-}
-.se-who {
-  font-size: 11px;
-  color: var(--ink-soft);
 }
 .pp-filter {
   flex-wrap: wrap;
@@ -376,9 +345,6 @@
 @media (max-width: 900px) {
   .book {
     --bw: calc(100vw - 24px);
-  }
-  .stamp-expanded {
-    flex-direction: column;
   }
   .pp-stamps {
     zoom: 0.7;
@@ -411,4 +377,184 @@
   text-align: center;
   font-size: 10.5px;
   color: var(--ink-soft);
+}
+
+/* recap of everything exchanged with one person */
+.person-recap {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 70;
+  width: min(940px, calc(100vw - 32px));
+  height: min(640px, calc(100dvh - 48px));
+  background: var(--paper-deep);
+  box-shadow: var(--shadow-lift);
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  overflow: hidden;
+}
+.pr-side {
+  padding: 34px 26px;
+  border-right: 1px dashed var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--paper);
+}
+.pr-side .se-stamp {
+  align-self: center;
+}
+.pr-who {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.pr-who h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.pr-who .mono,
+.pr-since,
+.pr-counts {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.pr-counts {
+  color: var(--tangerine-deep);
+}
+.pr-main {
+  overflow-y: auto;
+  padding: 30px 34px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.pr-main h3 {
+  margin: 0 0 8px;
+  font-weight: 400;
+}
+.pr-this {
+  padding: 16px 18px;
+  background: var(--card-white);
+  box-shadow: var(--shadow-paper);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.pr-this p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 300;
+}
+.pr-notes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pr-notes button {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+.pr-notes button:hover {
+  background: var(--card-white);
+}
+.pr-notes button.on {
+  background: var(--peach);
+}
+.pr-notes .mono {
+  flex: 0 0 150px;
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.pr-notes .serif {
+  font-style: italic;
+  font-size: 16px;
+}
+.pr-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.pr-media,
+.pr-strings {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pr-media li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.pr-media strong {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+}
+.pr-media em {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.pr-strings li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 12px;
+  border-left: 2.5px solid var(--tangerine);
+}
+.pr-strings .mono {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.pr-strings .serif {
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.3;
+}
+.pr-empty {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+@media (max-width: 760px) {
+  .person-recap {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    height: calc(100dvh - 32px);
+  }
+  .pr-side {
+    border-right: 0;
+    border-bottom: 1px dashed var(--rule);
+    padding: 26px 20px 18px;
+  }
+  .pr-main {
+    overflow: visible;
+    padding: 20px 18px 26px;
+  }
+  .pr-two {
+    grid-template-columns: 1fr;
+  }
+  .pr-notes button {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .pr-notes .mono {
+    flex: none;
+  }
 }

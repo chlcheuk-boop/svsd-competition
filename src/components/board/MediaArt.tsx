@@ -174,6 +174,28 @@ export function MediaArt({ art, imageData, title }: { art?: ArtSpec; imageData?:
         </>
       );
       break;
+    case 'map': {
+      // a walking-map fragment: blocks, a few streets, one river, one pin
+      const streets = [12, 34, 58, 81].map((v, i) => v + (r() * 6 - 3));
+      body = (
+        <>
+          <rect width="100" height="100" fill={a} />
+          <path d={`M-5 ${60 + r() * 10} C 30 ${50 + r() * 20}, 60 ${80 + r() * 10}, 105 ${62 + r() * 10}`} stroke={b} strokeWidth="9" fill="none" opacity=".75" />
+          {streets.map((v, i) => (
+            <path key={`v${i}`} d={`M${v} -5 L${v + (i % 2 ? 6 : -4)} 105`} stroke="#fff" strokeWidth={i === 1 ? 4 : 2.2} opacity=".9" />
+          ))}
+          {streets.map((v, i) => (
+            <path key={`h${i}`} d={`M-5 ${v} L105 ${v + (i % 2 ? -5 : 3)}`} stroke="#fff" strokeWidth={i === 2 ? 4 : 2.2} opacity=".9" />
+          ))}
+          <rect x="40" y="18" width="14" height="12" fill={c} opacity=".55" />
+          <g transform="translate(50 46)">
+            <path d="M0 0 C -9 -10, -7 -20, 0 -20 C 7 -20, 9 -10, 0 0Z" fill={d ?? '#E05E31'} stroke="#2E2C2A" strokeWidth="1.2" />
+            <circle cy="-13" r="3" fill="#fff" />
+          </g>
+        </>
+      );
+      break;
+    }
     default:
       body = <rect width="100" height="100" fill={a} />;
   }

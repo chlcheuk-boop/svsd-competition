@@ -3,11 +3,8 @@ import { MediaArt } from './MediaArt';
 import { MiniStamp } from '../ui/MiniStamp';
 import { person } from '../../data/people';
 import { sizeOf } from '../../lib/geometry';
+import { TYPE_LABEL, fmtEventDate, isWords } from '../../lib/mediaKinds';
 import './media-card.css';
-
-const TYPE_LABEL: Record<Media['type'], string> = {
-  image: 'image', music: 'music', text: 'quote', video: 'film', object: 'object', link: 'link',
-};
 
 function PlayGlyph() {
   return (
@@ -45,10 +42,10 @@ export function MediaCard({ m, showStamp = true }: { m: Media; showStamp?: boole
   } else if (m.shape === 'sticky') {
     inner = (
       <div className="sticky-body">
-        {m.type === 'text' ? (
+        {isWords(m.type) ? (
           <>
-            <blockquote className="sticky-quote lined">{m.quote ?? m.title}</blockquote>
-            {m.subtitle && <span className="sticky-attr mono">— {m.subtitle}</span>}
+            <blockquote className={`sticky-quote lined ${m.type === 'moment' ? 'is-moment' : ''}`}>{m.quote ?? m.title}</blockquote>
+            {m.subtitle && <span className="sticky-attr mono">{m.type === 'moment' ? '' : '— '}{m.subtitle}</span>}
           </>
         ) : (
           <>
@@ -85,7 +82,18 @@ export function MediaCard({ m, showStamp = true }: { m: Media; showStamp?: boole
             <span key={i} />
           ))}
         </div>
-        {m.type === 'music' ? (
+        {m.type === 'event' ? (
+          <div className="punched-event">
+            <div className="event-date">
+              <span className="mono">{fmtEventDate(m.when).month}</span>
+              <span className="serif">{fmtEventDate(m.when).day}</span>
+            </div>
+            <div>
+              <h3 className="card-title">{m.title}</h3>
+              {m.subtitle && <span className="card-sub">{m.subtitle}</span>}
+            </div>
+          </div>
+        ) : m.type === 'music' ? (
           <div className="punched-music">
             <div className="album">
               <MediaArt art={m.art} imageData={m.imageData} title={m.title} />

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import type { Connection, Media } from '../../types';
 import { MediaArt } from './MediaArt';
+import { isWords } from '../../lib/mediaKinds';
 import { IconClose, IconPause, IconPlay } from '../ui/icons';
 import { fmtMonth } from './BoardView';
 import './board-extras.css';
@@ -48,7 +49,7 @@ export function ThreadComposer({
               <li key={id}>
                 <div className="tc-item">
                   <div className="tc-thumb">
-                    {m.type === 'text' ? <span className="serif">“{m.title}”</span> : <MediaArt art={m.art} imageData={m.imageData} />}
+                    {isWords(m.type) || m.type === 'event' ? <span className="serif">{m.type === 'text' ? `“${m.title}”` : m.title}</span> : <MediaArt art={m.art} imageData={m.imageData} />}
                   </div>
                   <span className="tc-name">{m.title}</span>
                 </div>

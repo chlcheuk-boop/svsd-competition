@@ -394,6 +394,7 @@ export default function BoardPage() {
               setSelected(null);
               setReplayIdx(0);
             }}
+            onWhy={(text) => dispatch({ type: 'updateMedia', id: selectedMedia.id, patch: { why: text || undefined } })}
             onRemove={() => {
               dispatch({ type: 'removeMedia', id: selectedMedia.id });
               setSelected(null);

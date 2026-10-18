@@ -154,10 +154,10 @@ const STEPS: Step[] = [
   },
   {
     target: '[data-tool="note"]',
-    kicker: '3 · adding notes',
-    title: 'Add a new reference',
-    body: <>Open a <b>note</b> (<kbd>Ctrl</kbd>+<kbd>N</kbd>): upload or drop an image, paste a link, or type a quote. Give it a title and an <em>origin line</em> (where, when, who showed you), then click anywhere on the board to drop it.</>,
-    why: <>A new card is a loose end. Tie it to something so it counts.</>,
+    kicker: '3 · adding to your life',
+    title: 'Add something from your life',
+    body: <>Open a <b>note</b> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) and pick what it is: a <b>photo</b> (take one or choose from your camera roll), a <b>place</b>, an <b>event</b>, <b>something you noticed</b>, or media you’re into. Add an origin line (where, when, who showed you), then tap the board to drop it.</>,
+    why: <>Give it its own <em>why</em>, even before it’s tied to anything. Open any card later to read or edit it. Your board is built from your life, not from a feed.</>,
     art: <ArtNote />,
   },
   {
@@ -171,15 +171,15 @@ const STEPS: Step[] = [
   {
     target: '[data-nav="matches"]',
     kicker: '5 · matching',
-    title: 'Four people, every week',
-    body: <>Each week you’re dealt four tarot cards, one from every corner of two questions: <em>what do you collect</em>, and <em>how do you connect it</em>. The Mirror, The Lens, The Parallel, The Stranger. Flip them, view their boards, and start a <b>Crossing</b>: you each add one string, with a why, to the other’s board.</>,
+    title: 'A few people, not everyone',
+    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: <em>what do you collect</em>, and <em>how do you connect it</em>. The Mirror, The Lens, The Parallel, The Stranger. Flip them, view their boards, and start a <b>Crossing</b>: you each add one string, with a why, to the other’s board.</>,
     art: <ArtMatches />,
   },
   {
     target: '[data-nav="passport"]',
     kicker: '6 · the passport',
     title: 'Where other people leave their mark',
-    body: <>Every comment from a past connection lands in your passport as a stamp: whys from Crossings, notes left on your board, critiques on your threads. Click a stamp to read it in full and jump to the string it touched. At the back: <em>who changed you</em> this year.</>,
+    body: <>Every comment from a past connection lands in your passport as a stamp: whys from Crossings, notes left on your board, critiques on your threads. Click a stamp for the whole story with that person: every note, every string, and everything you traded. At the back: <em>who changed you</em> this year.</>,
     art: <ArtPassport />,
   },
   {

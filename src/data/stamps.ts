@@ -75,3 +75,27 @@ export const KENJI_PASSPORT_STAMP: PassportStamp = {
   full: `Crossing with Kenji: “The Shinjuku handbill was ${KENJI_GIFT_WHY}”`,
   target: { kind: 'connection', id: 'ck1' }, fresh: true,
 };
+
+/**
+ * Maya's side of past exchanges: which of her things she brought to each person's board,
+ * and the strings she tied there. (Their side lives on her board as `via` media and strings.)
+ */
+export const PAST_GIVEN: Record<string, { mediaIds: string[]; strings: { a: string; b: string; why: string; date: string }[] }> = {
+  ines: {
+    mediaIds: ['m8'],
+    strings: [{ a: 'Talavera tile, Puebla', b: 'Riso ink color chart', why: 'the glaze bleeds the way riso does', date: '2026-05-20' }],
+  },
+  saskia: {
+    mediaIds: ['m7'],
+    strings: [{ a: 'Kunsthal ramp', b: 'Garage signage, 13th St', why: 'concrete that tells you where to go', date: '2026-07-01' }],
+  },
+  june: {
+    mediaIds: ['m13'],
+    strings: [{ a: 'Night bus timelapse', b: 'Koyaanisqatsi', why: 'the same city at forty times the speed', date: '2026-02-26' }],
+  },
+  rafa: {
+    mediaIds: [],
+    strings: [{ a: 'Kiln-cracked bowl', b: 'Riso ink color chart', why: 'you never get the color you asked for', date: '2026-01-07' }],
+  },
+  theo: { mediaIds: [], strings: [] },
+};

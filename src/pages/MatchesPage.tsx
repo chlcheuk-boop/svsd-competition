@@ -199,7 +199,7 @@ export default function MatchesPage() {
         <span className="mono-label">week of oct 12 · 2026</span>
         <h1 className="serif">Matches of the week</h1>
         <p className="serif">
-          Four people, one from each corner of your taste. Read from what you <em>collect</em> and how you <em>connect</em> it.
+          Not a feed. Four people, picked from a small circle, each here to add something to your life. Read from what you <em>collect</em> and how you <em>connect</em> it.
         </p>
         <ul className="legend">
           {ordered.map((m) => {

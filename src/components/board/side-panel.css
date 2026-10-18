@@ -200,3 +200,82 @@
   margin-top: 6px;
   font-size: 12px;
 }
+
+/* the card's own why */
+.sp-own-why {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 16px 12px;
+  background: var(--peach);
+  text-align: left;
+  transform: rotate(-0.6deg);
+  box-shadow: var(--shadow-paper);
+}
+.sp-own-why .mono,
+.sp-own-why label {
+  display: block;
+  font-size: 10.5px;
+  color: var(--tangerine-deep);
+  margin-bottom: 4px;
+}
+.sp-own-why p {
+  margin: 0;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.35;
+}
+.sp-own-why.add {
+  background: transparent;
+  border: 1.5px dashed var(--peach-deep);
+  box-shadow: none;
+}
+.sp-own-why.add .serif {
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ink-soft);
+}
+.sp-own-why.add:hover {
+  background: var(--peach);
+}
+.sp-own-why textarea {
+  width: 100%;
+  border: 0;
+  outline: none;
+  resize: none;
+  background-color: transparent;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 28px;
+}
+.sp-own-why-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+.sp-own-why-actions .btn,
+.sp-own-why-edit {
+  height: 30px;
+}
+.sp-own-why-edit {
+  margin-top: 4px;
+  padding: 0;
+  font-size: 12px;
+}
+.sp-event {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--tangerine);
+  color: #fff;
+}
+.sp-event .serif {
+  font-size: 96px;
+  line-height: 1;
+}
+.sp-event .mono {
+  letter-spacing: 0.14em;
+}

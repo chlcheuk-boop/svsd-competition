@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import type { Connection, Media, PassportStamp } from '../../types';
 import { MediaArt } from './MediaArt';
 import { MiniStamp } from '../ui/MiniStamp';
 import { person } from '../../data/people';
 import { IconArrowLeft, IconArrowRight, IconClock, IconClose, IconEye, IconThread } from '../ui/icons';
 import { fmtMonth } from './BoardView';
+import { TYPE_LABEL, fmtEventDate, isWords } from '../../lib/mediaKinds';
 import './side-panel.css';
 
 interface Props {
@@ -19,10 +21,18 @@ interface Props {
   onMakeThread?: () => void;
   onReplay?: () => void;
   onRemove?: () => void;
+  /** save the card's own why; omitted on boards you can't edit */
+  onWhy?: (text: string) => void;
   readOnly?: boolean;
 }
 
-export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose, onJump, onRipple, onMakeThread, onReplay, onRemove, readOnly }: Props) {
+export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose, onJump, onRipple, onMakeThread, onReplay, onRemove, onWhy, readOnly }: Props) {
+  const [editingWhy, setEditingWhy] = useState(false);
+  const [whyDraft, setWhyDraft] = useState(m.why ?? '');
+  useEffect(() => {
+    setEditingWhy(false);
+    setWhyDraft(m.why ?? '');
+  }, [m.id, m.why]);
   const phone = window.innerWidth < 640; // slides up as a sheet on phones
   const byId = new Map(media.map((x) => [x.id, x]));
   const mine = connections.filter((c) => c.from === m.id || c.to === m.id);
@@ -43,11 +53,17 @@ export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose
       <button className="sp-close" onClick={onClose} aria-label="Close panel">
         <IconClose size={18} />
       </button>
-      <span className="mono sp-kind">{m.type} · added {fmtMonth(m.addedAt)}</span>
+      <span className="mono sp-kind">{TYPE_LABEL[m.type]} · added {fmtMonth(m.addedAt)}</span>
 
-      <div className={`sp-media ${m.type === 'text' ? 'is-text tint-' + m.tint : ''}`}>
-        {m.type === 'text' ? (
-          <blockquote className="serif">“{m.quote ?? m.title}”</blockquote>
+      <div className={`sp-media ${isWords(m.type) ? 'is-text tint-' + m.tint : ''}`}>
+        {isWords(m.type) ? (
+          <blockquote className="serif">{m.type === 'text' ? `“${m.quote ?? m.title}”` : m.quote ?? m.title}</blockquote>
+        ) : m.type === 'event' ? (
+          <div className="sp-event">
+            <span className="mono">{fmtEventDate(m.when).month}</span>
+            <span className="serif">{fmtEventDate(m.when).day}</span>
+            {m.when && <span className="mono">{new Date(m.when + 'T12:00:00').getFullYear()}</span>}
+          </div>
         ) : (
           <MediaArt art={m.art} imageData={m.imageData} title={m.title} />
         )}
@@ -61,6 +77,40 @@ export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose
         </a>
       )}
       {m.origin && <p className="sp-origin">{m.origin}</p>}
+
+      {/* the card's own why: shown here, when you open it */}
+      {editingWhy ? (
+        <div className="sp-own-why editing">
+          <label className="mono" htmlFor="sp-why-input">why it matters to you</label>
+          <textarea
+            id="sp-why-input"
+            className="serif lined"
+            rows={3}
+            autoFocus
+            value={whyDraft}
+            placeholder="this matters to me because…"
+            onChange={(e) => setWhyDraft(e.target.value)}
+          />
+          <div className="sp-own-why-actions">
+            <button className="btn btn-primary" onClick={() => {
+              onWhy?.(whyDraft.trim());
+              setEditingWhy(false);
+            }}>save</button>
+            <button className="btn btn-quiet" onClick={() => setEditingWhy(false)}>cancel</button>
+          </div>
+        </div>
+      ) : m.why ? (
+        <div className="sp-own-why">
+          <span className="mono">why it matters to {readOnly ? 'them' : 'you'}</span>
+          <p className="serif">{m.why}</p>
+          {onWhy && !readOnly && <button className="btn btn-quiet sp-own-why-edit" onClick={() => setEditingWhy(true)}>edit</button>}
+        </div>
+      ) : onWhy && !readOnly ? (
+        <button className="sp-own-why add" onClick={() => setEditingWhy(true)}>
+          <span className="mono">why it matters to you</span>
+          <span className="serif">add a reason, just for this one…</span>
+        </button>
+      ) : null}
       {m.tags.length > 0 && (
         <div className="sp-tags">
           {m.tags.map((t) => (
