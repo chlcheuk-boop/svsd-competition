@@ -181,3 +181,8 @@ export const IconTicket = (p: P) => (
     <path d="M14.6 7.4v9.2" strokeDasharray="1.4 1.8" />
   </Svg>
 );
+export const IconGrid = (p: P) => (
+  <Svg {...p}>
+    <path d="M4.2 4.3h6.1v6H4.3zM13.7 4.2h6.1v6.1h-6zM4.3 13.7h6v6.1H4.2zM13.8 13.8h6v6h-6.1z" />
+  </Svg>
+);

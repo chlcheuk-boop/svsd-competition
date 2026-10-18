@@ -290,3 +290,36 @@
   font-size: 11px;
   width: 48px;
 }
+
+/* labeled grid sections (arranged views) */
+.board-section {
+  position: absolute;
+  border-top: 1.5px solid var(--ink);
+  background: linear-gradient(rgba(241, 238, 233, 0.55), rgba(241, 238, 233, 0));
+  pointer-events: none;
+}
+.board-section h3 {
+  position: absolute;
+  left: 22px;
+  top: 10px;
+  margin: 0;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--ink);
+}
+.board-section .bs-group {
+  position: absolute;
+  left: 22px;
+  top: -22px;
+  font-size: 12px;
+  color: var(--tangerine);
+  letter-spacing: 0.06em;
+}
+.board-section .bs-count {
+  position: absolute;
+  right: 22px;
+  top: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}

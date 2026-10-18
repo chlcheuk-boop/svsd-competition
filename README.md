@@ -36,6 +36,8 @@ Every entry can have its own **why it matters to you**. It shows when you open t
 
 ## Other features
 
+- **Arrange** on the board toolbar switches between a tidy grid **by kind** (the default: places, photos, events, things noticed, then each kind of media), a grid **by theme**, and **my layout**, where you place and drag cards by hand. The grids keep cards straight so only the yarn is loose.
+
 - In the **Passport**, clicking a stamp opens your whole history with that person: every note they left, the strings each of you tied on the other's board, and what you traded.
 
 - Shift-click any chain of tied cards (no length limit, each pair just needs a string) (or use **Make a thread** in the side panel) to publish a thread. The **threads** tool shows every thread traced on the board in its own color. Threads open as a vertical story with one continuous yarn running down the page.

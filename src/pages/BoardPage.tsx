@@ -7,7 +7,8 @@ import { NoteComposer } from '../components/board/NoteComposer';
 import { SidePanel } from '../components/board/SidePanel';
 import { FirstArrow, ReplayBar, ThreadComposer, findLink, useReplay } from '../components/board/BoardExtras';
 import { Toolbar, useToast } from '../components/ui/Frame';
-import { IconNote, IconScissors, IconThread, IconYarn } from '../components/ui/icons';
+import { IconGrid, IconNote, IconScissors, IconThread, IconYarn } from '../components/ui/icons';
+import { arrange } from '../lib/arrange';
 import { ThreadsDrawer, THREAD_COLORS } from '../components/board/ThreadsDrawer';
 import { Tutorial } from '../components/board/Tutorial';
 import { accentVar } from '../components/ui/MiniStamp';
@@ -60,6 +61,7 @@ export default function BoardPage() {
   const [replayIdx, setReplayIdx] = useState<number | null>(null);
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const [threadsView, setThreadsView] = useState(false);
+  const [arrangeOpen, setArrangeOpen] = useState(false);
   const [activeThread, setActiveThread] = useState<string | null>(null);
   const [frame, setFrame] = useState<{ ids: string[]; nonce: number } | null>(null);
 
@@ -146,9 +148,11 @@ export default function BoardPage() {
 
   /* replay filtering */
   const replayDate = replayIdx !== null ? dates[replayIdx] : null;
+  // arranged views lay the whole desk on a grid first, so replay fills the grid in place
+  const arranged = useMemo(() => arrange(state.arrange, state.media), [state.arrange, state.media]);
   const visibleMedia = useMemo(
-    () => (replayDate ? state.media.filter((m) => m.addedAt <= replayDate) : state.media),
-    [state.media, replayDate],
+    () => (replayDate ? arranged.media.filter((m) => m.addedAt <= replayDate) : arranged.media),
+    [arranged, replayDate],
   );
   const visibleConns = useMemo(() => {
     if (!replayDate) return state.connections;
@@ -240,7 +244,7 @@ export default function BoardPage() {
     dispatch({ type: 'addMedia', media: m });
     setDraft(null);
     setMode('select');
-    toast({ text: 'placed · now tie it to something with yarn' });
+    toast({ text: state.arrange === 'free' ? 'placed · now tie it to something with yarn' : 'added · it’s filed in its section. tie it to something with yarn' });
   };
 
   const onCardClick = (id: string, { shift }: { shift: boolean }) => {
@@ -289,7 +293,7 @@ export default function BoardPage() {
   };
 
   const whyConn = whyFor ? state.connections.find((c) => c.id === whyFor.id) : undefined;
-  const byId = useMemo(() => new Map(state.media.map((m) => [m.id, m])), [state.media]);
+  const byId = useMemo(() => new Map(arranged.media.map((m) => [m.id, m])), [arranged]);
   const selectedMedia = selected ? byId.get(selected) : undefined;
 
   const screenOverlay = useCallback(
@@ -325,8 +329,11 @@ export default function BoardPage() {
   return (
     <>
       <BoardView
+        key={state.arrange}
         maskPrefix="mine"
         media={visibleMedia}
+        sections={arranged.sections}
+        editable={state.arrange === 'free'}
         connections={visibleConns}
         tool={boardTool}
         yarnColor={state.yarnColor}
@@ -463,8 +470,30 @@ export default function BoardPage() {
           { id: 'scissors', label: 'scissors', icon: <IconScissors />, active: mode === 'scissors', onClick: () => pickTool('scissors') },
           { id: 'note', label: 'note', icon: <IconNote />, active: mode === 'note' || mode === 'place', onClick: () => pickTool('note') },
           { id: 'threads', label: 'threads', icon: <IconThread />, active: threadsView, onClick: toggleThreads },
+          { id: 'arrange', label: 'arrange', icon: <IconGrid />, active: arrangeOpen, onClick: () => setArrangeOpen((o) => !o) },
         ]}
       >
+        {arrangeOpen && (
+          <motion.div key="arr" className="tool-popover arrange-pop" role="radiogroup" aria-label="Arrange the board"
+            initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }}>
+            {([['free', 'my layout'], ['kind', 'by kind'], ['theme', 'by theme']] as const).map(([v, label]) => (
+              <button
+                key={v}
+                className="chip"
+                role="radio"
+                aria-checked={state.arrange === v}
+                aria-pressed={state.arrange === v}
+                onClick={() => {
+                  dispatch({ type: 'patch', patch: { arrange: v } });
+                  setArrangeOpen(false);
+                  if (v !== 'free') toast({ text: 'sorted into a grid · switch to my layout to move cards by hand' });
+                }}
+              >
+                {label}
+              </button>
+            ))}
+          </motion.div>
+        )}
         {mode === 'yarn' && (
           <YarnSwatches key="sw" value={state.yarnColor} onChange={(c) => dispatch({ type: 'patch', patch: { yarnColor: c } })} />
         )}

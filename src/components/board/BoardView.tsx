@@ -10,6 +10,7 @@ import { YarnStrand, YARN_HEX } from './Yarn';
 import { MiniStamp } from '../ui/MiniStamp';
 import { person } from '../../data/people';
 import { IconMinus, IconPlus } from '../ui/icons';
+import type { Section } from '../../lib/arrange';
 import './board.css';
 
 export type BoardTool = 'select' | 'yarn' | 'scissors' | 'place';
@@ -50,6 +51,8 @@ export interface BoardViewProps {
   frame?: { ids: string[]; nonce: number } | null;
   /** Colored traces drawn under specific strings (e.g. threads). */
   traces?: { connectionIds: string[]; color: Accent }[];
+  /** labeled frames drawn under the cards when the desk is arranged on a grid */
+  sections?: Section[];
   placeGhost?: Media | null;
   /** Rendered above the canvas in screen space; receives a world→screen mapper. */
   screenOverlay?: (toScreen: (p: Pt) => Pt, cam: Camera) => ReactNode;
@@ -79,7 +82,7 @@ export default function BoardView(props: BoardViewProps) {
   const {
     media, connections, tool, yarnColor, editable = true, maskPrefix, onMove, onConnect, onSnip, onCardClick,
     onPlace, onTagClick, onBackgroundClick, selectedId, pathSelection = [], emphasis, glow, backdrop, focus,
-    frame, traces, placeGhost, screenOverlay, initialCamera, onCamera,
+    frame, traces, sections, placeGhost, screenOverlay, initialCamera, onCamera,
   } = props;
 
   const viewport = useRef<HTMLDivElement>(null);
@@ -114,6 +117,12 @@ export default function BoardView(props: BoardViewProps) {
     const el = viewport.current;
     if (!el) return;
     const b = boundsOf(media);
+    // leave room for section labels above the first row
+    for (const sec of sections ?? []) {
+      b.minY = Math.min(b.minY, sec.y - 34);
+      b.minX = Math.min(b.minX, sec.x);
+      b.maxX = Math.max(b.maxX, sec.x + sec.w);
+    }
     const vw = el.clientWidth;
     const vh = el.clientHeight;
     const phone = vw < 640;
@@ -518,6 +527,14 @@ export default function BoardView(props: BoardViewProps) {
     >
       <div className="board-world" style={{ transform: `translate(${cam.x}px, ${cam.y}px) scale(${cam.z})` }}>
         {backdrop && <Backdrop board={backdrop} />}
+
+        {sections?.map((sec) => (
+          <div key={sec.key} className="board-section" style={{ left: sec.x, top: sec.y, width: sec.w, height: sec.h }} aria-hidden="true">
+            {sec.group && <span className="mono bs-group">{sec.group}</span>}
+            <h3 className="serif">{sec.label}</h3>
+            <span className="mono bs-count">{sec.count}</span>
+          </div>
+        ))}
 
         {media.map((m, i) => {
           const isSel = selectedId === m.id;

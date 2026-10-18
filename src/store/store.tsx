@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
+import type { Arrange } from '../lib/arrange';
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
 import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
@@ -14,6 +15,8 @@ export interface AppState {
   tutorialSeen: boolean;
   /** saved boards from before the desk grew get the new references merged in once */
   boardEdition: number;
+  /** how the personal board is laid out: your own placement, or a tidy grid by kind or theme */
+  arrange: Arrange;
   matchesSeen: boolean;
   matchesDealt: boolean;
   media: Media[];
@@ -39,6 +42,7 @@ export function initialState(): AppState {
     media: withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA]),
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
     boardEdition: 5,
+    arrange: 'kind',
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
     matchState: Object.fromEntries(MATCHES.map((m) => [m.personId, { flipped: false, status: 'new' } as MatchState])),
