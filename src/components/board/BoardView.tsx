@@ -512,6 +512,50 @@ export default function BoardView(props: BoardViewProps) {
     return <rect x={m.x} y={m.y} width={w} height={h} fill={fill} transform={`rotate(${rotOf(m)} ${c.x} ${c.y})`} />;
   };
 
+  /* which strings lift above the cards: anything you're looking at */
+  const raised = new Set<string>();
+  const liftAround = (mid?: string | null) => {
+    if (!mid) return;
+    geo.forEach((g) => (g.c.from === mid || g.c.to === mid) && raised.add(g.c.id));
+  };
+  liftAround(hovered);
+  liftAround(selectedId);
+  liftAround(dragging);
+  if (pulse) {
+    raised.add(pulse);
+    liftAround(pulse);
+  }
+  if (emphasis) geo.forEach((g) => emphasis.has(g.c.id) && raised.add(g.c.id));
+  glow?.forEach((id) => raised.add(id));
+  traceColor.forEach((_, id) => raised.add(id));
+  if (tool === 'scissors' && cut) raised.add(cut.id);
+
+  const underCard = (p: Pt) =>
+    media.some((m) => {
+      const { w, h } = sizeOf(m);
+      return p.x > m.x - 6 && p.x < m.x + w + 6 && p.y > m.y - 6 && p.y < m.y + h + 6;
+    });
+
+  const span = (g: (typeof geo)[number], above: boolean) => {
+    const { c, curve } = g;
+    const d = bezierPath(curve);
+    // above the cards the span is masked where it passes under its own two cards
+    const mask = above ? `url(#${maskPrefix}-${c.id})` : undefined;
+    const isGlow = glow?.has(c.id);
+    const isPulse = pulse === c.id;
+    return (
+      <g key={c.id} opacity={dimmed(c.id) ? 0.16 : 1} style={{ transition: 'opacity .3s' }}>
+        {traceColor.has(c.id) && (
+          <path d={d} fill="none" style={{ stroke: YARN_HEX[traceColor.get(c.id)!].base }} strokeWidth={13} strokeLinecap="round" opacity={0.28} mask={mask} />
+        )}
+        {(isGlow || isPulse) && (
+          <path d={d} fill="none" className={isPulse ? 'yarn-pulse' : 'yarn-glow'} strokeWidth={14} strokeLinecap="round" mask={mask} />
+        )}
+        <YarnStrand d={d} color={c.color} mask={mask} />
+      </g>
+    );
+  };
+
   const cursorClass = spaceDown ? 'tool-pan' : `tool-${tool}`;
 
   return (
@@ -535,6 +579,11 @@ export default function BoardView(props: BoardViewProps) {
             <span className="mono bs-count">{sec.count}</span>
           </div>
         ))}
+
+        {/* strings run under the paper by default */}
+        <svg className="yarn-layer under" width="1" height="1" aria-hidden="true">
+          {geo.filter((g) => !raised.has(g.c.id)).map((g) => span(g, false))}
+        </svg>
 
         {media.map((m, i) => {
           const isSel = selectedId === m.id;
@@ -606,58 +655,52 @@ export default function BoardView(props: BoardViewProps) {
             ))}
           </defs>
 
-          {geo.map(({ c, ha, hb, curve }) => {
-            const d = bezierPath(curve);
-            const isGlow = glow?.has(c.id);
-            const isPulse = pulse === c.id;
-            const op = dimmed(c.id) ? 0.16 : 1;
-            return (
-              <g key={c.id} opacity={op} style={{ transition: 'opacity .3s' }}>
-                {traceColor.has(c.id) && (
-                  <path d={d} fill="none" style={{ stroke: YARN_HEX[traceColor.get(c.id)!].base }} strokeWidth={13} strokeLinecap="round" opacity={0.28} mask={`url(#${maskPrefix}-${c.id})`} />
-                )}
-                {(isGlow || isPulse) && (
-                  <path d={d} fill="none" className={isPulse ? 'yarn-pulse' : 'yarn-glow'} strokeWidth={14} strokeLinecap="round" mask={`url(#${maskPrefix}-${c.id})`} />
-                )}
-                <YarnStrand d={d} color={c.color} mask={`url(#${maskPrefix}-${c.id})`} />
-                {/* stitches: the thread surfaces at the outer hole and dives at the inner one */}
-                {[ha, hb].map((h, i) => (
-                  <g key={i}>
-                    <YarnStrand d={`M${h.outer.x},${h.outer.y} Q${(h.outer.x + h.inner.x) / 2 + 1},${(h.outer.y + h.inner.y) / 2 - 1.5} ${h.inner.x},${h.inner.y}`} color={c.color} width={2.6} />
-                    <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(46,44,42,.55)" />
-                    <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(46,44,42,.55)" />
-                    <circle cx={h.inner.x} cy={h.inner.y} r={1.2} fill={YARN_HEX[c.color].deep} />
-                  </g>
-                ))}
-                {tool === 'scissors' && (
-                  <path
-                    d={d}
-                    className="yarn-hit"
-                    fill="none"
-                    stroke="transparent"
-                    strokeWidth={20}
-                    mask={`url(#${maskPrefix}-${c.id})`}
-                    onPointerMove={(e) => setCut({ id: c.id, pt: toWorld(e.clientX, e.clientY) })}
-                    onPointerLeave={() => setCut((x) => (x?.id === c.id ? null : x))}
-                    onPointerDown={(e) => {
-                      e.stopPropagation();
-                      releaseTouch(e);
-                      snipping.current = true;
-                      const up = () => {
-                        snipping.current = false;
-                        window.removeEventListener('pointerup', up);
-                      };
-                      window.addEventListener('pointerup', up);
-                      snip(c, toWorld(e.clientX, e.clientY));
-                    }}
-                    onPointerEnter={(e) => {
-                      if (snipping.current && e.buttons === 1) snip(c, toWorld(e.clientX, e.clientY));
-                    }}
-                  />
-                )}
-              </g>
-            );
-          })}
+          {/* strings lifted above the cards: the ones you're looking at */}
+          {geo.filter((g) => raised.has(g.c.id)).map((g) => span(g, true))}
+
+          {/* stitches always sit on the paper, so you can see what each card is tied to */}
+          {geo.map(({ c, ha, hb }) => (
+            <g key={`st-${c.id}`} opacity={dimmed(c.id) ? 0.16 : 1} style={{ transition: 'opacity .3s' }}>
+              {[ha, hb].map((h, i) => (
+                <g key={i}>
+                  <YarnStrand d={`M${h.outer.x},${h.outer.y} Q${(h.outer.x + h.inner.x) / 2 + 1},${(h.outer.y + h.inner.y) / 2 - 1.5} ${h.inner.x},${h.inner.y}`} color={c.color} width={2.6} />
+                  <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(46,44,42,.55)" />
+                  <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(46,44,42,.55)" />
+                  <circle cx={h.inner.x} cy={h.inner.y} r={1.2} fill={YARN_HEX[c.color].deep} />
+                </g>
+              ))}
+            </g>
+          ))}
+
+          {/* scissors can find every string, even the ones running under cards */}
+          {tool === 'scissors' &&
+            geo.map(({ c, curve }) => (
+              <path
+                key={`hit-${c.id}`}
+                d={bezierPath(curve)}
+                className="yarn-hit"
+                fill="none"
+                stroke="transparent"
+                strokeWidth={20}
+                mask={`url(#${maskPrefix}-${c.id})`}
+                onPointerMove={(e) => setCut({ id: c.id, pt: toWorld(e.clientX, e.clientY) })}
+                onPointerLeave={() => setCut((x) => (x?.id === c.id ? null : x))}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  releaseTouch(e);
+                  snipping.current = true;
+                  const up = () => {
+                    snipping.current = false;
+                    window.removeEventListener('pointerup', up);
+                  };
+                  window.addEventListener('pointerup', up);
+                  snip(c, toWorld(e.clientX, e.clientY));
+                }}
+                onPointerEnter={(e) => {
+                  if (snipping.current && e.buttons === 1) snip(c, toWorld(e.clientX, e.clientY));
+                }}
+              />
+            ))}
 
           {/* hovered string for scissors: highlight + dotted cut mark */}
           {tool === 'scissors' && cut && (() => {
@@ -695,9 +738,13 @@ export default function BoardView(props: BoardViewProps) {
             const st = pointAt(curve, 0.28);
             const via = c.via ? person(c.via) : undefined;
             const op = dimmed(c.id) ? 0.16 : 1;
+            // a string running under a card keeps its tag and charm out of sight until it's lifted
+            const up = raised.has(c.id);
+            const showTag = up || !underCard(mid);
+            const showStamp = up || !underCard(st);
             return (
               <div key={c.id} style={{ opacity: op, transition: 'opacity .3s' }}>
-                {c.why && (
+                {c.why && showTag && (
                   <WhyTag
                     pt={mid}
                     text={c.why}
@@ -705,7 +752,7 @@ export default function BoardView(props: BoardViewProps) {
                     onClick={onTagClick ? () => onTagClick(c.id) : undefined}
                   />
                 )}
-                {via && (
+                {via && showStamp && (
                   <div className="string-stamp" style={{ left: st.x, top: st.y }}>
                     <MiniStamp personId={via.id} size={24} />
                     <span className="string-stamp-label mono">

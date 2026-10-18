@@ -323,3 +323,6 @@
   font-size: 13px;
   color: var(--ink-soft);
 }
+.yarn-layer.under {
+  z-index: 0;
+}
