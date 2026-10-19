@@ -7,14 +7,17 @@
 
 .book {
   --bw: min(1100px, calc(100vw - 120px));
-  --bh: min(660px, calc(100vh - 264px));
-  /* centered between the top bar (ends 66px down) and the toolbar (starts 78px up): ~60px clear on each side */
+  /* the book reaches up toward the top bar (28px clear) and keeps 60px above the toolbar */
   --top-bar: 66px;
   --tool-room: 78px;
+  --gap-top: 28px;
+  --gap-bottom: 60px;
+  --bh: min(760px, calc(100vh - var(--top-bar) - var(--tool-room) - var(--gap-top) - var(--gap-bottom)));
   /* the side tabs add ~34px on the right; shift left by half so book + tabs sit in the middle */
   --tab-nudge: 17px;
   position: absolute;
-  top: calc(var(--top-bar) + (100vh - var(--top-bar) - var(--tool-room) - var(--bh)) / 2);
+  /* on very tall screens, where the book hits its max height, the extra room is split evenly */
+  top: calc(var(--top-bar) + var(--gap-top) + max(0px, (100vh - var(--top-bar) - var(--tool-room) - var(--gap-top) - var(--gap-bottom) - var(--bh)) / 2));
   left: 50%;
   width: var(--bw);
   height: var(--bh);
