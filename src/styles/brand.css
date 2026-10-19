@@ -89,7 +89,9 @@ html body .board-section h3 { font-size: 28px; }
 html body .tarot-name { font-size: 15px; }
 
 /* card titles and UI text: General Sans, medium */
-html body :is(.card-title, .btn, .tool-label) { font-family: var(--sans); font-weight: 500; }
+html body :is(.card-title, .btn) { font-family: var(--sans); font-weight: 500; }
+/* the words under the toolbar icons are small text: the heading face, light */
+html body .tool-label { font-family: var(--serif); font-weight: 300; font-size: 12px; letter-spacing: 0.02em; }
 html body .btn { letter-spacing: 0.01em; }
 /* tarot cards: every word on the card face is in the heading face */
 html body :is(.tarot-numeral, .tarot-name, .tarot-who strong) {

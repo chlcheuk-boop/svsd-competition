@@ -54,8 +54,9 @@
 
 .tarot-field {
   position: relative;
-  width: 660px;
-  height: 680px;
+  /* roomy enough that every card keeps ~56px clear of both quadrant lines */
+  width: 740px;
+  height: 820px;
   justify-self: center;
 }
 .axis {
