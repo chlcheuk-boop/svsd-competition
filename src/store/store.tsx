@@ -83,7 +83,7 @@ export function initialState(): AppState {
     matchesDealt: false,
     media: withBeside(withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA])),
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
-    boardEdition: 10,
+    boardEdition: 11,
     arrange: 'kind',
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
@@ -142,12 +142,12 @@ function load(): AppState {
       merged.media = withWhys([...merged.media, ...LIFE_MEDIA.filter((m) => !haveM.has(m.id))]);
       merged.connections = [...merged.connections, ...LIFE_CONNECTIONS.filter((c) => !haveC.has(c.id))];
     }
-    if (merged.boardEdition < 10) {
+    if (merged.boardEdition < 11) {
       // real photos, objects, albums, events and places
       const haveM = new Set(merged.media.map((m) => m.id));
       merged.media = [...merged.media, ...placeBeside(merged.media, MY_THINGS.filter((m) => !haveM.has(m.id)))];
     }
-    merged.boardEdition = 10;
+    merged.boardEdition = 11;
     // photos and images are one category now: anything saved as an image becomes a photo
     const asPhoto = (m: Media): Media => ((m.type as string) === 'image' ? { ...m, type: 'photo' } : m);
     merged.media = merged.media.map(asPhoto);

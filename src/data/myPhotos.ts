@@ -116,8 +116,21 @@ export const MY_PLACES: Media[] = [
   L('pl3', 'stouffer-night', 'Stouffer at night', 'Penn, Philadelphia', ['philly', 'light', 'quiet']),
 ];
 
+/** Films, named from their posters. Files live in /public/film. */
+const F = (id: string, file: string, title: string, director: string, tags: string[]): Media => ({
+  id, type: 'video', title, subtitle: director, tags, imageData: `/film/${file}.jpg`,
+  x: 0, y: 0, rot: 0, shape: 'folded', tint: 'white', addedAt: '2026-10-19',
+});
+
+export const MY_FILMS: Media[] = [
+  F('f1', 'mulholland-drive', 'Mulholland Drive', 'David Lynch, 2001', ['film', 'light', 'color']),
+  F('f2', 'forbidden-planet', 'Forbidden Planet', 'Fred McLeod Wilcox, 1956', ['film', 'poster', 'color']),
+  F('f3', 'special-effects', 'Special Effects', 'Larry Cohen, 1984', ['film', 'cities', 'light']),
+  F('f4', 'fantomas', 'Fantômas', 'Louis Feuillade, 1913', ['film', 'poster', 'type']),
+];
+
 /** everything real, in the order it joins a board */
-export const MY_THINGS: Media[] = [...MY_PHOTOS, ...MY_OBJECTS, ...MY_MUSIC, ...MY_EVENTS, ...MY_PLACES];
+export const MY_THINGS: Media[] = [...MY_PHOTOS, ...MY_OBJECTS, ...MY_MUSIC, ...MY_EVENTS, ...MY_PLACES, ...MY_FILMS];
 
 /** Lay new cards out on a tidy grid beside the cards already on the desk, in "my layout". */
 export function placeBeside(existing: Media[], fresh: Media[], cols = 4, cellW = 280, cellH = 300): Media[] {
