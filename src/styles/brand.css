@@ -4,7 +4,7 @@
  */
 
 /* ---------- dividers: one plain line ---------- */
-html body .board-section { border-top: 1px solid var(--ink); }
+html body .board-section { border-top: 0; } /* category labels stand on their own, no rule */
 html body .settings-form fieldset { border-top: 1px solid var(--rule); }
 html body .sp-section { border-top: 1px solid var(--rule); }
 html body .pp-id-head { border-bottom: 1px solid var(--ink); }
