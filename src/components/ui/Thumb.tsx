@@ -15,7 +15,7 @@ export function Thumb({ m, size = 52, title = true }: { m: Media; size?: number;
         flex: 'none',
         overflow: 'hidden',
         background: tint,
-        boxShadow: '0 1px 2px rgba(46,44,42,.12)',
+        boxShadow: '0 1px 2px rgba(67, 32, 5,.12)',
         border: '3px solid var(--card-white)',
         transform: `rotate(${m.rot / 2}deg)`,
         fontFamily: 'var(--serif)',

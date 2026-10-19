@@ -179,7 +179,7 @@
   -webkit-backface-visibility: hidden;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: var(--shadow-paper), 0 18px 30px -18px rgba(46, 44, 42, 0.35);
+  box-shadow: var(--shadow-paper), 0 18px 30px -18px rgba(67, 32, 5, 0.35);
 }
 .tarot-side.back {
   padding: 0;
@@ -276,7 +276,7 @@
   position: relative;
   background: var(--card-white);
   border-radius: 12px;
-  box-shadow: var(--shadow-lift), 0 40px 80px -40px rgba(46, 44, 42, 0.4);
+  box-shadow: var(--shadow-lift), 0 40px 80px -40px rgba(67, 32, 5, 0.4);
   overflow: hidden;
 }
 .focus-inner {

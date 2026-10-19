@@ -3,7 +3,7 @@
   inset: 0;
   overflow: hidden;
   background: var(--paper);
-  background-image: radial-gradient(rgba(46, 44, 42, 0.06) 0.8px, transparent 0.9px);
+  background-image: radial-gradient(rgba(67, 32, 5, 0.06) 0.8px, transparent 0.9px);
   background-size: 22px 22px;
 }
 
@@ -41,7 +41,7 @@
   bottom: 0;
   width: 40px;
   margin-left: -20px;
-  background: linear-gradient(90deg, transparent, rgba(46, 44, 42, 0.09) 45%, rgba(46, 44, 42, 0.14) 50%, rgba(46, 44, 42, 0.09) 55%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(67, 32, 5, 0.09) 45%, rgba(67, 32, 5, 0.14) 50%, rgba(67, 32, 5, 0.09) 55%, transparent);
   pointer-events: none;
   z-index: 5;
 }

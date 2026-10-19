@@ -99,7 +99,7 @@ const ArtMatches = () => (
 const ArtPassport = () => (
   <svg viewBox="0 0 220 90" aria-hidden="true">
     <rect x="44" y="6" width="132" height="80" rx="4" fill="var(--paper-deep)" stroke="var(--rule)" />
-    <path d="M110 6 v80" stroke="rgba(46,44,42,.12)" />
+    <path d="M110 6 v80" stroke="rgba(67, 32, 5,.12)" />
     <g filter="url(#ink-bleed)">
       <circle cx="78" cy="44" r="22" fill="none" stroke="#D2552A" strokeWidth="2.5" />
       <circle cx="78" cy="44" r="17" fill="none" stroke="#D2552A" strokeWidth="1" />
@@ -113,7 +113,7 @@ const ArtPassport = () => (
 const Key = ({ x, w = 30, label, hot }: { x: number; w?: number; label: string; hot?: boolean }) => (
   <g>
     <rect x={x} y="30" width={w} height="30" rx="5" fill={hot ? 'var(--peach)' : 'var(--card-white)'} stroke="var(--rule)" />
-    <rect x={x} y="56" width={w} height="4" rx="2" fill="rgba(46,44,42,.08)" />
+    <rect x={x} y="56" width={w} height="4" rx="2" fill="rgba(67, 32, 5,.08)" />
     <text x={x + w / 2} y="50" textAnchor="middle" fontSize="11" fontFamily="IBM Plex Mono" fill={hot ? 'var(--tangerine-deep)' : 'var(--ink)'}>{label}</text>
   </g>
 );

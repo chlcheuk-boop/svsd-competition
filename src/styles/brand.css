@@ -1,81 +1,81 @@
 /*
- * Brand layer: CHIOMAO-style type and graphic image borders.
+ * Brand layer: the type roles and graphic image borders.
  * Loaded after the page stylesheets (and before the phone overrides) so it wins over their defaults.
  */
 
-/* ---------- display type: wide, heavy grotesk ---------- */
-html body :is(
-  h1.serif,
-  h2.serif,
-  .board-section h3,
-  .cover-name,
-  .tc-title,
-  .threads-view h2,
-  .tut-card h2,
-  .pf-section-head h2,
-  .settings-form legend,
-  .focus-who h2,
-  .pr-who h2,
-  .tarot-name,
-  .tv-title-input
-) {
-  font-family: var(--display);
-  font-weight: 800;
-  font-stretch: 118%;
-  font-style: normal;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
+/* ---------- type roles ----------
+ * page titles      Big Caslon italic swash
+ * section headings KoPub Batang
+ * everything else  General Sans
+ */
+html body .serif {
+  font-family: var(--sans);
+  font-weight: 400;
 }
-html body .matches-head h1 { font-size: 44px; }
-html body .tv-head h1 { font-size: clamp(38px, 5vw, 62px); }
-html body .ob-welcome h1 { font-size: clamp(36px, 5vw, 60px); max-width: 860px; }
-html body .ob-step h2 { font-size: clamp(26px, 3.4vw, 38px); }
-html body .pf-head h1 { font-size: 46px; }
-html body .settings-form h1 { font-size: 32px; }
+
+/* page titles */
+html body :is(h1, .tv-title-input, .cover-name, .mb-header strong, .tarot-name.big) {
+  font-family: var(--title);
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+html body .matches-head h1 { font-size: 54px; }
+html body .tv-head h1,
+html body .tv-title-input { font-size: clamp(44px, 6vw, 72px); }
+html body .ob-welcome h1 { font-size: clamp(42px, 6vw, 72px); max-width: 860px; }
+html body .settings-form h1 { font-size: 44px; }
+html body .cover-name { font-size: 64px; }
+html body .mb-header strong { font-size: 26px; }
+html body .tarot-name.big { font-size: 30px; }
+
+/* section headings */
+html body :is(
+  h2,
+  h3.serif,
+  .board-section h3,
+  .tc-title,
+  .settings-form legend,
+  .tarot-name,
+  .sp-title,
+  .pp-who h2
+) {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  text-transform: none;
+}
+html body .ob-step h2 { font-size: clamp(26px, 3.4vw, 36px); }
 html body .nc-title { font-size: 26px; }
-html body .tut-card h2 { font-size: 22px; line-height: 1.05; }
-html body .tc-title { font-size: 32px; }
+html body .tut-card h2 { font-size: 22px; }
+html body .tc-title { font-size: 28px; }
 html body .threads-view h2 { font-size: 24px; }
-html body .pf-section-head h2,
-html body .settings-form legend { font-size: 20px; text-transform: uppercase; letter-spacing: 0.01em; }
+html body .settings-form legend { font-size: 22px; }
 html body .focus-who h2 { font-size: 24px; }
 html body .pr-who h2 { font-size: 22px; }
+html body .board-section h3 { font-size: 28px; }
+html body .tarot-name { font-size: 15px; }
 
-/* section labels and card names read like sticker type: caps, wide, tight */
-html body .board-section h3 {
-  font-size: 26px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-html body .tarot-name {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-variant: normal;
-}
-html body .tarot-name.big { font-size: 20px; }
-html body .cover-name {
-  font-style: normal;
-  text-transform: uppercase;
-  font-size: 46px;
-  letter-spacing: 0.04em;
-}
-html body .tarot-numeral {
-  font-family: var(--display);
-  font-weight: 800;
-  font-stretch: 118%;
-  letter-spacing: 0.04em;
-}
-
-/* UI text in the same family, a touch heavier */
-html body :is(.btn, .card-title, .tool-label) { font-weight: 600; }
+/* card titles and UI text: General Sans, medium */
+html body :is(.card-title, .btn, .tool-label) { font-family: var(--sans); font-weight: 500; }
 html body .btn { letter-spacing: 0.01em; }
+html body .tarot-numeral {
+  font-family: var(--sans);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
 
 /* ---------- graphic image borders: a monochrome checker band ---------- */
 :root {
   --checker: repeating-conic-gradient(var(--ink) 0 25%, var(--card-white) 0 50%) 0 0 / 10px 10px;
 }
-html body :is(.polaroid-photo, .punched-art, .folded-thumb, .sticky-thumb, .tv-art, .nc-preview, .sp-media:not(.is-text)) {
+html body :is(.tv-art, .nc-preview, .sp-media:not(.is-text)) {
   padding: 5px;
   background: var(--checker);
   box-sizing: border-box;

@@ -30,7 +30,7 @@ export function TarotBack({ q }: { q: Quadrant }) {
   let seed = q * 97;
   const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
   for (let i = 0; i < 26; i++) stars.push([10 + rnd() * 80, 10 + rnd() * 155, 1 + rnd() * 1.8]);
-  const ink = q === 2 || q === 4 ? 'rgba(255,255,255,.75)' : 'rgba(46,44,42,.5)';
+  const ink = q === 2 || q === 4 ? 'rgba(255,255,255,.75)' : 'rgba(67, 32, 5,.5)';
   return (
     <svg viewBox="0 0 100 175" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true">
       <rect width="100" height="175" fill={`var(--${info.accent})`} />
@@ -42,7 +42,7 @@ export function TarotBack({ q }: { q: Quadrant }) {
       <circle cx="50" cy="87.5" r="19" fill="none" stroke={ink} strokeWidth=".6" />
       <circle cx="50" cy="87.5" r="15" fill="none" stroke={ink} strokeWidth=".6" strokeDasharray="1.2 1.8" />
       <g transform="translate(39 76.5) scale(0.22)">
-        <AnimalShapes q={q} fill={q === 2 || q === 4 ? '#fffcf5' : '#1d1a17'} cut={`var(--${info.accent})`} />
+        <AnimalShapes q={q} fill={q === 2 || q === 4 ? '#fffaf6' : '#432005'} cut={`var(--${info.accent})`} />
       </g>
       <path d="M50 70.5 v-10 M50 104.5 v10" stroke={ink} strokeWidth=".5" strokeDasharray="1 1.6" />
     </svg>

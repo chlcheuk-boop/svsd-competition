@@ -24,7 +24,7 @@ export function MiniStamp({ personId, size = 22, title }: { personId: string; si
     <svg width={size} height={size} viewBox="0 0 24 24" role="img" aria-label={title ?? `stamp from ${p.name}`}>
       <path d={d} fill={accentVar(p.color)} />
       <circle cx="12" cy="12" r="7" fill="none" stroke="#fff" strokeWidth="0.8" strokeDasharray="1 1.3" opacity=".9" />
-      <text x="12" y="15.3" textAnchor="middle" fontFamily="Newsreader, serif" fontStyle="italic" fontSize="10" fill={p.color === 'tangerine' || p.color === 'pink' ? '#fff' : '#2E2C2A'}>
+      <text x="12" y="15.3" textAnchor="middle" fontFamily="Big Caslon Swash, Georgia, serif" fontSize="10" fill={p.color === 'tangerine' || p.color === 'pink' ? '#fff' : '#432005'}>
         {p.initial}
       </text>
     </svg>

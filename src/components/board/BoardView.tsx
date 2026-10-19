@@ -667,8 +667,8 @@ export default function BoardView(props: BoardViewProps) {
               {[ha, hb].map((h, i) => (
                 <g key={i}>
                   <YarnStrand d={`M${h.outer.x},${h.outer.y} Q${(h.outer.x + h.inner.x) / 2 + 1},${(h.outer.y + h.inner.y) / 2 - 1.5} ${h.inner.x},${h.inner.y}`} color={c.color} width={2.6} />
-                  <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(46,44,42,.55)" />
-                  <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(46,44,42,.55)" />
+                  <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
+                  <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
                   <circle cx={h.inner.x} cy={h.inner.y} r={1.2} fill={YARN_HEX[c.color].deep} />
                 </g>
               ))}
@@ -831,8 +831,8 @@ function PendingYarn({ from, pt, color }: { from: Media; pt: Pt; color: Accent }
     <g>
       <YarnStrand d={bezierPath(curve)} color={color} />
       <YarnStrand d={`M${h.outer.x},${h.outer.y} L${h.inner.x},${h.inner.y}`} color={color} width={2.6} />
-      <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(46,44,42,.55)" />
-      <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(46,44,42,.55)" />
+      <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
+      <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
     </g>
   );
 }

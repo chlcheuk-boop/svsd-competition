@@ -132,8 +132,8 @@
   overflow: visible;
   user-select: none;
 }
-.ob-target .paper-card {
-  box-shadow: 0 0 0 3px var(--peach), var(--shadow-lift);
+.ob-target .stamp-edge {
+  filter: drop-shadow(0 0 2px var(--pink)) drop-shadow(0 0 3px var(--pink)) drop-shadow(0 10px 14px rgba(67, 32, 5, 0.18));
 }
 .ob-needle.pulse circle:first-child {
   animation: ob-pulse 1.4s ease-in-out infinite;

@@ -73,11 +73,8 @@
   font-size: 12px;
   z-index: 4;
 }
-.card-slot.glow .paper-card {
-  box-shadow: 0 0 0 3px var(--lime), 0 0 26px 6px rgba(242, 197, 46, 0.7), var(--shadow-paper);
-}
-.card-slot.glow .paper-card.shape-folded {
-  filter: drop-shadow(0 0 3px var(--lime)) drop-shadow(0 0 14px rgba(242, 197, 46, 0.85));
+.card-slot.glow .stamp-edge {
+  filter: drop-shadow(0 0 2px var(--lime)) drop-shadow(0 0 3px var(--lime)) drop-shadow(0 0 16px rgba(241, 197, 46, 0.85));
 }
 .card-slot.pulse .card-motion::after {
   content: '';

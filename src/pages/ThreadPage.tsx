@@ -109,8 +109,8 @@ export default function ThreadPage() {
           <YarnStrand d={path.d} color={color} width={3.2} />
           {path.stitches.map((p, i) => (
             <g key={i}>
-              <circle cx={p.x - 6} cy={p.y} r={2.4} fill="rgba(46,44,42,.5)" />
-              <circle cx={p.x + 6} cy={p.y} r={2.4} fill="rgba(46,44,42,.5)" />
+              <circle cx={p.x - 6} cy={p.y} r={2.4} fill="rgba(67, 32, 5,.5)" />
+              <circle cx={p.x + 6} cy={p.y} r={2.4} fill="rgba(67, 32, 5,.5)" />
               <YarnStrand d={`M ${p.x - 6} ${p.y} L ${p.x + 6} ${p.y}`} color={color} width={2.6} />
             </g>
           ))}

@@ -1,35 +1,69 @@
+@font-face {
+  font-family: 'Big Caslon Swash';
+  src: url('/fonts/big-caslon-italic-swash.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url('/fonts/general-sans-variable.woff2') format('woff2');
+  font-weight: 200 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'KoPub Batang';
+  src: url('/fonts/kopub-batang-light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'KoPub Batang';
+  src: url('/fonts/kopub-batang-regular.woff2') format('woff2');
+  font-weight: 400 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'KoPub Batang';
+  src: url('/fonts/kopub-batang-bold.woff2') format('woff2');
+  font-weight: 600 800;
+  font-display: swap;
+}
+
 :root {
-  --paper: #f4efe5;
-  --paper-deep: #eae2d3;
-  --ink: #1d1a17;
-  --ink-soft: #6a5f54;
-  --rule: #ded4c3;
+  /* base: cream paper and brown ink */
+  --paper: #f8ece5;
+  --paper-deep: #f0dfd4;
+  --ink: #432005;
+  --ink-soft: #7d5f4a;
+  --rule: #e6d2c4;
+  --card-white: #fffaf6;
 
-  --tangerine: #e1442a;
-  --tangerine-deep: #b5321c;
-  --peach: #f0c7a0;
-  --peach-deep: #e2ad7f;
-  --lime: #f2c52e;
-  --lime-deep: #d9a919;
-  --sky: #8eb0e6;
-  --sky-deep: #5c86cf;
-  --pink: #e8678a;
-  --pink-deep: #c9466b;
-  --card-white: #fffcf5;
+  /* accents: only for yarn, buttons, titles and the outlines of reason cards */
+  --tangerine: #e14429; /* red */
+  --tangerine-deep: #b2311a;
+  --peach: #7f8c2f; /* olive */
+  --peach-deep: #5f6a1e;
+  --lime: #f1c52e; /* yellow */
+  --lime-deep: #c99d12;
+  --sky: #7dc6eb;
+  --sky-deep: #3f97c4;
+  --pink: #ff8fa3;
+  --pink-deep: #e0607a;
 
-  --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
-  --sans: 'Archivo', system-ui, -apple-system, sans-serif;
-  /* wide, heavy grotesk for headings, in the spirit of the CHIOMAO stickers */
-  --display: 'Archivo', system-ui, sans-serif;
-  /* bold accents that sit beside the muted ones */
-  --green: #2f9a57;
-  --cobalt: #2f62c9;
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  /* page titles: Big Caslon italic swash · sections: KoPub Batang · everything else: General Sans */
+  --title: 'Big Caslon Swash', 'Big Caslon', 'Iowan Old Style', Georgia, serif;
+  --serif: 'KoPub Batang', 'Iowan Old Style', Georgia, serif;
+  --sans: 'General Sans', system-ui, -apple-system, sans-serif;
+  --display: var(--sans);
+  --mono: var(--sans);
+  --green: #7f8c2f;
+  --cobalt: #3f97c4;
 
-  --shadow-paper: 0 1px 1px rgba(46, 44, 42, 0.04), 0 2px 6px rgba(46, 44, 42, 0.05),
-    0 8px 18px -10px rgba(46, 44, 42, 0.12);
-  --shadow-lift: 0 2px 2px rgba(46, 44, 42, 0.04), 0 10px 24px -6px rgba(46, 44, 42, 0.14),
-    0 22px 40px -22px rgba(46, 44, 42, 0.2);
+  --shadow-paper: 0 1px 1px rgba(67, 32, 5, 0.04), 0 2px 6px rgba(67, 32, 5, 0.05),
+    0 8px 18px -10px rgba(67, 32, 5, 0.12);
+  --shadow-lift: 0 2px 2px rgba(67, 32, 5, 0.04), 0 10px 24px -6px rgba(67, 32, 5, 0.14),
+    0 22px 40px -22px rgba(67, 32, 5, 0.2);
 
   --radius-s: 3px;
   --ease-paper: cubic-bezier(0.2, 0.8, 0.2, 1);

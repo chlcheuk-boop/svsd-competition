@@ -6,10 +6,11 @@ export interface Pt {
 }
 
 export const CARD_SIZE: Record<CardShape, { w: number; h: number }> = {
-  punched: { w: 204, h: 184 },
-  sticky: { w: 180, h: 180 },
-  folded: { w: 232, h: 136 },
-  polaroid: { w: 184, h: 236 },
+  // every kind now shares one stamp card
+  punched: { w: 196, h: 236 },
+  sticky: { w: 196, h: 236 },
+  folded: { w: 196, h: 236 },
+  polaroid: { w: 196, h: 236 },
 };
 
 export const sizeOf = (m: Pick<Media, 'shape'>) => CARD_SIZE[m.shape];

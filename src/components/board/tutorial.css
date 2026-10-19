@@ -22,7 +22,7 @@
   overflow-y: auto;
   padding: 22px 24px 18px;
   background: var(--card-white);
-  box-shadow: var(--shadow-lift), 0 30px 60px -30px rgba(46, 44, 42, 0.35);
+  box-shadow: var(--shadow-lift), 0 30px 60px -30px rgba(67, 32, 5, 0.35);
 }
 .tut-pin {
   position: absolute;
