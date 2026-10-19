@@ -246,7 +246,6 @@
     --bh: calc(100dvh - 206px);
   }
   .pp-id,
-  .pp-who,
   .pp-profile,
   .pp-threads,
   .pp-visibility {
@@ -282,9 +281,6 @@
   }
   .pp-id-row {
     gap: 14px;
-  }
-  .pp-who h2 {
-    font-size: 24px;
   }
 
   /* pages */

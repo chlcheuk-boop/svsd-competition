@@ -53,8 +53,6 @@ type PageSpec =
   | { kind: 'threads' }
   | { kind: 'visibility' }
   | { kind: 'stamps'; stamps: PassportStamp[]; n: number }
-  | { kind: 'who-story' }
-  | { kind: 'who-people' }
   | { kind: 'blank' };
 
 export default function PassportPage() {
@@ -82,7 +80,6 @@ export default function PassportPage() {
     const ps: PageSpec[] = [{ kind: 'id' }, { kind: 'profile' }, { kind: 'threads' }, { kind: 'visibility' }];
     for (let i = 0; i < stamps.length; i += PER_PAGE) ps.push({ kind: 'stamps', stamps: stamps.slice(i, i + PER_PAGE), n: i / PER_PAGE + 1 });
     if (ps.length % 2 === 1) ps.push({ kind: 'blank' });
-    ps.push({ kind: 'who-story' }, { kind: 'who-people' });
     return ps;
   }, [stamps]);
   const spreads = pages.length / 2;
@@ -95,7 +92,6 @@ export default function PassportPage() {
       { id: 'profile', label: 'profile', page: at('profile'), accent: 'sky' },
       { id: 'threads', label: 'threads', page: at('threads'), accent: 'lime' },
       { id: 'stamps', label: 'stamps', page: at('stamps'), accent: 'pink' },
-      { id: 'who', label: phone ? 'who' : 'who changed you', page: at('who-story'), accent: 'peach' },
     ].filter((x) => x.page >= 0);
     return t.map((x, i) => ({ ...x, end: (t[i + 1]?.page ?? pages.length) - 1 }));
   }, [pages, phone]);
@@ -398,8 +394,7 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
     );
   }
 
-  if (spec.kind === 'who-story') return <WhoStory state={state} />;
-  return <WhoPeople state={state} />;
+  return null;
 }
 
 type State = ReturnType<typeof useStore>['state'];
@@ -535,71 +530,6 @@ function VisibilityPage({ state }: { state: State }) {
         </span>
       </button>
       <button className="btn btn-ghost pp-settings-link" onClick={() => nav('/settings')}>all settings</button>
-    </div>
-  );
-}
-
-function WhoStory({ state }: { state: ReturnType<typeof useStore>['state'] }) {
-  const months = ['2025-02', '2025-05', '2025-08', '2025-11', '2026-02', '2026-05', '2026-08', '2026-10'];
-  const counts = months.map((m) => state.media.filter((x) => x.addedAt.slice(0, 7) <= m).length);
-  const max = Math.max(...counts, 1);
-  const pts = counts.map((c, i) => [16 + i * 46, 96 - (c / max) * 80]);
-  const d = pts.map(([x, y], i) => (i ? `S ${x - 20},${y} ${x},${y}` : `M ${x},${y}`)).join(' ');
-  const viaCount = state.media.filter((m) => m.via).length + state.connections.filter((c) => c.via).length;
-  return (
-    <div className="pp-who">
-      <span className="mono-label">who changed you · 2026</span>
-      <h2 className="serif">You started with posters that looked back. This year they started arguing.</h2>
-      <p className="serif">
-        In February 2025 your board was two posters and a film. Now it holds {state.media.length} references and {state.connections.length} strings,
-        and {viaCount} of them only exist because someone else tied them.
-      </p>
-      <svg className="pp-spark" viewBox="0 0 360 110" aria-label="References over time">
-        <path d={d} fill="none" stroke="var(--tangerine)" strokeWidth="3" strokeLinecap="round" />
-        <path d={d} fill="none" stroke="#A9411C" strokeWidth="3" strokeDasharray="1.1 3.1" opacity=".45" />
-        {pts.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r="2.6" fill="var(--paper-deep)" stroke="var(--ink)" strokeWidth="1" />
-        ))}
-        <text x="16" y="108" className="mono" fontSize="9" fill="var(--ink-soft)">feb ’25</text>
-        <text x="338" y="108" textAnchor="end" className="mono" fontSize="9" fill="var(--ink-soft)">oct ’26</text>
-      </svg>
-      <p className="serif pp-shift">
-        Your taste moved from <em>nostalgia</em> toward <em>evidence</em>: fewer things kept because they were beautiful,
-        more kept because of who made them and why.
-      </p>
-    </div>
-  );
-}
-
-function WhoPeople({ state }: { state: ReturnType<typeof useStore>['state'] }) {
-  const rows = Array.from(new Set(state.stamps.map((s) => s.personId)))
-    .map((pid) => ({
-      pid,
-      stamps: state.stamps.filter((s) => s.personId === pid),
-      led: state.connections.filter((c) => c.via === pid).length + state.media.filter((m) => m.via === pid).length,
-    }))
-    .sort((a, b) => b.led - a.led || b.stamps.length - a.stamps.length);
-  return (
-    <div className="pp-who">
-      <span className="mono-label">whose stamps led somewhere</span>
-      <ol className="pp-people">
-        {rows.map(({ pid, stamps, led }) => {
-          const p = person(pid)!;
-          const best = stamps[stamps.length - 1];
-          return (
-            <li key={pid}>
-              <MiniStamp personId={pid} size={30} />
-              <div>
-                <strong>{p.name}</strong> <span className="mono">{p.craft} · {p.city}</span>
-                <p className="serif">“{best.excerpt}”</p>
-                <span className="mono pp-count" style={{ color: led ? accentVar('tangerine') : undefined }}>
-                  {stamps.length} stamp{stamps.length > 1 ? 's' : ''} → {led} new {led === 1 ? 'thing' : 'things'} on your board
-                </span>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
     </div>
   );
 }

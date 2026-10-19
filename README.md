@@ -42,7 +42,7 @@ Every entry can have its own **why it matters to you**. It shows when you open t
 
 - Shift-click any chain of tied cards (no length limit, each pair just needs a string) (or use **Make a thread** in the side panel) to publish a thread. The **threads** tool shows every thread traced on the board in its own color. Threads open as a vertical story with one continuous yarn running down the page.
 - **Time replay** is in the side panel and on the passport's visibility page.
-- **The passport** opens on your ID and profile; your photo leads to settings, and index tabs down the side jump to profile, threads, stamps and who changed you.
+- **The passport** opens on your ID and profile; your photo leads to settings, and index tabs down the side jump to profile, threads and stamps.
 - **Ripple view** is in the side panel for anything a past match influenced.
 - Shortcuts: <kbd>Ctrl</kbd>+<kbd>Y</kbd> yarn, <kbd>Ctrl</kbd>+<kbd>S</kbd> scissors, <kbd>Ctrl</kbd>+<kbd>N</kbd> new note, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo the last string you tied or snipped (⌘ works too on Mac). The single keys `y`, `x`, `n`, `t` still work.
 - Pan by dragging empty space or holding space. Zoom with ctrl/⌘ + scroll, the zoom control, or `+` / `-`.
