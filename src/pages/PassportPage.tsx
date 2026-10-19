@@ -1,9 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store';
 import { Avatar, Toolbar } from '../components/ui/Frame';
-import { IconArrowLeft, IconArrowRight, IconClose, IconPerson } from '../components/ui/icons';
+import { IconArrowLeft, IconArrowRight, IconClock, IconClose, IconPerson, IconThread } from '../components/ui/icons';
+import { Toggle } from '../components/ui/Toggle';
+import { Fingerprint } from '../components/passport/Fingerprint';
+import { fmtMonth } from '../components/board/BoardView';
 import { Stamp, stampSize } from '../components/passport/Stamp';
 import { MiniStamp, accentVar } from '../components/ui/MiniStamp';
 import { MAYA, person } from '../data/people';
@@ -46,6 +49,9 @@ function Guilloche() {
 
 type PageSpec =
   | { kind: 'id' }
+  | { kind: 'profile' }
+  | { kind: 'threads' }
+  | { kind: 'visibility' }
   | { kind: 'stamps'; stamps: PassportStamp[]; n: number }
   | { kind: 'who-story' }
   | { kind: 'who-people' }
@@ -57,7 +63,9 @@ export default function PassportPage() {
   const [open, setOpen] = useState(false);
   const [opening, setOpening] = useState(false);
   const [spread, setSpread] = useState(0);
-  const [turning, setTurning] = useState<null | 'next' | 'prev'>(null);
+  // a turn goes to a target spread: the next one, or any spread a side tab points at
+  const [target, setTarget] = useState<number | null>(null);
+  const turning: null | 'next' | 'prev' = target === null ? null : target > spread ? 'next' : 'prev';
   const [expanded, setExpanded] = useState<PassportStamp | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
@@ -71,13 +79,26 @@ export default function PassportPage() {
   const people = useMemo(() => Array.from(new Set(stamps.map((s) => s.personId))), [stamps]);
 
   const pages: PageSpec[] = useMemo(() => {
-    const ps: PageSpec[] = [{ kind: 'id' }];
+    const ps: PageSpec[] = [{ kind: 'id' }, { kind: 'profile' }, { kind: 'threads' }, { kind: 'visibility' }];
     for (let i = 0; i < stamps.length; i += PER_PAGE) ps.push({ kind: 'stamps', stamps: stamps.slice(i, i + PER_PAGE), n: i / PER_PAGE + 1 });
     if (ps.length % 2 === 1) ps.push({ kind: 'blank' });
     ps.push({ kind: 'who-story' }, { kind: 'who-people' });
     return ps;
   }, [stamps]);
   const spreads = pages.length / 2;
+
+  // index tabs down the edge of the book, one per section
+  const tabs = useMemo(() => {
+    const at = (k: PageSpec['kind']) => pages.findIndex((x) => x.kind === k);
+    const t = [
+      { id: 'id', label: 'ID', page: 0, accent: 'tangerine' },
+      { id: 'profile', label: 'profile', page: at('profile'), accent: 'sky' },
+      { id: 'threads', label: 'threads', page: at('threads'), accent: 'lime' },
+      { id: 'stamps', label: 'stamps', page: at('stamps'), accent: 'pink' },
+      { id: 'who', label: phone ? 'who' : 'who changed you', page: at('who-story'), accent: 'peach' },
+    ].filter((x) => x.page >= 0);
+    return t.map((x, i) => ({ ...x, end: (t[i + 1]?.page ?? pages.length) - 1 }));
+  }, [pages, phone]);
 
   // a fresh stamp stays marked "new" until it is opened
   const openStamp = (st: PassportStamp) => {
@@ -97,7 +118,26 @@ export default function PassportPage() {
     if (turning || !open) return;
     if (dir === 'next' && spread >= spreads - 1) return;
     if (dir === 'prev' && spread <= 0) return;
-    setTurning(dir);
+    setTarget(spread + (dir === 'next' ? 1 : -1));
+  };
+
+  const jumpTo = (pageIndex: number) => {
+    if (phone) {
+      if (!open) setOpen(true);
+      setPdir(pageIndex >= page ? 1 : -1);
+      setPage(pageIndex);
+      return;
+    }
+    const sp = Math.floor(pageIndex / 2);
+    if (!open) {
+      // open straight onto that spread
+      if (opening) return;
+      setSpread(sp);
+      setOpening(true);
+      return;
+    }
+    if (turning || sp === spread) return;
+    setTarget(sp);
   };
 
   useEffect(() => {
@@ -119,7 +159,7 @@ export default function PassportPage() {
   const renderPage = (spec: PageSpec | undefined, side: 'left' | 'right', freshPress = true): ReactNode => {
     if (!spec) return null;
     return (
-      <div className={`pp-page ${side}`}>
+      <div className={`pp-page ${side} pp-${spec.kind}-page`}>
         <Guilloche />
         <PageContent spec={spec} filter={filter} onStamp={openStamp} freshPress={freshPress} state={state} />
         <span className="pp-folio mono">{pages.indexOf(spec) + 1}</span>
@@ -140,6 +180,26 @@ export default function PassportPage() {
       <span className="cover-title mono">P A S S P O R T</span>
       <span className="cover-hint mono">{phone ? 'tap to open' : 'click to open'}</span>
     </>
+  );
+
+  const current = phone ? [page] : [spread * 2, spread * 2 + 1];
+  const tabBar = (
+    <nav className={`pp-tabs ${phone ? 'phone' : ''}`} aria-label="Passport sections">
+      {tabs.map((t) => {
+        const on = open && current.some((pg) => pg >= t.page && pg <= t.end);
+        return (
+          <button
+            key={t.id}
+            className={`pp-tab ${on ? 'on' : ''}`}
+            style={{ ['--tab' as string]: accentVar(t.accent as never) }}
+            aria-current={on ? 'page' : undefined}
+            onClick={() => jumpTo(t.page)}
+          >
+            {t.label}
+          </button>
+        );
+      })}
+    </nav>
   );
 
   const atStart = phone ? page === 0 : spread === 0;
@@ -224,6 +284,7 @@ export default function PassportPage() {
             )}
           </AnimatePresence>
           {open && <span className="phone-pager mono">{page + 1} / {pages.length} · swipe to turn</span>}
+          {tabBar}
         </div>
         {modal}
         {toolbar}
@@ -233,20 +294,18 @@ export default function PassportPage() {
 
   const L = pages[spread * 2];
   const R = pages[spread * 2 + 1];
-  const nextL = pages[(spread + 1) * 2];
-  const nextR = pages[(spread + 1) * 2 + 1];
-  const prevL = pages[(spread - 1) * 2];
-  const prevR = pages[(spread - 1) * 2 + 1];
+  const toL = target === null ? undefined : pages[target * 2];
+  const toR = target === null ? undefined : pages[target * 2 + 1];
 
   return (
     <div className="passport-page">
       <div className={`book ${open ? 'is-open' : opening ? 'is-opening' : 'is-closed'}`}>
         {/* static halves */}
         <div className="half left">
-          {open && (turning === 'prev' ? renderPage(prevL, 'left') : renderPage(L, 'left'))}
+          {open && (turning === 'prev' ? renderPage(toL, 'left') : renderPage(L, 'left'))}
         </div>
         <div className="half right">
-          {(open || opening) && (turning === 'next' ? renderPage(nextR, 'right') : renderPage(R, 'right'))}
+          {(open || opening) && (turning === 'next' ? renderPage(toR, 'right') : renderPage(R, 'right'))}
         </div>
         {open && <div className="spine" aria-hidden="true" />}
 
@@ -267,7 +326,7 @@ export default function PassportPage() {
             <button className="leaf-face front cover" onClick={openBook} aria-label="Open passport">
               {coverFace}
             </button>
-            <div className="leaf-face back">{renderPage(pages[0], 'left')}</div>
+            <div className="leaf-face back">{renderPage(L, 'left')}</div>
           </motion.div>
         )}
 
@@ -275,21 +334,22 @@ export default function PassportPage() {
         <AnimatePresence>
           {turning && (
             <motion.div
-              key={`${turning}-${spread}`}
+              key={`${spread}-${target}`}
               className={`leaf turn-leaf ${turning}`}
               initial={{ rotateY: 0 }}
               animate={{ rotateY: turning === 'next' ? -180 : 180 }}
               transition={{ duration: 0.85, ease: [0.45, 0.05, 0.25, 1] }}
               onAnimationComplete={() => {
-                setSpread((s) => s + (turning === 'next' ? 1 : -1));
-                setTurning(null);
+                setSpread(target!);
+                setTarget(null);
               }}
             >
               <div className="leaf-face front">{turning === 'next' ? renderPage(R, 'right', false) : renderPage(L, 'left', false)}</div>
-              <div className="leaf-face back">{turning === 'next' ? renderPage(nextL, 'left', false) : renderPage(prevR, 'right', false)}</div>
+              <div className="leaf-face back">{turning === 'next' ? renderPage(toL, 'left', false) : renderPage(toR, 'right', false)}</div>
             </motion.div>
           )}
         </AnimatePresence>
+        {tabBar}
       </div>
 
       {modal}
@@ -300,44 +360,14 @@ export default function PassportPage() {
 
 function PageContent({ spec, filter, onStamp, freshPress, state }: {
   spec: PageSpec; filter: string | null; onStamp: (s: PassportStamp) => void; freshPress: boolean;
-  state: ReturnType<typeof useStore>['state'];
+  state: State;
 }) {
   if (spec.kind === 'blank') return <p className="pp-blank serif">space for the next people who change your mind</p>;
 
-  if (spec.kind === 'id') {
-    const themes = ['two-color print', 'quiet tension', 'wayfinding'];
-    return (
-      <div className="pp-id">
-        <span className="mono-label">rhyme · passport · id</span>
-        <div className="pp-id-row">
-          <div className="pp-photo">
-            <Avatar size={112} />
-          </div>
-          <dl>
-            <dt className="mono">name</dt>
-            <dd>{MAYA.name}</dd>
-            <dt className="mono">home</dt>
-            <dd>{MAYA.city}</dd>
-            <dt className="mono">craft</dt>
-            <dd>{MAYA.craft}</dd>
-            <dt className="mono">member since</dt>
-            <dd>{MAYA.memberSince}</dd>
-          </dl>
-        </div>
-        <span className="mono-label">taste fingerprint</span>
-        <ol className="pp-themes serif">
-          {themes.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ol>
-        <div className="pp-mrz mono" aria-hidden="true">
-          P&lt;RHY&lt;LIN&lt;OKAFOR&lt;&lt;MAYA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-          <br />
-          RHY2025021ML&lt;6PHL&lt;&lt;{state.stamps.length}STAMPS&lt;&lt;&lt;&lt;
-        </div>
-      </div>
-    );
-  }
+  if (spec.kind === 'id') return <IdPage state={state} />;
+  if (spec.kind === 'profile') return <ProfileLeaf state={state} />;
+  if (spec.kind === 'threads') return <ThreadsPage state={state} />;
+  if (spec.kind === 'visibility') return <VisibilityPage state={state} />;
 
   if (spec.kind === 'stamps') {
     return (
@@ -370,6 +400,143 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
 
   if (spec.kind === 'who-story') return <WhoStory state={state} />;
   return <WhoPeople state={state} />;
+}
+
+type State = ReturnType<typeof useStore>['state'];
+
+/** The data page: everything about you, laid out like the photo page of a passport. Photo opens settings. */
+function IdPage({ state }: { state: State }) {
+  const nav = useNavigate();
+  const share = state.settings.shareProfile ?? { username: true, demographic: false, origin: true, creative: true };
+  const parts = MAYA.name.split(' ');
+  const surname = parts.slice(1).join(' ');
+  const given = parts[0];
+  const fields: { label: string; value: string; shared?: boolean; wide?: boolean }[] = [
+    { label: 'surname', value: surname },
+    { label: 'given name', value: given },
+    { label: 'username', value: MAYA.username, shared: share.username },
+    { label: 'demographic', value: MAYA.demographic, shared: share.demographic },
+    { label: 'place of origin', value: MAYA.origin, shared: share.origin, wide: true },
+    { label: 'kind of creative', value: MAYA.creative, shared: share.creative, wide: true },
+    { label: 'occupation', value: MAYA.craft, wide: true },
+    { label: 'home', value: MAYA.city },
+    { label: 'member since', value: MAYA.memberSince },
+  ];
+  const mrzName = `${surname.toUpperCase().replace(/[^A-Z]/g, '<')}<<${given.toUpperCase()}`.padEnd(32, '<');
+  return (
+    <div className="pp-id">
+      <div className="pp-id-head">
+        <span className="mono-label">passport</span>
+        <span className="mono pp-id-no">P · RHY · no. RHY2025021</span>
+      </div>
+      <div className="pp-id-row">
+        <button className="pp-photo" onClick={() => nav('/settings')} aria-label="Edit your details in settings">
+          <Avatar size={116} />
+          <span className="pp-photo-hint mono">edit in settings</span>
+        </button>
+        <dl className="pp-fields">
+          {fields.map((f) => (
+            <div key={f.label} className={f.wide ? 'wide' : ''}>
+              <dt className="mono">
+                {f.label}
+                {f.shared && <span className="pp-shared" title="your matches see this" aria-label="shown to matches" />}
+              </dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div className="pp-id-foot">
+        <span className="pp-signature serif">{MAYA.name}</span>
+        <span className="mono pp-legend"><span className="pp-shared" aria-hidden="true" /> shown to matches</span>
+      </div>
+      <div className="pp-mrz mono" aria-hidden="true">
+        {`P<RHY${mrzName}`}
+        <br />
+        {`RHY2025021<6PHL<<${String(state.stamps.length).padStart(2, '0')}STAMPS<<${state.media.length}REFS<<`}
+      </div>
+    </div>
+  );
+}
+
+/** About you: bio, counts and the taste fingerprint matching works from. */
+function ProfileLeaf({ state }: { state: State }) {
+  return (
+    <div className="pp-profile">
+      <span className="mono-label">profile</span>
+      <p className="serif pp-bio">{MAYA.bio}</p>
+      <div className="pp-stats">
+        <span><strong>{state.media.length}</strong><span className="mono">references</span></span>
+        <span><strong>{state.connections.length}</strong><span className="mono">strings</span></span>
+        <span><strong>{state.stamps.length}</strong><span className="mono">stamps</span></span>
+      </div>
+      <span className="mono-label">taste fingerprint · what matching sees: themes, not your images</span>
+      <Fingerprint media={state.media} />
+    </div>
+  );
+}
+
+/** Published threads: how other people meet you. */
+function ThreadsPage({ state }: { state: State }) {
+  const { dispatch } = useStore();
+  const u = universe(state);
+  const mine = state.threads.filter((t) => t.owner === 'maya');
+  return (
+    <div className="pp-threads">
+      <span className="mono-label">threads · how other people meet you</span>
+      <ul>
+        {mine.map((t) => (
+          <li key={t.id}>
+            <Link to={`/thread/${t.id}`} className="pp-thread-link">
+              <span className="pp-thread-stack">
+                {t.mediaIds.slice(0, 3).map((id) => {
+                  const m = u.media.get(id);
+                  return m ? <Thumb key={id} m={m} size={40} title={false} /> : null;
+                })}
+              </span>
+              <span>
+                <strong>{t.title}</strong>
+                <span className="mono">{t.coAuthor ? 'shared thread' : 'thread'} · {t.mediaIds.length} refs · {fmtMonth(t.publishedAt)}</span>
+              </span>
+            </Link>
+            <Toggle
+              label={t.isPublic ? 'public' : 'private'}
+              checked={t.isPublic}
+              onChange={(v) => dispatch({ type: 'updateThread', id: t.id, patch: { isPublic: v } })}
+            />
+          </li>
+        ))}
+      </ul>
+      <p className="pp-thread-empty serif">
+        <IconThread size={18} /> Shift-click any chain of tied cards on your board to make a new thread.
+      </p>
+    </div>
+  );
+}
+
+/** Who can find you, and a way back through time. */
+function VisibilityPage({ state }: { state: State }) {
+  const { dispatch } = useStore();
+  const nav = useNavigate();
+  return (
+    <div className="pp-visibility">
+      <span className="mono-label">visibility</span>
+      <div className="pp-controls">
+        <Toggle label="Matchable this week" hint="you appear in other people’s four cards" checked={state.settings.matchable}
+          onChange={(v) => dispatch({ type: 'settings', patch: { matchable: v } })} />
+        <Toggle label="Board is private" hint="matches see a slice, threads and fingerprint, never the whole board" checked={state.settings.boardPrivate}
+          onChange={(v) => dispatch({ type: 'settings', patch: { boardPrivate: v } })} />
+      </div>
+      <button className="pf-replay" onClick={() => nav('/?replay=1')}>
+        <IconClock size={22} />
+        <span>
+          <strong className="serif">Time replay</strong>
+          <span className="mono">watch your board grow from feb 2025 to now</span>
+        </span>
+      </button>
+      <button className="btn btn-ghost pp-settings-link" onClick={() => nav('/settings')}>all settings</button>
+    </div>
+  );
 }
 
 function WhoStory({ state }: { state: ReturnType<typeof useStore>['state'] }) {

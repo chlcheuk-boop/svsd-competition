@@ -242,12 +242,40 @@
 
   /* passport */
   .book {
-    top: 66px;
-    --bh: calc(100dvh - 176px);
+    top: 96px;
+    --bh: calc(100dvh - 206px);
   }
   .pp-id,
-  .pp-who {
-    padding: 26px 22px;
+  .pp-who,
+  .pp-profile,
+  .pp-threads,
+  .pp-visibility {
+    padding: 22px 20px 30px;
+  }
+  .pp-id {
+    overflow-y: auto;
+  }
+  .pp-id-row {
+    flex-direction: column;
+  }
+  .pp-fields dd {
+    font-size: 14px;
+  }
+  .pp-bio {
+    font-size: 20px;
+  }
+  .pp-profile .fingerprint {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pp-profile .fingerprint svg {
+    width: 72%;
+    align-self: center;
+  }
+  .pp-profile .fp-legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px 14px;
   }
   .pp-themes {
     font-size: 24px;

@@ -1,0 +1,32 @@
+.fingerprint {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.fingerprint svg {
+  width: 62%;
+  height: auto;
+}
+.fp-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fp-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+}
+.fp-legend .mono {
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+.fp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}

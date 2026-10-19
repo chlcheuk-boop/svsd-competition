@@ -8,7 +8,6 @@ import MatchesPage from './pages/MatchesPage';
 import MatchBoardPage from './pages/MatchBoardPage';
 import PassportPage from './pages/PassportPage';
 import ThreadPage from './pages/ThreadPage';
-import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 import Onboarding from './pages/Onboarding';
 
@@ -31,7 +30,7 @@ export default function App() {
             <Route path="/match/:id" element={<MatchBoardPage />} />
             <Route path="/passport" element={<PassportPage />} />
             <Route path="/thread/:id" element={<ThreadPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<Navigate to="/passport" replace />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

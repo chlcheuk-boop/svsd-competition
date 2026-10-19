@@ -96,7 +96,7 @@ export default function ThreadPage() {
     return () => ro.disconnect();
   }, [items.length, editing]);
 
-  if (!thread) return <Navigate to="/profile" replace />;
+  if (!thread) return <Navigate to="/passport" replace />;
   const mine = thread.owner === 'maya';
   const author = mine ? MAYA.name : person(thread.owner)?.name;
   const co = thread.coAuthor ? person(thread.coAuthor) : undefined;

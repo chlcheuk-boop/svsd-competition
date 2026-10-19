@@ -54,7 +54,7 @@ export function Avatar({ size = 44, label = MAYA.initial, color = 'var(--peach)'
 export function AvatarButton() {
   const nav = useNavigate();
   return (
-    <button className="avatar-btn" onClick={() => nav('/profile')} aria-label="Open profile">
+    <button className="avatar-btn" onClick={() => nav('/settings')} aria-label="Open settings">
       <Avatar />
     </button>
   );

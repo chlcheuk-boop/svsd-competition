@@ -179,7 +179,7 @@ const STEPS: Step[] = [
     target: '[data-nav="passport"]',
     kicker: '6 · the passport',
     title: 'Where other people leave their mark',
-    body: <>Every comment from a past connection lands in your passport as a stamp: whys from Crossings, notes left on your board, critiques on your threads. Click a stamp for the whole story with that person: every note, every string, and everything you traded. At the back: <em>who changed you</em> this year.</>,
+    body: <>Every comment from a past connection lands in your passport as a stamp: whys from Crossings, notes left on your board, critiques on your threads. Click a stamp for the whole story with that person: every note, every string, and everything you traded. The first pages are your ID and profile (tap your photo to edit them in settings), and the tabs down the side jump between sections. At the back: <em>who changed you</em> this year.</>,
     art: <ArtPassport />,
   },
   {
