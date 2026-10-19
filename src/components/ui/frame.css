@@ -11,22 +11,30 @@
   position: relative;
   width: 46px;
   height: 46px;
-  border-radius: 50%;
   display: grid;
   place-items: center;
   color: var(--ink);
+  /* a scalloped edge like the toolbar's: the paper is the masked ::before, so the shadow and tooltip aren't clipped */
+  filter: drop-shadow(0 1px 1px rgba(67, 32, 5, 0.08)) drop-shadow(0 4px 8px rgba(67, 32, 5, 0.1));
+  transition: transform 0.2s var(--ease-paper);
+}
+.nav-round::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
   background: var(--card-white);
-  border: 1px solid var(--rule);
-  box-shadow: var(--shadow-paper);
-  transition: transform 0.2s var(--ease-paper), background 0.2s, border-color 0.2s;
+  -webkit-mask: url('/brand/scallop.svg') center / 100% 100% no-repeat;
+  mask: url('/brand/scallop.svg') center / 100% 100% no-repeat;
+  transition: background 0.2s;
 }
 .nav-round:hover {
   transform: translateY(-2px) rotate(-3deg);
+}
+.nav-round:hover::before {
   background: var(--blush);
-  border-color: var(--blush-deep);
 }
 .nav-round.active {
-  border-color: var(--tangerine);
   color: var(--tangerine);
 }
 .nav-dot {

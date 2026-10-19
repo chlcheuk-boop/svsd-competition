@@ -17,6 +17,8 @@ export interface Section {
   w: number;
   h: number;
   count: number;
+  /** width from the first card's left edge to the right edge of the widest row of cards */
+  contentW: number;
 }
 
 const CELL_W = 280;
@@ -101,7 +103,9 @@ export function arrange(mode: Arrange, media: Media[]): { media: Media[]; sectio
     lastGroup = g.group;
     // the label, the rule and the first card all start on the same left edge
     const inset = (CELL_W - sizeOf(g.items[0]).w) / 2;
-    sections.push({ key: g.key, label: g.label, group: groupLabel, x: x0 + inset, y: y - 10, w: colW - inset * 2, h: h + 20, count: g.items.length });
+    const cardW = sizeOf(g.items[0]).w;
+    const contentW = (Math.min(g.items.length, PER_ROW) - 1) * CELL_W + cardW;
+    sections.push({ key: g.key, label: g.label, group: groupLabel, x: x0 + inset, y: y - 10, w: colW - inset * 2, h: h + 20, count: g.items.length, contentW });
     g.items.forEach((m, i) => {
       const { w, h: ch } = sizeOf(m);
       const cx = x0 + (i % PER_ROW) * CELL_W + CELL_W / 2;

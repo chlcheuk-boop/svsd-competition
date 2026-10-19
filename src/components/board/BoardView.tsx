@@ -570,8 +570,7 @@ export default function BoardView(props: BoardViewProps) {
   const headingBoxes = useMemo(
     () =>
       (sections ?? []).flatMap((sec) => [
-        { x0: sec.x - 16, y0: sec.y - (sec.group ? 34 : 14), x1: sec.x + sec.label.length * 16 + 28, y1: sec.y + 58 },
-        { x0: sec.x + sec.w - 60, y0: sec.y - 14, x1: sec.x + sec.w + 16, y1: sec.y + 44 },
+        { x0: sec.x - 16, y0: sec.y - (sec.group ? 34 : 14), x1: sec.x + sec.label.length * 16 + 64, y1: sec.y + 58 },
       ]),
     [sections],
   );
@@ -643,8 +642,11 @@ export default function BoardView(props: BoardViewProps) {
         {sections?.map((sec) => (
           <div key={sec.key} className="board-section" style={{ left: sec.x, top: sec.y, width: sec.w, height: sec.h }} aria-hidden="true">
             {sec.group && <span className="mono bs-group">{sec.group}</span>}
-            <h3 className="serif">{sec.label}</h3>
-            <span className="mono bs-count">{sec.count}</span>
+            <div className="bs-head" style={{ width: sec.contentW }}>
+              <h3 className="serif">{sec.label}</h3>
+              <span className="mono bs-count">{sec.count}</span>
+              <span className="bs-rule" />
+            </div>
           </div>
         ))}
 

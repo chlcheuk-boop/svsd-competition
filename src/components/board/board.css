@@ -280,10 +280,23 @@
   position: absolute;
   pointer-events: none;
 }
-.board-section h3 {
+.board-section .bs-head {
   position: absolute;
   left: 0;
   top: 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+/* a thin dotted line runs from the label to where the category's cards end */
+.board-section .bs-rule {
+  flex: 1;
+  min-width: 24px;
+  border-bottom: 4px dotted rgba(67, 32, 5, 0.75);
+  transform: translateY(-6px);
+}
+.board-section h3 {
+  flex: none;
   margin: 0;
   font-size: 34px;
   font-weight: 300;
@@ -299,9 +312,7 @@
   letter-spacing: 0.06em;
 }
 .board-section .bs-count {
-  position: absolute;
-  right: 0;
-  top: 16px;
+  flex: none;
   font-size: 13px;
   color: var(--ink-soft);
 }
