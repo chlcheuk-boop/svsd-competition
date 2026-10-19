@@ -58,10 +58,10 @@ export default function Onboarding() {
               />
             </svg>
             <motion.h1 className="serif" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}>
-              Your life is a story. Let’s start telling it.
+              Collect the things you live with, and tie them together.
             </motion.h1>
             <motion.p className="mono" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-              rhyme · a desk for the places, things and moments that make you you
+              purl · a desk for the places, things and moments you keep
             </motion.p>
             <motion.button className="btn btn-primary ob-cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} onClick={() => setStep('import')}>
               begin
@@ -72,7 +72,7 @@ export default function Onboarding() {
         {step === 'import' && (
           <motion.section key="i" className="ob-step" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
             <span className="mono-label">step one</span>
-            <h2 className="serif">Not the whole internet. Just your life.</h2>
+            <h2 className="serif">Start with your own life</h2>
             <LifePrompts onNext={() => setStep('game')} />
           </motion.section>
         )}
@@ -93,13 +93,13 @@ export default function Onboarding() {
 
         {step === 'done' && (
           <motion.section key="d" className="ob-step ob-done" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <span className="mono-label">your starter board is seeded</span>
+            <span className="mono-label">we set up a starter board for you</span>
             <h2 className="serif">
               {state.media.length} references, {state.connections.length} strings.
               <br />
-              <em>{ties ? `${ties} of them are brand new.` : 'Some things don’t rhyme, and that’s fine.'}</em>
+              <em>{ties ? `${ties} of them are brand new.` : 'You can tie more whenever you like.'}</em>
             </h2>
-            <p className="serif">Every why you write is what matching reads. On Sunday, four people arrive: chosen for you, not everyone.</p>
+            <p className="serif">Matching reads the whys you write. On Sunday you’ll meet four people picked for you.</p>
             <button className="btn btn-primary ob-cta" onClick={finish}>open my board</button>
           </motion.section>
         )}
@@ -118,7 +118,7 @@ function LifePrompts({ onNext }: { onNext: () => void }) {
   return (
     <>
       <p className="serif ob-lede">
-        Other boards fill up with what everyone else is posting. Yours starts with what you actually live: places, photos, events, the small things you notice. Each one gets its own <em>why</em>.
+        Your board starts with places you go, photos you took, events and small things you noticed. You give each one its own <em>why</em>.
       </p>
       <div className="ob-imports">
         {prompts.map((p, i) => {
@@ -139,7 +139,7 @@ function LifePrompts({ onNext }: { onNext: () => void }) {
           );
         })}
       </div>
-      <p className="mono ob-note">nothing is pulled from a public feed. you’ll start with Maya’s desk in this prototype.</p>
+      <p className="mono ob-note">purl doesn’t pull anything from a public feed. in this prototype you’ll start with Maya’s desk.</p>
       <button className="btn btn-primary ob-cta" onClick={onNext}>
         next: tie a few things together
       </button>
@@ -229,7 +229,7 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
   return (
     <div className="ob-game">
       <span className="mono-label">connect these two · {round + 1} of {PAIRS.length}</span>
-      <h2 className="serif">Do these rhyme for you?</h2>
+      <h2 className="serif">Do these two belong together?</h2>
       <p className="mono ob-note">drag the thread from the {stacked ? 'top' : 'left'} card to the {stacked ? 'bottom' : 'right'} one, or snip if they don’t connect.</p>
 
       <div className="ob-stage" ref={stage} style={{ aspectRatio: `${W} / ${H}`, maxWidth: stacked ? 360 : undefined }}>
@@ -274,7 +274,7 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
           </motion.div>
         ) : (
           <motion.div key="acts" className="ob-actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <button className="btn btn-ghost" onClick={tieByButton} disabled={phase !== 'idle'}>they rhyme</button>
+            <button className="btn btn-ghost" onClick={tieByButton} disabled={phase !== 'idle'}>they connect</button>
             <button className="btn btn-ghost" onClick={snip} disabled={phase !== 'idle'}>
               <IconScissors size={16} /> no connection
             </button>

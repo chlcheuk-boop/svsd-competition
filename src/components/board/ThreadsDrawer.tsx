@@ -75,7 +75,7 @@ export function ThreadsDrawer({ parts, active, onPick, onOpen, onClose }: {
         })}
       </ul>
       {parts.length === 0 && <p className="serif tv-empty">No threads yet.</p>}
-      <p className="mono tv-hint">shift-click any chain of tied cards to make a new thread. any length works, as long as each pair has a string.</p>
+      <p className="mono tv-hint">shift-click a chain of tied cards to make a new thread. it can be any length if each pair has a string.</p>
     </motion.aside>
   );
 }

@@ -33,7 +33,7 @@ export default function SettingsPage() {
             <span className="field-label">what matches can see</span>
             {([
               ['fingerprint', 'Only my taste fingerprint', 'themes and how you connect, no images'],
-              ['threads', 'My fingerprint and public threads', 'threads are how people meet you'],
+              ['threads', 'My fingerprint and public threads', 'people meet you through your threads'],
             ] as const).map(([v, label, hint]) => (
               <label key={v} className={`radio ${s.shareMode === v ? 'on' : ''}`}>
                 <input type="radio" name="share" checked={s.shareMode === v} onChange={() => set({ shareMode: v })} />
@@ -54,7 +54,7 @@ export default function SettingsPage() {
 
         <fieldset>
           <legend className="serif">What your matches see</legend>
-          <p className="mono helper">your four matches only see what you switch on here. everyone else sees nothing.</p>
+          <p className="mono helper">your four matches see what you switch on here. no one else sees any of it.</p>
           {([
             ['username', 'Username', MAYA.username],
             ['demographic', 'Demographic', MAYA.demographic],
@@ -107,8 +107,8 @@ export default function SettingsPage() {
 
         <fieldset>
           <legend className="serif">Capture</legend>
-          <p className="mono helper">Purl never fills your desk from a public feed. things come from your life, or from the few people you cross paths with.</p>
-          <Toggle label="Camera" hint="take a photo straight onto your board" checked={s.capture?.camera ?? true}
+          <p className="mono helper">everything on your desk comes from your life or from people you’ve crossed paths with.</p>
+          <Toggle label="Camera" hint="take a photo and put it on your board" checked={s.capture?.camera ?? true}
             onChange={(v) => set({ capture: { ...s.capture, camera: v } })} />
           <Toggle label="Photo library" hint="pick from your camera roll" checked={s.capture?.library ?? true}
             onChange={(v) => set({ capture: { ...s.capture, library: v } })} />
@@ -140,7 +140,7 @@ export default function SettingsPage() {
 
         <fieldset>
           <legend className="serif">Demo</legend>
-          <p className="mono helper">for presenting: start fresh or replay the first-run story</p>
+          <p className="mono helper">for demos: start fresh or replay onboarding</p>
           <div className="demo-row">
             <button type="button" className="btn btn-ghost" onClick={() => {
               dispatch({ type: 'reset', onboarded: true });

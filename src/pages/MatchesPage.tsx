@@ -127,7 +127,7 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
               <span className="mono-label">where you overlap</span>
               <div className="thumbs">
                 {mp.overlap.length ? mp.overlap.map((id) => <Thumb key={id} m={byId.get(id)!} size={60} />) : (
-                  <span className="serif empty-overlap">nothing yet, and that’s the point</span>
+                  <span className="serif empty-overlap">no overlap yet</span>
                 )}
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function MatchesPage() {
         <span className="mono-label">week of oct 12 · 2026</span>
         <h1 className="serif">Matches of the week</h1>
         <p className="serif">
-          Not a feed. Four people, picked from a small circle, each here to add something to your life. Sorted by two things: whether your media is similar or dissimilar, and whether your connections are.
+          Four people this week, picked from a small circle. The cards sort them by two questions: is their media similar to yours, and are their connections?
         </p>
         <ul className="legend">
           {ordered.map((m) => {

@@ -439,7 +439,7 @@ function IdPage({ state }: { state: State }) {
         </p>
       </div>
       <div className="pp-sec">
-        <span className="mono-label">taste fingerprint · themes, not images</span>
+        <span className="mono-label">taste fingerprint · the themes matching reads</span>
         <Fingerprint media={state.media} />
       </div>
       <div className="pp-mrz mono" aria-hidden="true">
@@ -460,7 +460,7 @@ function ThreadsPage({ state }: { state: State }) {
   return (
     <div className="pp-leaf pp-threads">
       <div className="pp-sec">
-        <span className="mono-label">threads · how other people meet you</span>
+        <span className="mono-label">threads · what other people see</span>
         <ul>
           {mine.map((t) => (
             <li key={t.id}>
@@ -607,7 +607,7 @@ function PersonRecap({ s, state, onClose, onShow, onPick }: {
           <section className="pr-two">
             <div>
               <h3 className="mono-label">{first} brought you</h3>
-              {theirMedia.length === 0 && theirStrings.length === 0 && <p className="pr-empty serif">nothing yet, just notes</p>}
+              {theirMedia.length === 0 && theirStrings.length === 0 && <p className="pr-empty serif">notes so far, nothing traded</p>}
               <ul className="pr-media">
                 {theirMedia.map((m) => (
                   <li key={m.id}>
@@ -627,7 +627,7 @@ function PersonRecap({ s, state, onClose, onShow, onPick }: {
             </div>
             <div>
               <h3 className="mono-label">you brought {first}</h3>
-              {myMedia.length === 0 && myStrings.length === 0 && <p className="pr-empty serif">nothing yet. a Crossing would change that.</p>}
+              {myMedia.length === 0 && myStrings.length === 0 && <p className="pr-empty serif">nothing yet. start a Crossing to trade a string.</p>}
               <ul className="pr-media">
                 {myMedia.map((m) => (
                   <li key={m.id}>

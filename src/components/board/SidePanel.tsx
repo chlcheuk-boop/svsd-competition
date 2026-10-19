@@ -108,7 +108,7 @@ export function SidePanel({ m, media, connections, stamps, ripplePerson, onClose
       ) : onWhy && !readOnly ? (
         <button className="sp-own-why add" onClick={() => setEditingWhy(true)}>
           <span className="mono">why it matters to you</span>
-          <span className="serif">add a reason, just for this one…</span>
+          <span className="serif">add a reason for this one…</span>
         </button>
       ) : null}
       {m.tags.length > 0 && (

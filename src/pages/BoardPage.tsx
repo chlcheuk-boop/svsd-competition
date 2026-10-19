@@ -244,7 +244,7 @@ export default function BoardPage() {
     dispatch({ type: 'addMedia', media: m });
     setDraft(null);
     setMode('select');
-    toast({ text: state.arrange === 'free' ? 'placed · now tie it to something with yarn' : 'added · it’s filed in its section. tie it to something with yarn' });
+    toast({ text: state.arrange === 'free' ? 'placed · now tie it to something with yarn' : 'added to its section · tie it to something with yarn' });
   };
 
   const onCardClick = (id: string, { shift }: { shift: boolean }) => {
@@ -271,7 +271,7 @@ export default function BoardPage() {
       cur = next.id;
     }
     if (seq.length < 2) {
-      toast({ text: 'tie this card to something first: a thread just needs a string' });
+      toast({ text: 'tie this card to something first: a thread needs at least one string' });
       return;
     }
     setPath(seq);
@@ -310,7 +310,7 @@ export default function BoardPage() {
             onSave={(text) => {
               dispatch({ type: 'updateConnection', id: whyConn.id, patch: { why: text } });
               setWhyFor(null);
-              if (whyFor.isNew) toast({ text: 'tied · the tag is hanging on the string' });
+              if (whyFor.isNew) toast({ text: 'tied · its tag hangs on the string' });
             }}
             onSkip={() => setWhyFor(null)}
             onRemove={!whyFor.isNew && whyConn.why ? () => {

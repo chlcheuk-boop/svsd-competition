@@ -61,7 +61,7 @@ export function ThreadComposer({
           })}
         </ol>
         <div className="nc-actions">
-          <span className="mono nc-hint" style={{ color: 'var(--ink-soft)' }}>threads are how other people meet you</span>
+          <span className="mono nc-hint" style={{ color: 'var(--ink-soft)' }}>other people meet you through your threads</span>
           <button className="btn btn-ghost" onClick={onCancel}>cancel</button>
           <button className="btn btn-primary" disabled={!title.trim()} onClick={() => onPublish(title.trim(), intro.trim())}>
             publish thread

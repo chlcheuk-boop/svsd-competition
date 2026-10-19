@@ -141,15 +141,15 @@ const STEPS: Step[] = [
     kicker: '1 · connections',
     title: 'Tie two things together',
     body: <>Pick up the <b>yarn</b> (<kbd>Ctrl</kbd>+<kbd>Y</kbd>), click one card, then another. A paper tag swings onto the string: write <em>why</em> they belong together. Click a tag later to edit it. Tied the wrong pair? <kbd>Ctrl</kbd>+<kbd>Z</kbd>.</>,
-    why: <>This is what matching reads. Two people can collect the same poster; <em>how you connect it</em> is what makes your taste yours.</>,
+    why: <>Matching reads these strings. You and a stranger might keep the same poster; <em>what you tie it to</em> makes it yours.</>,
     art: <ArtTie />,
   },
   {
     target: '[data-tool="scissors"]',
     kicker: '2 · breaking connections',
-    title: 'Snip what no longer rhymes',
+    title: 'Snip what no longer fits',
     body: <>Take the <b>scissors</b> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) and click a string to cut it, or drag across several at once. Changed your mind? <kbd>Ctrl</kbd>+<kbd>Z</kbd> ties it back.</>,
-    why: <>Matching reads your board as it is now, so every snip changes who you meet next week. Your taste is allowed to move.</>,
+    why: <>Matching reads your board as it stands today, so a snip can change who you meet next week.</>,
     art: <ArtSnip />,
   },
   {
@@ -157,35 +157,35 @@ const STEPS: Step[] = [
     kicker: '3 · adding to your life',
     title: 'Add something from your life',
     body: <>Open a <b>note</b> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) and pick what it is: a <b>photo</b> (take one or choose from your camera roll), a <b>place</b>, an <b>event</b>, <b>something you noticed</b>, or media you’re into. Add an origin line (where, when, who showed you), then tap the board to drop it.</>,
-    why: <>Give it its own <em>why</em>, even before it’s tied to anything. Open any card later to read or edit it. Your board is built from your life, not from a feed.</>,
+    why: <>Give it its own <em>why</em> before you tie it to anything. You can open any card later to read or change it.</>,
     art: <ArtNote />,
   },
   {
     target: '[data-tool="threads"]',
     kicker: '4 · threads',
     title: 'What is a thread?',
-    body: <>A thread is a path of tied cards with the whys between them, read like a story. <b>Shift-click</b> any chain of tied cards to make one: any length, as long as each pair has a string. The <b>threads</b> view (<kbd>t</kbd>) traces each one on your board.</>,
-    why: <>Your board stays private. Threads are how other people meet you.</>,
+    body: <>A thread is a chain of tied cards with the whys between them, read top to bottom like a story. <b>Shift-click</b> any chain of tied cards to make one: any length, as long as each pair has a string. The <b>threads</b> view (<kbd>t</kbd>) traces each one on your board.</>,
+    why: <>Your board stays private. Other people meet you through the threads you publish.</>,
     art: <ArtThread />,
   },
   {
     target: '[data-nav="matches"]',
     kicker: '5 · matching',
-    title: 'A few people, not everyone',
-    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em> similar or dissimilar? The Mirror (stones), The Lens (a spiral shell), The Parallel (a cloud), The Stranger (a wave). You never see anyone’s whole board, only the slice where yours meets theirs. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s.</>,
+    title: 'Four people a week',
+    body: <>Each week you’re dealt four tarot cards, one for each answer to two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em>? The Mirror (stones), The Lens (a spiral shell), The Parallel (a cloud), The Stranger (a wave). You see the part of their board that meets yours. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s board.</>,
     art: <ArtMatches />,
   },
   {
     target: '[data-nav="passport"]',
     kicker: '6 · the passport',
-    title: 'Where other people leave their mark',
-    body: <>Every comment from a past connection lands in your passport as a stamp: whys from Crossings, notes left on your board, critiques on your threads. Click a stamp for the whole story with that person: every note, every string, and everything you traded. The first pages are your ID and profile (tap your photo to edit them in settings), and the tabs down the side jump between sections.</>,
+    title: 'Notes from people you’ve met',
+    body: <>When someone you’ve matched with leaves you a why, a note on your board or a critique on a thread, it lands in your passport as a stamp. Click a stamp to see your history with that person: their notes, your strings and anything you traded. Your ID and profile come first (tap your photo to edit them in settings), and the tabs down the side jump between sections.</>,
     art: <ArtPassport />,
   },
   {
     target: '.toolbar',
     kicker: '7 · keyboard shortcuts',
-    title: 'Keep your hands on the desk',
+    title: 'Keyboard shortcuts',
     body: (
       <span className="tut-keys">
         <span><kbd>Ctrl</kbd>+<kbd>Y</kbd></span><span>pick up the yarn</span>
@@ -198,7 +198,7 @@ const STEPS: Step[] = [
         <span><kbd>Ctrl</kbd> + scroll</span><span>zoom in and out</span>
       </span>
     ),
-    why: <>On a Mac, <em>⌘</em> works in place of Ctrl. Ctrl+Z can be pressed again to keep stepping back.</>,
+    why: <>On a Mac, use <em>⌘</em> instead of Ctrl. Press Ctrl+Z again to keep stepping back.</>,
     art: <ArtKeys />,
   },
   {

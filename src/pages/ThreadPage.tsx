@@ -179,14 +179,14 @@ export default function ThreadPage() {
                       )}
                     </>
                   ) : (
-                    <p className="serif">no string here yet. {co ? 'write this why together.' : 'the gap is part of the story.'}</p>
+                    <p className="serif">no string here yet. {co ? 'write this why together.' : 'tie these two on your board to fill the gap.'}</p>
                   )}
                 </motion.div>
               )}
             </section>
           );
         })}
-        <footer className="tv-end mono">— end of thread · {items.length} references —</footer>
+        <footer className="tv-end mono">end of thread · {items.length} references</footer>
       </div>
 
       <Toolbar
@@ -197,7 +197,7 @@ export default function ThreadPage() {
             onClick: () => {
               if (mine && !thread.isPublic) {
                 dispatch({ type: 'updateThread', id, patch: { isPublic: true } });
-                toast({ text: 'published · it now appears on your profile' });
+                toast({ text: 'published · it’s in your passport now' });
                 return;
               }
               try {
@@ -205,7 +205,7 @@ export default function ThreadPage() {
               } catch {
                 /* clipboard blocked */
               }
-              toast({ text: 'link copied · threads are how people meet you' });
+              toast({ text: 'link copied' });
             },
           },
           { id: 'back', label: mine ? 'back to board' : 'back', icon: <IconArrowLeft />, onClick: () => (mine ? nav('/') : nav(-1)) },

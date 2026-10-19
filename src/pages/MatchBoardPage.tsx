@@ -144,7 +144,7 @@ export default function MatchBoardPage() {
 
   const onConnect = (from: string, to: string) => {
     if (findLink(connections, from, to)) return toast({ text: 'these two are already tied' });
-    if (crossing && alreadyTied) return toast({ text: 'one string per Crossing. make it count.' });
+    if (crossing && alreadyTied) return toast({ text: 'you can add one string per Crossing' });
     const c: Connection = { id: uid('x'), from, to, color: state.yarnColor, addedAt: today(), via: 'maya' };
     setPending(c);
     setWhyFor(c.id);
@@ -172,7 +172,7 @@ export default function MatchBoardPage() {
       type: 'addThread',
       thread: {
         id: `jt-${id}`, owner: 'maya', coAuthor: id, title: `Crossing with ${first}`,
-        intro: 'A shared thread space. Keep building it together.',
+        intro: 'A thread you’re both building.',
         mediaIds: mine ? [mine.from, mine.to, 'm1', 'mk1'] : ['m1', 'mk1'],
         publishedAt: today(), isPublic: false,
       },
@@ -406,7 +406,7 @@ function CrossingModal({ phase, personId, onSee, onStay }: { phase: Phase; perso
             <span className="mono-label">crossing complete</span>
             <p className="serif">{first} tied a string on your board.</p>
             {personId === 'kenji' && <blockquote className="serif">“{KENJI_GIFT_CONNECTION.why?.replace('Kenji: ', '')}”</blockquote>}
-            <span className="mono">a shared thread space is open for you both · his why is now a passport stamp</span>
+            <span className="mono">you now share a thread · his why is in your passport as a stamp</span>
             <div className="crossing-actions">
               <button className="btn btn-primary" onClick={onSee}>see it on your board</button>
               <button className="btn btn-quiet" onClick={onStay}>stay here</button>

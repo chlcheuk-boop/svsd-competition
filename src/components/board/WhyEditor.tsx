@@ -95,7 +95,7 @@ export function WhyEditor({ at, initial = '', required, title, onSave, onSkip, o
           )}
         </div>
         <p className="why-hint mono">
-          {required ? 'a why is required in a Crossing: it becomes their passport stamp.' : 'connections with a why are what matching reads.'}
+          {required ? 'a Crossing needs a why: it goes into their passport as a stamp.' : 'matching reads the whys on your strings.'}
         </p>
       </motion.div>
     </div>
