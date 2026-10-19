@@ -22,7 +22,7 @@ const c = (id: string, from: string, to: string, why: string, color: Connection[
   ({ id, from, to, why, color, addedAt: '2026-01-02' });
 const a = (kind: ArtSpec['kind'], colors: string[], seed: number): ArtSpec => ({ kind, colors, seed });
 
-/* ---------------- II · The Lens · Kenji ---------------- */
+/* ---------------- II · Shell · Kenji ---------------- */
 const kenjiMedia: Media[] = [
   mk('k1', 'photo', "Expo '70 poster", 'Osaka, 1970', a('sun', [ART.red, ART.cream, ART.ink], 3), 140, 140,
     { ref: 'm1', origin: "my grandfather's, rolled in a tube", tags: ['poster', '70s'] }),
@@ -64,7 +64,7 @@ const kenjiThreads: Thread[] = [
   { id: 'kt2', owner: 'kenji', title: 'Quiet records, loud years', mediaIds: ['k7', 'k8', 'k4'], publishedAt: '2026-09-12', isPublic: true },
 ];
 
-/* ---------------- I · The Mirror · Lena ---------------- */
+/* ---------------- I · Rock · Lena ---------------- */
 const lenaMedia: Media[] = [
   mk('l1', 'photo', 'Bauhaus exhibition, 1923', 'reprint', a('bauhaus', [ART.red, ART.navy, ART.mustard, ART.cream], 7), 160, 120,
     { ref: 'm2', shape: 'punched', origin: 'Dessau gift shop, age 12', tags: ['grid', 'color', 'architecture'] }),
@@ -100,7 +100,7 @@ const lenaThreads: Thread[] = [
   { id: 'lt1', owner: 'lena', title: 'Signs that forgot to be pretty', mediaIds: ['l1', 'l2', 'l3', 'l6'], publishedAt: '2026-07-20', isPublic: true },
 ];
 
-/* ---------------- III · The Parallel · Marcus ---------------- */
+/* ---------------- III · Pearl · Marcus ---------------- */
 const marcusMedia: Media[] = [
   mk('r1', 'music', 'Kind of Blue', 'Miles Davis', a('waves', [ART.navy, ART.sky, ART.cream], 4), 160, 140,
     { ref: 'm3', origin: 'the first record I owned' }),
@@ -136,7 +136,7 @@ const marcusThreads: Thread[] = [
   { id: 'rt1', owner: 'marcus', title: 'The note you don’t play', mediaIds: ['r1', 'r3', 'r4', 'r7'], publishedAt: '2026-05-01', isPublic: true },
 ];
 
-/* ---------------- IV · The Stranger · Ama ---------------- */
+/* ---------------- IV · Ocean · Ama ---------------- */
 const amaMedia: Media[] = [
   mk('a1', 'photo', 'Kente strip, Bonwire', 'woven', a('stripes', [ART.mustard, ART.forest, ART.red, ART.ink, ART.mustard], 51), 160, 140,
     { origin: 'my grandmother’s cloth', tags: ['textile'] }),

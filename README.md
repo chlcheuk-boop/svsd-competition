@@ -16,8 +16,8 @@ Open http://localhost:5173. It is designed for a 1440×900 presentation screen a
 ## Demo script (the pitch path)
 
 1. **Board.** Press **Note** (or `n`) to add a reference, then click anywhere to drop it. Press **Yarn** (`y`), click the new card and then an existing one, and write a why on the tag. Press **Scissors** (`x`) and snip an old string. You can undo the snip from the toast.
-2. **Matches of the week** (the card-fan icon). Press **reveal all**, then click **II · The Lens** (Kenji).
-3. Press **See where you meet**. You see only the slice of Kenji's board that meets yours (for The Lens: the posters you share, and the different strings he ran from them). Turn on **what's shared** to make the shared cards glow.
+2. **Matches of the week** (the card-fan icon). Click a card to flip it, then click **II · Shell** (Kenji).
+3. Press **See where you meet**. You see only the slice of Kenji's board that meets yours (for Shell: the posters you share, and the different strings he ran from them). Turn on **what's shared** to make the shared cards glow.
 4. Press **Yarn** to start a Crossing. Tie two of Kenji's cards and write a why (it's required). Kenji ties one back. Press **see it on your board** to land on his stamped string.
 5. Open the **Passport** and click the cover. Kenji's comment is the fresh stamp marked "new". Click it, then **show on my board** to jump back to that string.
 

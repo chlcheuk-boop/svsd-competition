@@ -2,10 +2,10 @@ import type { Connection, Media, Quadrant } from '../types';
 
 /**
  * A match never sees someone's whole board. They see a slice, chosen for how their two boards meet:
- *   I   Mirror   (similar collection, similar connections): things you both have, tied the way you'd tie them
- *   II  Lens     (similar collection, different connections): a thing you share, and where they took it instead
- *   III Parallel (different collection, similar connections): different things, tied for the same reasons
- *   IV  Stranger (different, different): one small corner of their desk, to start
+ *   I   Rock     (similar collection, similar connections): things you both have, tied the way you'd tie them
+ *   II  Shell    (similar collection, different connections): a thing you share, and where they took it instead
+ *   III Pearl    (different collection, similar connections): different things, tied for the same reasons
+ *   IV  Ocean    (different, different): one small corner of their desk, to start
  * No performing a whole board for strangers; just the overlap that's worth a conversation.
  */
 
