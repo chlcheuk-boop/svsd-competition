@@ -104,8 +104,20 @@ export const MY_EVENTS: Media[] = [
   E('e3', 'philly-concerts', 'Concerts in Philly', 'Philadelphia', '2026-09-16', ['music', 'philly', 'light']),
 ];
 
+/** Places you go. Files live in /public/places. */
+const L = (id: string, file: string, title: string, where: string, tags: string[]): Media => ({
+  id, type: 'place', title, subtitle: where, tags, imageData: `/places/${file}.jpg`,
+  x: 0, y: 0, rot: 0, shape: 'polaroid', tint: 'white', addedAt: '2026-10-19',
+});
+
+export const MY_PLACES: Media[] = [
+  L('pl1', 'love-statue', 'LOVE statue', 'LOVE Park, Philadelphia', ['philly', 'friends', 'type']),
+  L('pl2', 'schuylkill-river', 'Schuylkill River trail', 'Philadelphia', ['philly', 'nature', 'water']),
+  L('pl3', 'stouffer-night', 'Stouffer at night', 'Penn, Philadelphia', ['philly', 'light', 'quiet']),
+];
+
 /** everything real, in the order it joins a board */
-export const MY_THINGS: Media[] = [...MY_PHOTOS, ...MY_OBJECTS, ...MY_MUSIC, ...MY_EVENTS];
+export const MY_THINGS: Media[] = [...MY_PHOTOS, ...MY_OBJECTS, ...MY_MUSIC, ...MY_EVENTS, ...MY_PLACES];
 
 /** Lay new cards out on a tidy grid beside the cards already on the desk, in "my layout". */
 export function placeBeside(existing: Media[], fresh: Media[], cols = 4, cellW = 280, cellH = 300): Media[] {

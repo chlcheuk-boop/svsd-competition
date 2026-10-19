@@ -38,15 +38,19 @@ export interface AppState {
 const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_THINGS)];
 
 /**
- * The drawn stand-ins that used to fill the photo / image, object and music categories. Real images
+ * The drawn stand-ins that used to fill the photo / image, object, music, place and event categories. Real images
  * replaced them, so they, and any string tied to them, leave every board (new and saved).
  * Kenji's old handbill gift (mk1) goes too; his Crossing now ties a string between two real cards.
  */
-const DRAWN_OBJECTS_AND_MUSIC = ['m3', 'm9', 'm6', 'm10', 'm15', 'm22', 'm23', 'm27', 'm31', 'm36', 'm37', 'm42', 'm45', 'm47'];
+const DRAWN_PLACES_AND_EVENTS = ['m49', 'm53', 'm51', 'm55'];
+const DRAWN_OBJECTS_AND_MUSIC = [...DRAWN_PLACES_AND_EVENTS, 'm3', 'm9', 'm6', 'm10', 'm15', 'm22', 'm23', 'm27', 'm31', 'm36', 'm37', 'm42', 'm45', 'm47'];
 const DRAWN_PHOTOS = new Set([...DRAWN_OBJECTS_AND_MUSIC, 'mk1', 'm1', 'm2', 'm14', 'm7', 'm12', 'm16', 'm17', 'm19', 'm21', 'm25', 'm28', 'm29', 'm30', 'm33', 'm35', 'm38', 'm48', 'm50', 'm54']);
 
 function dropDrawnPhotos(s: AppState): AppState {
-  const media = s.media.filter((m) => !DRAWN_PHOTOS.has(m.id));
+  const media = s.media
+    .filter((m) => !DRAWN_PHOTOS.has(m.id))
+    // places briefly saved as l1–l3 (Lena's card ids) get their own ids
+    .map((m) => (m.type === 'place' && /^l[123]$/.test(m.id) && m.imageData?.startsWith('/places/') ? { ...m, id: `p${m.id}` } : m));
   let connections = s.connections.filter((c) => !DRAWN_PHOTOS.has(c.from) && !DRAWN_PHOTOS.has(c.to));
   // a finished Crossing keeps Kenji's string, now tied to a real photo
   if (s.crossings.kenji === 'complete' && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
@@ -79,7 +83,7 @@ export function initialState(): AppState {
     matchesDealt: false,
     media: withBeside(withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA])),
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
-    boardEdition: 9,
+    boardEdition: 10,
     arrange: 'kind',
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
@@ -138,12 +142,12 @@ function load(): AppState {
       merged.media = withWhys([...merged.media, ...LIFE_MEDIA.filter((m) => !haveM.has(m.id))]);
       merged.connections = [...merged.connections, ...LIFE_CONNECTIONS.filter((c) => !haveC.has(c.id))];
     }
-    if (merged.boardEdition < 9) {
-      // real photos, objects, albums and events
+    if (merged.boardEdition < 10) {
+      // real photos, objects, albums, events and places
       const haveM = new Set(merged.media.map((m) => m.id));
       merged.media = [...merged.media, ...placeBeside(merged.media, MY_THINGS.filter((m) => !haveM.has(m.id)))];
     }
-    merged.boardEdition = 9;
+    merged.boardEdition = 10;
     // photos and images are one category now: anything saved as an image becomes a photo
     const asPhoto = (m: Media): Media => ((m.type as string) === 'image' ? { ...m, type: 'photo' } : m);
     merged.media = merged.media.map(asPhoto);
