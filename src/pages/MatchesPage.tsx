@@ -165,6 +165,11 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
 
 export default function MatchesPage() {
   const vp = useViewport();
+  // side by side on desktop: shrink the 740x820 card field so the whole page fits without scrolling
+  // (80px above and 40px below; the intro column takes 380px plus the 24px gap)
+  const fieldFit = vp.w > 1100
+    ? { zoom: Math.min(1, (vp.h - 120) / 820, (vp.w - 96 - 380 - 24) / 740) }
+    : undefined;
   const cardW = vp.phone ? Math.min(CARD_W, Math.floor((vp.w - 24) / 2 - 34)) : CARD_W;
   const { state, dispatch } = useStore();
   const nav = useNavigate();
@@ -203,7 +208,7 @@ export default function MatchesPage() {
         </ul>
       </header>
 
-      <div className="tarot-field" style={vp.phone ? { height: 2 * (Math.round(cardW * 1.75) + 76) } : undefined}>
+      <div className="tarot-field" style={vp.phone ? { height: 2 * (Math.round(cardW * 1.75) + 76) } : fieldFit}>
         <div className="axis axis-x" aria-hidden="true">
           <span className="mono axis-end left">similar connections</span>
           <span className="mono axis-title">connections →</span>
