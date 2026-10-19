@@ -548,8 +548,18 @@ export default function BoardView(props: BoardViewProps) {
       ]),
     [sections],
   );
-  // a hanging tag covers about 26 x 46 below its knot
-  const onHeading = (p: Pt) => headingBoxes.some((b) => p.x + 14 > b.x0 && p.x - 14 < b.x1 && p.y + 46 > b.y0 && p.y - 4 < b.y1);
+  // each card's reason tab hangs off its top-right corner (up to 156 wide, two lines tall)
+  const reasonBoxes = useMemo(
+    () =>
+      media.filter((m) => m.why).map((m) => {
+        const { w } = sizeOf(m);
+        return { x0: m.x + w + 26 - 160, y0: m.y - 20, x1: m.x + w + 30, y1: m.y + 34 };
+      }),
+    [media],
+  );
+  // a hanging tag covers about 26 x 46 below its knot; keep it off headings and reason tabs
+  const onHeading = (p: Pt) =>
+    [...headingBoxes, ...reasonBoxes].some((b) => p.x + 14 > b.x0 && p.x - 14 < b.x1 && p.y + 46 > b.y0 && p.y - 4 < b.y1);
   const SPOTS = [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8, 0.14, 0.86];
   /** the spot along the string nearest `prefer` that keeps clear of headings */
   const spotOn = (curve: Parameters<typeof pointAt>[0], prefer: number) => {
