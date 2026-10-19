@@ -6,6 +6,7 @@ import { KENJI_GIFT_CONNECTION, KENJI_PASSPORT_STAMP, PASSPORT_STAMPS } from '..
 import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 import { MY_THINGS, placeBeside } from '../data/myPhotos';
+import { MY_CONNECTIONS, MY_REASONS } from '../data/myConnections';
 
 const KEY = 'purl.state.v1';
 /** where boards were saved before the app was renamed Purl; read once, then moved */
@@ -35,7 +36,8 @@ export interface AppState {
 }
 
 /** the desk plus the real photos, placed on a grid beside it */
-const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_THINGS)];
+const withReason = (m: Media): Media => (!m.why && MY_REASONS[m.id] ? { ...m, why: MY_REASONS[m.id] } : m);
+const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_THINGS.map(withReason))];
 
 /**
  * The drawn stand-ins that used to fill the photo / image, object, music, place, event and film categories. Real images
@@ -84,8 +86,8 @@ export function initialState(): AppState {
     matchesSeen: false,
     matchesDealt: false,
     media: withBeside(withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA])),
-    connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
-    boardEdition: 11,
+    connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS, ...MY_CONNECTIONS],
+    boardEdition: 13,
     arrange: 'kind',
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
@@ -149,7 +151,21 @@ function load(): AppState {
       const haveM = new Set(merged.media.map((m) => m.id));
       merged.media = [...merged.media, ...placeBeside(merged.media, MY_THINGS.filter((m) => !haveM.has(m.id)))];
     }
-    merged.boardEdition = 11;
+    if (merged.boardEdition < 12) {
+      // starter strings and reasons for the real cards (never over a reason already written)
+      const ids = new Set(merged.media.map((m) => m.id));
+      const haveC = new Set(merged.connections.map((c) => c.id));
+      merged.media = merged.media.map(withReason);
+      merged.connections = [...merged.connections, ...MY_CONNECTIONS.filter((c) => !haveC.has(c.id) && ids.has(c.from) && ids.has(c.to))];
+    }
+    if (merged.boardEdition < 13) {
+      // the first batch of starter strings (mc1…) is replaced by the trimmed set with stable ids
+      const ids = new Set(merged.media.map((m) => m.id));
+      const kept = merged.connections.filter((c) => !/^mc\d+$/.test(c.id));
+      const haveC = new Set(kept.map((c) => c.id));
+      merged.connections = [...kept, ...MY_CONNECTIONS.filter((c) => !haveC.has(c.id) && ids.has(c.from) && ids.has(c.to))];
+    }
+    merged.boardEdition = 13;
     // photos and images are one category now: anything saved as an image becomes a photo
     const asPhoto = (m: Media): Media => ((m.type as string) === 'image' ? { ...m, type: 'photo' } : m);
     merged.media = merged.media.map(asPhoto);
