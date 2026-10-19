@@ -57,6 +57,7 @@ export function initialState(): AppState {
       capture: { camera: true, library: true, location: false },
       defaultYarn: 'tangerine',
       reduceMotion: false,
+      shareProfile: { username: true, demographic: false, origin: true, creative: true },
     },
     yarnColor: 'tangerine',
   };

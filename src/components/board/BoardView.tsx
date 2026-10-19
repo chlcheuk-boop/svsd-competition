@@ -53,6 +53,8 @@ export interface BoardViewProps {
   traces?: { connectionIds: string[]; color: Accent }[];
   /** labeled frames drawn under the cards when the desk is arranged on a grid */
   sections?: Section[];
+  /** a short note pinned under a card (e.g. why it's in a match's slice) */
+  badges?: Map<string, string>;
   placeGhost?: Media | null;
   /** Rendered above the canvas in screen space; receives a world→screen mapper. */
   screenOverlay?: (toScreen: (p: Pt) => Pt, cam: Camera) => ReactNode;
@@ -82,7 +84,7 @@ export default function BoardView(props: BoardViewProps) {
   const {
     media, connections, tool, yarnColor, editable = true, maskPrefix, onMove, onConnect, onSnip, onCardClick,
     onPlace, onTagClick, onBackgroundClick, selectedId, pathSelection = [], emphasis, glow, backdrop, focus,
-    frame, traces, sections, placeGhost, screenOverlay, initialCamera, onCamera,
+    frame, traces, sections, badges, placeGhost, screenOverlay, initialCamera, onCamera,
   } = props;
 
   const viewport = useRef<HTMLDivElement>(null);
@@ -626,6 +628,7 @@ export default function BoardView(props: BoardViewProps) {
                 <MediaCard m={m} />
                 {pathIdx >= 0 && <span className="path-badge mono">{pathIdx + 1}</span>}
               </motion.div>
+              {badges?.get(m.id) && <span className="card-badge mono">{badges.get(m.id)}</span>}
             </div>
           );
         })}

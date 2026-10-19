@@ -10,6 +10,7 @@ import { IconClose, IconOverlay, IconStamp, IconYarn } from '../components/ui/ic
 import { accentVar } from '../components/ui/MiniStamp';
 import { Thumb } from '../components/ui/Thumb';
 import { QUADRANT_INFO } from '../components/tarot/TarotArt';
+import { AnimalMark } from '../components/tarot/Animals';
 import { YarnSwatches } from './BoardPage';
 import { matchFor } from '../data/matches';
 import { person } from '../data/people';
@@ -17,6 +18,7 @@ import { KENJI_GIFT_CONNECTION, KENJI_GIFT_MEDIA, KENJI_PASSPORT_STAMP } from '.
 import { today, uid, useStore } from '../store/store';
 import type { Connection, Media } from '../types';
 import type { Pt } from '../lib/geometry';
+import { sliceFor } from '../lib/matchSlice';
 import './match-board.css';
 
 type Phase = 'idle' | 'waiting' | 'arrived';
@@ -51,18 +53,47 @@ export default function MatchBoardPage() {
   }, [crossingParam, id]);
 
   const contrib = state.contributions[id] ?? { media: [], connections: [] };
-  const media = useMemo(() => (mp ? [...mp.board.media, ...contrib.media] : []), [mp, contrib.media]);
-  const connections = useMemo(() => (mp ? [...mp.board.connections, ...contrib.connections] : []), [mp, contrib.connections]);
+
+  // you never see their whole board: only the slice where your two boards meet
+  const slice = useMemo(
+    () => (mp ? sliceFor(mp.quadrant, { media: state.media, connections: state.connections }, mp.board) : null),
+    [mp, state.media, state.connections],
+  );
+  const media = useMemo(() => {
+    if (!mp || !slice) return [];
+    const list = [...slice.media];
+    const have = new Set(list.map((m) => m.id));
+    // anything you added in a Crossing stays visible, with the cards your string is tied to
+    const pool = [...mp.board.media, ...contrib.media];
+    const extraIds = [...contrib.media.map((m) => m.id), ...contrib.connections.flatMap((c) => [c.from, c.to])];
+    for (const xid of extraIds) {
+      if (have.has(xid)) continue;
+      const m = pool.find((x) => x.id === xid);
+      if (!m) continue;
+      const i = list.length;
+      list.push({ ...m, x: (i % slice.cols) * 300, y: Math.floor(i / slice.cols) * 320, rot: 0 });
+      have.add(xid);
+    }
+    return list;
+  }, [mp, slice, contrib.media, contrib.connections]);
+  const connections = useMemo(() => {
+    const ids = new Set(media.map((m) => m.id));
+    return [...(slice?.connections ?? []), ...contrib.connections].filter((c) => ids.has(c.from) && ids.has(c.to));
+  }, [slice, contrib.connections, media]);
   const byId = useMemo(() => new Map(media.map((m) => [m.id, m])), [media]);
 
-  const myIds = useMemo(() => new Set(state.media.map((m) => m.id)), [state.media]);
+  // only threads that run through the slice are shown
+  const sliceThreads = useMemo(
+    () => (mp ? mp.threads.filter((t) => t.mediaIds.filter((x) => byId.has(x)).length >= 2) : []),
+    [mp, byId],
+  );
+
   const glow = useMemo(() => {
-    if (!overlay) return undefined;
-    const shared = new Set(media.filter((m) => m.ref && myIds.has(m.ref)).map((m) => m.id));
-    const g = new Set(shared);
-    connections.forEach((c) => shared.has(c.from) && shared.has(c.to) && g.add(c.id));
+    if (!overlay || !slice) return undefined;
+    const g = new Set([...slice.shared].filter((x) => byId.has(x)));
+    connections.forEach((c) => g.has(c.from) && g.has(c.to) && g.add(c.id));
     return g;
-  }, [overlay, media, connections, myIds]);
+  }, [overlay, slice, connections, byId]);
 
   const screenOverlay = useCallback(
     (toScreen: (p: Pt) => Pt) => {
@@ -168,17 +199,22 @@ export default function MatchBoardPage() {
         onBackgroundClick={() => setSelected(null)}
         selectedId={selected}
         glow={glow}
-        backdrop={overlay ? { media: state.media, connections: state.connections } : null}
+        badges={slice?.notes}
         screenOverlay={screenOverlay}
       />
 
       <div className="mb-header">
         <Avatar size={36} label={p.initial} color={accentVar(p.color)} ink={p.color === 'tangerine' || p.color === 'pink' ? '#fff' : 'var(--ink)'} />
         <div>
-          <strong>{p.name}’s board</strong>
-          <span className="mono">{p.craft} · {p.city} · <span style={{ color: accentVar(info.accent) === 'var(--sky)' ? 'var(--ink-soft)' : undefined }}>{info.numeral} {info.name}</span></span>
+          <strong>Where you meet {first}</strong>
+          <span className="mono">{p.craft} · {p.city} · {info.numeral} {info.name}</span>
+          <span className="mono mb-slice">
+            {slice?.media.length} of {slice?.total} references · {slice?.summary}
+          </span>
         </div>
-        {overlay && <span className="chip lime mono">overlay on · shared glows</span>}
+        <span className="mb-animal" style={{ background: accentVar(info.accent) }}>
+          <AnimalMark q={mp.quadrant} size={26} color="var(--ink)" cut={accentVar(info.accent)} />
+        </span>
       </div>
 
       <AnimatePresence>
@@ -220,7 +256,8 @@ export default function MatchBoardPage() {
               <IconClose size={16} />
             </button>
             <span className="mono-label">{first}’s threads</span>
-            {mp.threads.map((t) => (
+            {sliceThreads.length === 0 && <p className="mono drawer-bio">{first}’s threads stay private until a thread runs through where you meet.</p>}
+            {sliceThreads.map((t) => (
               <Link key={t.id} to={`/thread/${t.id}`} className="drawer-thread">
                 <div className="drawer-thumbs">
                   {t.mediaIds.slice(0, 4).map((mid) => byId.get(mid) && <Thumb key={mid} m={byId.get(mid)!} size={40} title={false} />)}
@@ -236,7 +273,7 @@ export default function MatchBoardPage() {
       </AnimatePresence>
       {!drawer && (
         <button className="drawer-tab mono" onClick={() => setDrawer(true)}>
-          threads ({mp.threads.length})
+          threads ({sliceThreads.length})
         </button>
       )}
 
@@ -280,7 +317,7 @@ export default function MatchBoardPage() {
 
       <Toolbar
         tools={[
-          { id: 'overlay', label: 'overlay', icon: <IconOverlay />, active: overlay, onClick: () => setOverlay((o) => !o) },
+          { id: 'overlay', label: 'what’s shared', icon: <IconOverlay />, active: overlay, onClick: () => setOverlay((o) => !o) },
           {
             id: 'yarn', label: crossing ? 'yarn · crossing' : 'yarn', icon: <IconYarn />, active: tool === 'yarn',
             onClick: () => {

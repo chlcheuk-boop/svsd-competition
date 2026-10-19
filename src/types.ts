@@ -113,6 +113,8 @@ export interface Settings {
   capture: { camera: boolean; library: boolean; location: boolean };
   defaultYarn: Accent;
   reduceMotion: boolean;
+  /** which details about you your matches can see */
+  shareProfile: { username: boolean; demographic: boolean; origin: boolean; creative: boolean };
 }
 
 export interface MatchState {

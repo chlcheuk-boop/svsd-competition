@@ -8,6 +8,7 @@ import { Avatar, Toolbar, useToast } from '../components/ui/Frame';
 import { IconBookmark, IconClose, IconQuadrants, IconShuffle, IconTicket } from '../components/ui/icons';
 import { QUADRANT_INFO, TarotBack, TarotIllustration } from '../components/tarot/TarotArt';
 import { Thumb } from '../components/ui/Thumb';
+import { AnimalMark, ANIMAL_NAME } from '../components/tarot/Animals';
 import { accentVar } from '../components/ui/MiniStamp';
 import type { MatchProfile, Quadrant } from '../types';
 import { useViewport } from '../lib/useViewport';
@@ -151,7 +152,7 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
 
           <div className="focus-actions">
             <button className="btn btn-primary" onClick={onCross}>Start a Crossing</button>
-            <button className="btn btn-ghost" onClick={onView}>View their board</button>
+            <button className="btn btn-ghost" onClick={onView}>See where you meet</button>
             <button className="btn btn-quiet" onClick={onPass}>Pass</button>
           </div>
           <span className="tarot-name big">{info.name}</span>
@@ -206,8 +207,10 @@ export default function MatchesPage() {
             const info = QUADRANT_INFO[m.quadrant];
             return (
               <li key={m.quadrant}>
-                <span className="legend-dot" style={{ background: accentVar(info.accent) }} />
-                <span className="mono">{info.numeral}</span> {info.name} <span className="mono legend-axis">{info.story}</span>
+                <span className="legend-badge" style={{ background: accentVar(info.accent) }}>
+                  <AnimalMark q={m.quadrant} size={20} color="var(--ink)" cut={accentVar(info.accent)} />
+                </span>
+                <span className="mono">{info.numeral}</span> {info.name} <span className="mono legend-axis">{ANIMAL_NAME[m.quadrant]} · {info.story}</span>
               </li>
             );
           })}

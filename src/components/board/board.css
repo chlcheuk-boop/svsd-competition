@@ -74,10 +74,10 @@
   z-index: 4;
 }
 .card-slot.glow .paper-card {
-  box-shadow: 0 0 0 3px var(--lime), 0 0 26px 6px rgba(201, 214, 113, 0.75), var(--shadow-paper);
+  box-shadow: 0 0 0 3px var(--lime), 0 0 26px 6px rgba(242, 197, 46, 0.7), var(--shadow-paper);
 }
 .card-slot.glow .paper-card.shape-folded {
-  filter: drop-shadow(0 0 3px var(--lime)) drop-shadow(0 0 14px rgba(201, 214, 113, 0.9));
+  filter: drop-shadow(0 0 3px var(--lime)) drop-shadow(0 0 14px rgba(242, 197, 46, 0.85));
 }
 .card-slot.pulse .card-motion::after {
   content: '';
@@ -105,7 +105,7 @@
   pointer-events: stroke;
 }
 .yarn-glow {
-  stroke: rgba(201, 214, 113, 0.75);
+  stroke: rgba(242, 197, 46, 0.7);
   filter: blur(3px);
 }
 .yarn-pulse {
@@ -325,4 +325,20 @@
 }
 .yarn-layer.under {
   z-index: 0;
+}
+.card-badge {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 12px);
+  white-space: nowrap;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  pointer-events: none;
+}
+.card-slot.glow .card-badge {
+  background: var(--lime);
+  color: var(--ink);
 }

@@ -7,6 +7,7 @@ import { IconArrowLeft } from '../components/ui/icons';
 import { accentVar } from '../components/ui/MiniStamp';
 import { QUADRANT_INFO } from '../components/tarot/TarotArt';
 import { YARN_COLORS } from './BoardPage';
+import { MAYA } from '../data/people';
 import type { Quadrant, Settings } from '../types';
 import './settings.css';
 
@@ -15,6 +16,7 @@ export default function SettingsPage() {
   const nav = useNavigate();
   const toast = useToast();
   const s = state.settings;
+  const share = s.shareProfile ?? { username: true, demographic: false, origin: true, creative: true };
   const set = (patch: Partial<Settings>) => dispatch({ type: 'settings', patch });
 
   return (
@@ -47,6 +49,38 @@ export default function SettingsPage() {
             {state.threads.filter((t) => t.owner === 'maya').map((t) => (
               <Toggle key={t.id} label={t.title} checked={t.isPublic} onChange={(v) => dispatch({ type: 'updateThread', id: t.id, patch: { isPublic: v } })} />
             ))}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="serif">What your matches see</legend>
+          <p className="mono helper">your four matches only see what you switch on here. everyone else sees nothing.</p>
+          {([
+            ['username', 'Username', MAYA.username],
+            ['demographic', 'Demographic', MAYA.demographic],
+            ['origin', 'Place of origin', MAYA.origin],
+            ['creative', 'What kind of creative you are', MAYA.creative],
+          ] as const).map(([key, label, value]) => (
+            <Toggle
+              key={key}
+              label={label}
+              hint={value}
+              checked={share[key]}
+              onChange={(v) => set({ shareProfile: { ...share, [key]: v } })}
+            />
+          ))}
+          <div className="share-preview" aria-label="How you appear on a match’s card">
+            <span className="mono share-preview-label">how you appear on their tarot card</span>
+            <div className="share-card">
+              <span className="share-avatar serif">{MAYA.initial}</span>
+              <div>
+                <strong>{share.username ? MAYA.username : 'a Rhyme member'}</strong>
+                {share.creative && <span className="mono">{MAYA.creative}</span>}
+                {share.origin && <span className="mono">{MAYA.origin}</span>}
+                {share.demographic && <span className="chip">{MAYA.demographic}</span>}
+                {!share.creative && !share.origin && !share.demographic && <span className="mono">only your board’s slice, no details</span>}
+              </div>
+            </div>
           </div>
         </fieldset>
 

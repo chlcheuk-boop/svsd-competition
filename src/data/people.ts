@@ -9,6 +9,11 @@ export const MAYA = {
   bio: 'Collecting signage, slow films and anything printed in two colors.',
   memberSince: 'Feb 2025',
   initial: 'M',
+  // what a match can be shown, if Maya allows it (Settings → What your matches see)
+  username: '@maya.inks',
+  demographic: '20 · Gen Z',
+  origin: 'grew up in Harrisburg, PA',
+  creative: 'graphic designer, still in school',
 };
 
 export const PEOPLE: Record<string, Person> = {

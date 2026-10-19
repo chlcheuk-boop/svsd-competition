@@ -10,9 +10,9 @@ function Svg({ size = 22, children, ...rest }: P) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokeWidth={2}
+      strokeLinecap="square"
+      strokeLinejoin="miter"
       aria-hidden="true"
       {...rest}
     >

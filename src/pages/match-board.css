@@ -247,3 +247,15 @@
     top: 136px;
   }
 }
+.mb-slice {
+  display: block;
+  color: var(--tangerine-deep) !important;
+}
+.mb-animal {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: none;
+}

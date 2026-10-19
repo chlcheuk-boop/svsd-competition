@@ -3,12 +3,12 @@ import { person } from '../../data/people';
 import { QUADRANT_INFO } from '../tarot/TarotArt';
 
 export const STAMP_INK: Record<string, string> = {
-  tangerine: '#D2552A',
-  pink: '#C94A68',
-  sky: '#3F78AD',
-  lime: '#6F7C22',
-  peach: '#B9784F',
-  ink: '#2E2C2A',
+  tangerine: '#C8361F',
+  pink: '#B83F63',
+  sky: '#2F5FB8',
+  lime: '#A37C0C',
+  peach: '#A86A3F',
+  ink: '#1D1A17',
 };
 
 const SIZE: Record<StampShape, { w: number; h: number }> = {

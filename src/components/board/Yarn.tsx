@@ -1,12 +1,12 @@
 import type { Accent } from '../../types';
 
 export const YARN_HEX: Record<Accent, { base: string; deep: string; light: string }> = {
-  tangerine: { base: '#E05E31', deep: '#A9411C', light: '#F59A72' },
-  peach: { base: '#EFBF9F', deep: '#C98E68', light: '#FBE4D4' },
-  lime: { base: '#B9C85A', deep: '#7F8C2E', light: '#DDE69B' },
-  sky: { base: '#8FBDE6', deep: '#4F86B8', light: '#D2E6F8' },
-  pink: { base: '#EE7A93', deep: '#B9475F', light: '#F8B4C3' },
-  ink: { base: '#3A3735', deep: '#141312', light: '#8A847E' },
+  tangerine: { base: '#E1442A', deep: '#A32E18', light: '#F38A6F' },
+  peach: { base: '#E9B98F', deep: '#B9875C', light: '#F8DFC8' },
+  lime: { base: '#EBBE26', deep: '#A9850F', light: '#F7DE84' },
+  sky: { base: '#7FA4E0', deep: '#3F68B4', light: '#C9DAF5' },
+  pink: { base: '#E8678A', deep: '#B13F60', light: '#F5B1C3' },
+  ink: { base: '#2A2622', deep: '#0E0C0A', light: '#7D746B' },
 };
 
 /** A strand of yarn: base fiber, dark twist marks and a light highlight so it reads as twisted fiber. */
