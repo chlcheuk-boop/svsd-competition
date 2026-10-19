@@ -14,13 +14,13 @@ body,
 /* the wall: board-formed concrete (warmed to the cream base), with a soft light falling from above.
    It stays put behind everything; the cards and pages never catch the light. */
 body {
-  background-color: #f4e7de;
+  background-color: var(--paper);
   background-image:
     radial-gradient(ellipse 70% 85% at 40% -12%, rgba(255, 251, 245, 0.95), rgba(255, 249, 241, 0.55) 40%, rgba(255, 248, 238, 0) 72%),
     linear-gradient(112deg, rgba(255, 249, 240, 0) 28%, rgba(255, 249, 240, 0.32) 40%, rgba(255, 249, 240, 0) 54%),
-    radial-gradient(ellipse 140% 80% at 50% 125%, rgba(67, 32, 5, 0.13), rgba(67, 32, 5, 0) 62%),
-    radial-gradient(ellipse 50% 90% at -8% 60%, rgba(67, 32, 5, 0.1), rgba(67, 32, 5, 0) 70%),
-    radial-gradient(ellipse 50% 90% at 108% 60%, rgba(67, 32, 5, 0.12), rgba(67, 32, 5, 0) 70%),
+    radial-gradient(ellipse 140% 80% at 50% 125%, rgba(67, 32, 5, 0.07), rgba(67, 32, 5, 0) 62%),
+    radial-gradient(ellipse 50% 90% at -8% 60%, rgba(67, 32, 5, 0.05), rgba(67, 32, 5, 0) 70%),
+    radial-gradient(ellipse 50% 90% at 108% 60%, rgba(67, 32, 5, 0.06), rgba(67, 32, 5, 0) 70%),
     url('/brand/wall.webp');
   background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 1100px auto;
   background-attachment: fixed;
