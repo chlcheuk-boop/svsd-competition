@@ -16,7 +16,7 @@ const PAIRS: [string, string][] = [
   ['o11', 'p20'],
   ['m5', 'p27'],
   ['m11', 'p6'],
-  ['m13', 'p8'],
+  ['f3', 'p8'],
   ['a4', 'p26'],
 ];
 const byId = new Map([...MAYA_MEDIA, ...MY_THINGS].map((m) => [m.id, m]));

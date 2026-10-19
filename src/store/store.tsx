@@ -38,12 +38,13 @@ export interface AppState {
 const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_THINGS)];
 
 /**
- * The drawn stand-ins that used to fill the photo / image, object, music, place and event categories. Real images
+ * The drawn stand-ins that used to fill the photo / image, object, music, place, event and film categories. Real images
  * replaced them, so they, and any string tied to them, leave every board (new and saved).
  * Kenji's old handbill gift (mk1) goes too; his Crossing now ties a string between two real cards.
  */
 const DRAWN_PLACES_AND_EVENTS = ['m49', 'm53', 'm51', 'm55'];
-const DRAWN_OBJECTS_AND_MUSIC = [...DRAWN_PLACES_AND_EVENTS, 'm3', 'm9', 'm6', 'm10', 'm15', 'm22', 'm23', 'm27', 'm31', 'm36', 'm37', 'm42', 'm45', 'm47'];
+const DRAWN_FILMS = ['m4', 'm13', 'm24', 'm40', 'm41', 'm43', 'm46'];
+const DRAWN_OBJECTS_AND_MUSIC = [...DRAWN_PLACES_AND_EVENTS, ...DRAWN_FILMS, 'm3', 'm9', 'm6', 'm10', 'm15', 'm22', 'm23', 'm27', 'm31', 'm36', 'm37', 'm42', 'm45', 'm47'];
 const DRAWN_PHOTOS = new Set([...DRAWN_OBJECTS_AND_MUSIC, 'mk1', 'm1', 'm2', 'm14', 'm7', 'm12', 'm16', 'm17', 'm19', 'm21', 'm25', 'm28', 'm29', 'm30', 'm33', 'm35', 'm38', 'm48', 'm50', 'm54']);
 
 function dropDrawnPhotos(s: AppState): AppState {
@@ -58,12 +59,13 @@ function dropDrawnPhotos(s: AppState): AppState {
   }
   const mediaIds = new Set(media.map((m) => m.id));
   const connIds = new Set(connections.map((c) => c.id));
-  // a seed thread that lost its cards comes back as rebuilt from real ones; anything else under two cards goes
+  // a seed thread that lost any card comes back as rebuilt from real ones; anything else under two cards goes
   const seedThreads = new Map(MAYA_THREADS.map((t) => [t.id, t]));
   const threads = s.threads
     .map((t) => {
       const mediaIds = t.mediaIds.filter((id) => !DRAWN_PHOTOS.has(id));
-      return mediaIds.length < 2 && seedThreads.has(t.id) ? seedThreads.get(t.id)! : { ...t, mediaIds };
+      const lost = mediaIds.length < t.mediaIds.length;
+      return lost && seedThreads.has(t.id) ? seedThreads.get(t.id)! : { ...t, mediaIds };
     })
     .filter((t) => t.mediaIds.length >= 2 && !t.mediaIds.some((id) => DRAWN_PHOTOS.has(id)));
   // a stamp whose card or string is gone keeps its note, just without "show on my board"

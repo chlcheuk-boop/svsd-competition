@@ -154,6 +154,6 @@ export const MAYA_THREADS: Thread[] = [
   {
     id: 't2', owner: 'maya', title: 'Quiet tension',
     intro: 'Everything I love is waiting for something.',
-    mediaIds: ['m4', 'p22', 'p5', 'p31'], publishedAt: '2026-06-14', isPublic: true,
+    mediaIds: ['f1', 'p22', 'p5', 'p31'], publishedAt: '2026-06-14', isPublic: true,
   },
 ];
