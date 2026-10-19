@@ -11,7 +11,7 @@ body,
   margin: 0;
 }
 
-/* the wall: plain dark beige, with faded patches of concrete and of linen drifting through it,
+/* the wall: plain dark beige, with faded patches of linen drifting through it,
    and a soft light from above over everything. It stays put behind the board and pages. */
 body {
   background-color: #efe2da;
@@ -233,26 +233,13 @@ select {
   mask-position: center;
 }
 
-/* texture patches: each texture shows only inside a few soft blobs that fade back to the plain beige */
-body::before,
+/* linen patches: the texture shows only inside a few soft blobs that fade back to the plain beige */
 body::after,
 html::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-}
-body::before {
-  z-index: -2;
-  background: url('/brand/wall.webp') 0 0 / 1100px auto;
-  -webkit-mask-image:
-    radial-gradient(ellipse 38% 32% at 12% 22%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%),
-    radial-gradient(ellipse 30% 40% at 78% 74%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
-    radial-gradient(ellipse 22% 18% at 52% 108%, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-  mask-image:
-    radial-gradient(ellipse 38% 32% at 12% 22%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%),
-    radial-gradient(ellipse 30% 40% at 78% 74%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
-    radial-gradient(ellipse 22% 18% at 52% 108%, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
 }
 body::after {
   z-index: -2;
