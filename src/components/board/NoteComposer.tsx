@@ -10,13 +10,12 @@ import { uid, today } from '../../store/store';
 import './note-composer.css';
 
 const LIFE: { id: MediaType; label: string }[] = [
-  { id: 'photo', label: 'photo' },
+  { id: 'photo', label: 'photo / image' },
   { id: 'place', label: 'place' },
   { id: 'event', label: 'event' },
   { id: 'moment', label: 'something I noticed' },
 ];
 const MEDIA: { id: MediaType; label: string }[] = [
-  { id: 'image', label: 'image' },
   { id: 'music', label: 'music' },
   { id: 'video', label: 'film / video' },
   { id: 'text', label: 'quote' },
@@ -59,7 +58,7 @@ const domainOf = (u: string) => {
 };
 
 const TITLE_HINT: Partial<Record<MediaType, string>> = {
-  photo: 'what is it a photo of?',
+  photo: 'what is it a photo or image of?',
   place: 'name of the place',
   event: 'what was it?',
   moment: '(optional) a short name',
@@ -159,7 +158,7 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
     onDone(draft);
   };
 
-  const showUpload = type === 'image' || type === 'object' || type === 'video' || type === 'music';
+  const showUpload = type === 'object' || type === 'video' || type === 'music';
 
   const chip = (t: { id: MediaType; label: string }) => (
     <button key={t.id} className="chip" role="radio" aria-checked={type === t.id} aria-pressed={type === t.id} onClick={() => setType(t.id)}>

@@ -21,25 +21,25 @@ export const ART = {
 
 export const MAYA_MEDIA: Media[] = [
   {
-    id: 'm1', type: 'image', title: "Expo '70 poster", subtitle: 'Osaka, 1970',
+    id: 'm1', type: 'photo', title: "Expo '70 poster", subtitle: 'Osaka, 1970',
     origin: 'found in a Tokyo bookstore, 2025', tags: ['poster', '70s', 'japan'],
     x: 120, y: 120, rot: -3, shape: 'polaroid', tint: 'white',
     art: { kind: 'sun', colors: [ART.red, ART.cream, ART.ink], seed: 3 }, addedAt: '2025-02-11',
   },
   {
-    id: 'm2', type: 'image', title: 'Bauhaus exhibition, 1923', subtitle: 'reprint',
+    id: 'm2', type: 'photo', title: 'Bauhaus exhibition, 1923', subtitle: 'reprint',
     origin: "my aunt's studio wall, every summer", tags: ['poster', 'bauhaus', 'grid'],
     x: 400, y: 70, rot: 2.5, shape: 'punched', tint: 'white',
     art: { kind: 'bauhaus', colors: [ART.red, ART.navy, ART.mustard, ART.cream], seed: 7 }, addedAt: '2025-02-11',
   },
   {
-    id: 'm14', type: 'image', title: 'Subway diagram, 1972', subtitle: 'thrift print',
+    id: 'm14', type: 'photo', title: 'Subway diagram, 1972', subtitle: 'thrift print',
     origin: 'thrift print, $4, South Street', tags: ['wayfinding', 'map', '70s'],
     x: 690, y: 110, rot: -1.5, shape: 'punched', tint: 'white',
     art: { kind: 'grid', colors: [ART.red, ART.forest, ART.navy, ART.mustard, ART.cream], seed: 11 }, addedAt: '2025-03-02',
   },
   {
-    id: 'm7', type: 'image', title: 'Garage signage, 13th St', subtitle: 'my photo',
+    id: 'm7', type: 'photo', title: 'Garage signage, 13th St', subtitle: 'my photo',
     origin: 'walking to studio at 7am', tags: ['brutalist', 'signage', 'philly'],
     x: 640, y: 380, rot: 3.5, shape: 'polaroid', tint: 'white',
     art: { kind: 'stencil', colors: ['#9B9690', ART.mustard, ART.ink], seed: 2 }, addedAt: '2025-04-19',
@@ -56,7 +56,7 @@ export const MAYA_MEDIA: Media[] = [
     art: { kind: 'neon', colors: [ART.oxblood, ART.forest, ART.mustard], seed: 5 }, addedAt: '2025-02-20',
   },
   {
-    id: 'm12', type: 'image', title: 'Chungking neon study', subtitle: 'gouache, my sketchbook',
+    id: 'm12', type: 'photo', title: 'Chungking neon study', subtitle: 'gouache, my sketchbook',
     origin: 'my sketchbook, after the WKW marathon', tags: ['color', 'own work'],
     x: 1300, y: 90, rot: -3.5, shape: 'polaroid', tint: 'white',
     art: { kind: 'gradient', colors: [ART.pink, ART.teal, ART.mustard], seed: 9 }, addedAt: '2025-05-03',
@@ -110,7 +110,7 @@ export const MAYA_MEDIA: Media[] = [
     art: { kind: 'sun', colors: [ART.mustard, ART.pink, ART.ink], seed: 15 }, addedAt: '2026-05-21', via: 'ines',
   },
   {
-    id: 'm16', type: 'image', title: 'Kunsthal ramp', subtitle: 'Rotterdam',
+    id: 'm16', type: 'photo', title: 'Kunsthal ramp', subtitle: 'Rotterdam',
     origin: "Saskia's photo from the ramp, 2026", tags: ['architecture', 'brutalist'],
     x: 1560, y: 260, rot: 3, shape: 'polaroid', tint: 'white',
     art: { kind: 'arch', colors: [ART.cream, '#8F8A83', ART.lime], seed: 16 }, addedAt: '2026-07-02', via: 'saskia',

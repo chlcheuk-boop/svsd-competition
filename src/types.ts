@@ -1,5 +1,6 @@
 /** Things from your own life (photo, place, event, moment) sit alongside media (the rest). */
-export type MediaType = 'photo' | 'place' | 'event' | 'moment' | 'image' | 'music' | 'text' | 'video' | 'object' | 'link';
+/** 'photo' covers photos and images alike (one category). */
+export type MediaType = 'photo' | 'place' | 'event' | 'moment' | 'music' | 'text' | 'video' | 'object' | 'link';
 export type CardShape = 'punched' | 'sticky' | 'folded' | 'polaroid';
 export type Accent = 'tangerine' | 'peach' | 'lime' | 'sky' | 'pink' | 'ink';
 export type CardTint = 'white' | 'peach' | 'lime' | 'sky' | 'deep';

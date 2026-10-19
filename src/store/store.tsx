@@ -103,6 +103,12 @@ function load(): AppState {
       merged.connections = [...merged.connections, ...LIFE_CONNECTIONS.filter((c) => !haveC.has(c.id))];
     }
     merged.boardEdition = 5;
+    // photos and images are one category now: anything saved as an image becomes a photo
+    const asPhoto = (m: Media): Media => ((m.type as string) === 'image' ? { ...m, type: 'photo' } : m);
+    merged.media = merged.media.map(asPhoto);
+    merged.contributions = Object.fromEntries(
+      Object.entries(merged.contributions).map(([k, b]) => [k, { ...b, media: b.media.map(asPhoto) }]),
+    );
     return merged;
   } catch {
     return initialState();

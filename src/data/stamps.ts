@@ -54,7 +54,7 @@ export const PASSPORT_STAMPS: PassportStamp[] = [
 
 /** What Kenji ties onto Maya's board when the Crossing completes. */
 export const KENJI_GIFT_MEDIA: Media = {
-  id: 'mk1', type: 'image', title: 'Shinjuku handbill, 1969', subtitle: 'from Kenji’s board',
+  id: 'mk1', type: 'photo', title: 'Shinjuku handbill, 1969', subtitle: 'from Kenji’s board',
   origin: 'Kenji tied this in during our Crossing', tags: ['protest', 'print', '70s'],
   x: -190, y: 300, rot: -3, shape: 'punched', tint: 'white',
   art: { kind: 'stencil', colors: [ART.cream, ART.red, ART.ink], seed: 21 },

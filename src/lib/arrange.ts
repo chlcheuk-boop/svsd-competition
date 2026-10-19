@@ -29,10 +29,9 @@ const COLUMNS = 3;
 
 const KIND_SECTIONS: { key: string; label: string; group: string; types: MediaType[] }[] = [
   { key: 'place', label: 'Places', group: 'from your life', types: ['place'] },
-  { key: 'photo', label: 'Photos', group: 'from your life', types: ['photo'] },
+  { key: 'photo', label: 'Photos & images', group: 'from your life', types: ['photo'] },
   { key: 'event', label: 'Events', group: 'from your life', types: ['event'] },
   { key: 'moment', label: 'Things I noticed', group: 'from your life', types: ['moment'] },
-  { key: 'image', label: 'Images', group: 'media', types: ['image'] },
   { key: 'object', label: 'Objects', group: 'media', types: ['object'] },
   { key: 'music', label: 'Music', group: 'media', types: ['music'] },
   { key: 'video', label: 'Film & video', group: 'media', types: ['video'] },

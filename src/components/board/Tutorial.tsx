@@ -156,7 +156,7 @@ const STEPS: Step[] = [
     target: '[data-tool="note"]',
     kicker: '3 · adding to your life',
     title: 'Add something from your life',
-    body: <>Open a <b>note</b> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) and pick what it is: a <b>photo</b> (take one or choose from your camera roll), a <b>place</b>, an <b>event</b>, <b>something you noticed</b>, or media you’re into. Add an origin line (where, when, who showed you), then tap the board to drop it.</>,
+    body: <>Open a <b>note</b> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) and pick what it is: a <b>photo or image</b> (take one or upload it), a <b>place</b>, an <b>event</b>, <b>something you noticed</b>, or media you’re into. Add an origin line (where, when, who showed you), then tap the board to drop it.</>,
     why: <>Give it its own <em>why</em> before you tie it to anything. You can open any card later to read or change it.</>,
     art: <ArtNote />,
   },

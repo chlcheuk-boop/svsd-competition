@@ -2,19 +2,19 @@ import type { CardShape, MediaType } from '../types';
 
 export const SHAPE_FOR: Record<MediaType, CardShape> = {
   photo: 'polaroid', place: 'polaroid', event: 'punched', moment: 'sticky',
-  image: 'polaroid', object: 'polaroid', music: 'punched', text: 'sticky', video: 'folded', link: 'folded',
+  object: 'polaroid', music: 'punched', text: 'sticky', video: 'folded', link: 'folded',
 };
 
 export const TYPE_LABEL: Record<MediaType, string> = {
-  photo: 'photo', place: 'place', event: 'event', moment: 'noticed',
-  image: 'image', music: 'music', text: 'quote', video: 'film', object: 'object', link: 'link',
+  photo: 'photo / image', place: 'place', event: 'event', moment: 'noticed',
+  music: 'music', text: 'quote', video: 'film', object: 'object', link: 'link',
 };
 
 /** Entries that are mostly words: rendered as written notes, not pictures. */
 export const isWords = (t: MediaType) => t === 'text' || t === 'moment';
 
 export const LIFE_TYPES: MediaType[] = ['photo', 'place', 'event', 'moment'];
-export const MEDIA_TYPES: MediaType[] = ['image', 'music', 'video', 'text', 'link', 'object'];
+export const MEDIA_TYPES: MediaType[] = ['music', 'video', 'text', 'link', 'object'];
 
 export const fmtEventDate = (iso?: string) => {
   if (!iso) return { month: '', day: '' };
