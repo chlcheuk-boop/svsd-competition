@@ -247,11 +247,23 @@ body::after {
   -webkit-mask-image:
     radial-gradient(ellipse 34% 30% at 84% 16%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%),
     radial-gradient(ellipse 36% 34% at 26% 82%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
-    radial-gradient(ellipse 18% 22% at 55% 42%, rgba(0, 0, 0, 0.45) 0%, transparent 100%);
+    radial-gradient(ellipse 18% 22% at 55% 42%, rgba(0, 0, 0, 0.45) 0%, transparent 100%),
+    radial-gradient(ellipse 30% 28% at 10% 20%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
+    radial-gradient(ellipse 32% 30% at 82% 80%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
+    radial-gradient(ellipse 22% 20% at 46% 8%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 20% 24% at 4% 55%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 20% 22% at 96% 48%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 24% 18% at 58% 96%, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
   mask-image:
     radial-gradient(ellipse 34% 30% at 84% 16%, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%),
     radial-gradient(ellipse 36% 34% at 26% 82%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
-    radial-gradient(ellipse 18% 22% at 55% 42%, rgba(0, 0, 0, 0.45) 0%, transparent 100%);
+    radial-gradient(ellipse 18% 22% at 55% 42%, rgba(0, 0, 0, 0.45) 0%, transparent 100%),
+    radial-gradient(ellipse 30% 28% at 10% 20%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
+    radial-gradient(ellipse 32% 30% at 82% 80%, #000 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%),
+    radial-gradient(ellipse 22% 20% at 46% 8%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 20% 24% at 4% 55%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 20% 22% at 96% 48%, rgba(0, 0, 0, 0.7) 0%, transparent 100%),
+    radial-gradient(ellipse 24% 18% at 58% 96%, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
 }
 /* the light, over the patches */
 html::after {
