@@ -538,6 +538,28 @@ export default function BoardView(props: BoardViewProps) {
   traceColor.forEach((_, id) => raised.add(id));
   if (tool === 'scissors' && cut) raised.add(cut.id);
 
+  // where section headings sit (label, group line above it, count at the right), so tags and charms stay clear of the words
+  const headingBoxes = useMemo(
+    () =>
+      (sections ?? []).flatMap((sec) => [
+        { x0: sec.x - 16, y0: sec.y - (sec.group ? 34 : 14), x1: sec.x + sec.label.length * 16 + 28, y1: sec.y + 58 },
+        { x0: sec.x + sec.w - 60, y0: sec.y - 14, x1: sec.x + sec.w + 16, y1: sec.y + 44 },
+      ]),
+    [sections],
+  );
+  // a hanging tag covers about 26 x 46 below its knot
+  const onHeading = (p: Pt) => headingBoxes.some((b) => p.x + 14 > b.x0 && p.x - 14 < b.x1 && p.y + 46 > b.y0 && p.y - 4 < b.y1);
+  const SPOTS = [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74, 0.2, 0.8, 0.14, 0.86];
+  /** the spot along the string nearest `prefer` that keeps clear of headings */
+  const spotOn = (curve: Parameters<typeof pointAt>[0], prefer: number) => {
+    const order = [...SPOTS].sort((a, b) => Math.abs(a - prefer) - Math.abs(b - prefer));
+    for (const t of order) {
+      const p = pointAt(curve, t);
+      if (!onHeading(p)) return p;
+    }
+    return null;
+  };
+
   const underCard = (p: Pt) =>
     media.some((m) => {
       const { w, h } = sizeOf(m);
@@ -743,14 +765,17 @@ export default function BoardView(props: BoardViewProps) {
         {/* ---------- tags and charms hanging on strings ---------- */}
         <div className="string-ornaments">
           {geo.map(({ c, curve }) => {
-            const mid = pointAt(curve, 0.5);
-            const st = pointAt(curve, 0.28);
             const via = c.via ? person(c.via) : undefined;
             const op = dimmed(c.id) ? 0.16 : 1;
-            // a string running under a card keeps its tag and charm out of sight until it's lifted
+            // a string running under a card keeps its tag and charm out of sight until it's lifted,
+            // and neither ever hangs over a section heading: it slides along the string instead
             const up = raised.has(c.id);
-            const showTag = up || !underCard(mid);
-            const showStamp = up || !underCard(st);
+            const midSpot = spotOn(curve, 0.5);
+            const stSpot = spotOn(curve, 0.28);
+            const mid = midSpot ?? pointAt(curve, 0.5);
+            const st = stSpot ?? pointAt(curve, 0.28);
+            const showTag = !!midSpot && (up || !underCard(mid));
+            const showStamp = !!stSpot && (up || !underCard(st));
             return (
               <div key={c.id} style={{ opacity: op, transition: 'opacity .3s' }}>
                 {c.why && showTag && (
