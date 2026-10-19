@@ -85,6 +85,7 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
   const [url, setUrl] = useState('');
   const [when, setWhen] = useState(today());
   const [imageData, setImageData] = useState<string>();
+  const [showLink, setShowLink] = useState(false);
   const [over, setOver] = useState(false);
   const [locating, setLocating] = useState(false);
   const [art] = useState<ArtSpec>(() => ({
@@ -130,6 +131,7 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
   };
 
   const wordy = isWords(type);
+  const linkableType = type === 'music' || type === 'video';
   const effectiveTitle = wordy ? (title || words.slice(0, 60)) : title;
   const canPlace = !!effectiveTitle.trim();
 
@@ -151,13 +153,14 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
       art: wordy || type === 'event' ? undefined : type === 'place' ? mapArt : art,
       imageData,
       quote: wordy ? words.trim() || title.trim() : undefined,
-      url: type === 'link' ? url : undefined,
+      url: type === 'link' || (linkableType && url.trim()) ? url.trim() : undefined,
       addedAt: today(),
     };
     onDone(draft);
   };
 
   const showUpload = type === 'image' || type === 'object' || type === 'video' || type === 'music';
+
   const chip = (t: { id: MediaType; label: string }) => (
     <button key={t.id} className="chip" role="radio" aria-checked={type === t.id} aria-pressed={type === t.id} onClick={() => setType(t.id)}>
       {t.label}
@@ -222,7 +225,7 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
                 </div>
                 <div className="nc-photo-actions">
                   <button className="btn btn-ghost" onClick={() => cameraRef.current?.click()}>take a photo</button>
-                  <button className="btn btn-ghost" onClick={() => fileRef.current?.click()}>from your photos</button>
+                  <button className="btn btn-ghost" onClick={() => fileRef.current?.click()}>upload an image</button>
                 </div>
                 <input ref={cameraRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => takeFile(e.target.files?.[0])} />
                 <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => takeFile(e.target.files?.[0])} />
@@ -247,23 +250,33 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
                   <span className="serif">{fmtEventDate(when).day}</span>
                 </div>
                 <label className="field-label" htmlFor="nc-when">when</label>
-                <input id="nc-when" type="date" className="line-input mono" value={when} onChange={(e) => setWhen(e.target.value)} />
+                <input id="nc-when" type="date" className="nc-box" value={when} onChange={(e) => setWhen(e.target.value)} />
               </div>
             )}
             {showUpload && (
-              <button className={`nc-drop ${over ? 'over' : ''}`} onClick={() => fileRef.current?.click()}>
-                <div className="nc-preview">
+              <div className={`nc-drop static ${over ? 'over' : ''}`}>
+                <button className="nc-preview" onClick={() => fileRef.current?.click()} aria-label="Upload an image">
                   <MediaArt art={art} imageData={imageData} />
+                </button>
+                <div className="nc-photo-actions">
+                  <button className="btn btn-ghost" onClick={() => fileRef.current?.click()}>
+                    <IconUpload size={14} /> {imageData ? 'replace image' : 'upload an image'}
+                  </button>
+                  {linkableType && (
+                    <button className="btn btn-ghost" aria-pressed={showLink} onClick={() => setShowLink((v) => !v)}>
+                      {type === 'music' ? 'add a link to listen' : 'add a link to watch'}
+                    </button>
+                  )}
                 </div>
-                <span className="mono">
-                  <IconUpload size={14} /> {imageData ? 'replace image' : 'upload or drop (optional)'}
-                </span>
+                {linkableType && showLink && (
+                  <input className="nc-box" placeholder="https://…" value={url} onChange={(e) => setUrl(e.target.value)} aria-label="Link" autoFocus />
+                )}
                 <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => takeFile(e.target.files?.[0])} />
-              </button>
+              </div>
             )}
             {wordy && (
               <textarea
-                className="nc-quote lined"
+                className="nc-box nc-quote"
                 placeholder={type === 'moment' ? 'what did you notice? the light on the bus, a sign, a sound…' : 'type the quote or passage…'}
                 value={words}
                 onChange={(e) => setWords(e.target.value)}
@@ -273,7 +286,7 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
             {type === 'link' && (
               <div className="nc-link">
                 <label className="field-label" htmlFor="nc-url">link</label>
-                <input id="nc-url" className="line-input mono" placeholder="https://…" value={url} onChange={(e) => setUrl(e.target.value)} />
+                <input id="nc-url" className="nc-box" placeholder="https://…" value={url} onChange={(e) => setUrl(e.target.value)} />
                 <div className="nc-preview small">
                   <MediaArt art={art} />
                 </div>
@@ -284,28 +297,28 @@ export function NoteComposer({ onDone, onCancel }: { onDone: (draft: Media) => v
           <div className="nc-fields">
             <div>
               <label className="field-label" htmlFor="nc-title">title</label>
-              <input id="nc-title" className="line-input" value={title} onChange={(e) => setTitle(e.target.value)}
+              <input id="nc-title" className="nc-box" value={title} onChange={(e) => setTitle(e.target.value)}
                 placeholder={TITLE_HINT[type] ?? 'what is it?'} />
             </div>
             {type !== 'link' && type !== 'moment' && (
               <div>
                 <label className="field-label" htmlFor="nc-sub">{SUB_LABEL[type] ?? 'maker / detail'}</label>
-                <input id="nc-sub" className="line-input" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
+                <input id="nc-sub" className="nc-box" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
               </div>
             )}
             <div>
               <label className="field-label" htmlFor="nc-origin">origin line</label>
-              <input id="nc-origin" className="line-input nc-origin" value={origin} onChange={(e) => setOrigin(e.target.value)}
+              <input id="nc-origin" className="nc-box" value={origin} onChange={(e) => setOrigin(e.target.value)}
                 placeholder="where / when / who showed you?" />
             </div>
             <div>
               <label className="field-label" htmlFor="nc-why">why it matters to you</label>
-              <textarea id="nc-why" className="nc-why lined" rows={2} value={why} onChange={(e) => setWhy(e.target.value)}
+              <textarea id="nc-why" className="nc-box nc-why" rows={2} value={why} onChange={(e) => setWhy(e.target.value)}
                 placeholder="this one matters because…" />
             </div>
             <div>
               <label className="field-label" htmlFor="nc-tags">tags</label>
-              <input id="nc-tags" className="line-input mono" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="quiet, philly, 70s" />
+              <input id="nc-tags" className="nc-box" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="quiet, philly, 70s" />
             </div>
           </div>
         </div>
