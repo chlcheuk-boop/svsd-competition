@@ -6,7 +6,9 @@ import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
 import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 
-const KEY = 'rhyme.state.v1';
+const KEY = 'purl.state.v1';
+/** where boards were saved before the app was renamed Purl; read once, then moved */
+const OLD_KEY = 'rhyme.state.v1';
 
 export interface AppState {
   version: 1;
@@ -65,7 +67,14 @@ export function initialState(): AppState {
 
 function load(): AppState {
   try {
-    const raw = localStorage.getItem(KEY);
+    let raw = localStorage.getItem(KEY);
+    if (!raw) {
+      raw = localStorage.getItem(OLD_KEY);
+      if (raw) {
+        localStorage.setItem(KEY, raw);
+        localStorage.removeItem(OLD_KEY);
+      }
+    }
     if (!raw) return initialState();
     const parsed = JSON.parse(raw) as AppState;
     if (parsed.version !== 1) return initialState();

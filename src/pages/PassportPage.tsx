@@ -411,7 +411,7 @@ function IdPage({ state }: { state: State }) {
   return (
     <div className="pp-leaf pp-id">
       <div className="pp-sec pp-id-head">
-        <span className="mono-label">passport · no. RHY2025021</span>
+        <span className="mono-label">passport · no. PRL2025021</span>
         <span className="mono pp-legend"><span className="pp-shared" aria-hidden="true" /> shown to matches</span>
       </div>
       <div className="pp-sec pp-id-row">
@@ -443,9 +443,9 @@ function IdPage({ state }: { state: State }) {
         <Fingerprint media={state.media} />
       </div>
       <div className="pp-mrz mono" aria-hidden="true">
-        {`P<RHY${mrzName}`}
+        {`P<PRL${mrzName}`}
         <br />
-        {`RHY2025021<6PHL<<${String(state.stamps.length).padStart(2, '0')}STAMPS<<${state.media.length}REFS<<`}
+        {`PRL2025021<6PHL<<${String(state.stamps.length).padStart(2, '0')}STAMPS<<${state.media.length}REFS<<`}
       </div>
     </div>
   );
