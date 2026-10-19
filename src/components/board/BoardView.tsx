@@ -244,7 +244,24 @@ export default function BoardView(props: BoardViewProps) {
       }
     };
     el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
+    // a pinch over the toolbar or top bar would otherwise zoom the whole browser page;
+    // send it to the board instead (keyboard zoom is left alone)
+    const onPinchElsewhere = (e: WheelEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || el.contains(e.target as Node)) return;
+      e.preventDefault();
+      const r = el.getBoundingClientRect();
+      zoomAt(Math.exp(-e.deltaY * 0.01), r.width / 2, r.height / 2);
+    };
+    const stopGesture = (e: Event) => e.preventDefault(); // Safari trackpad pinch
+    window.addEventListener('wheel', onPinchElsewhere, { passive: false });
+    window.addEventListener('gesturestart', stopGesture);
+    window.addEventListener('gesturechange', stopGesture);
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      window.removeEventListener('wheel', onPinchElsewhere);
+      window.removeEventListener('gesturestart', stopGesture);
+      window.removeEventListener('gesturechange', stopGesture);
+    };
   }, [zoomAt]);
 
   useEffect(() => {
