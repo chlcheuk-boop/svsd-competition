@@ -1,6 +1,12 @@
 /* every card on the board is a perforated stamp */
 .paper-card {
   position: relative;
+  /* the same inset above the image and below the date */
+  --inset: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--inset);
   color: var(--ink);
   user-select: none;
   overflow: visible;
@@ -16,11 +22,9 @@
   fill: var(--card-white);
 }
 .stamp-window {
-  position: absolute;
-  left: 16px;
-  right: 16px;
-  top: 16px;
-  height: 150px;
+  position: relative;
+  flex: none;
+  height: 136px;
   overflow: hidden;
   background: var(--paper-deep);
   outline: 1px solid rgba(67, 32, 5, 0.12);
@@ -72,10 +76,8 @@
   line-height: 0.9;
 }
 .card-caption {
-  position: absolute;
-  left: 17px;
-  right: 16px;
-  top: 174px;
+  position: relative;
+  padding-top: 8px;
 }
 .card-title {
   margin: 0;

@@ -8,7 +8,7 @@ import { Avatar, Toolbar, useToast } from '../components/ui/Frame';
 import { IconBookmark, IconClose, IconQuadrants, IconShuffle, IconTicket } from '../components/ui/icons';
 import { QUADRANT_INFO, TarotBack, TarotIllustration } from '../components/tarot/TarotArt';
 import { Thumb } from '../components/ui/Thumb';
-import { AnimalMark, ANIMAL_NAME } from '../components/tarot/Animals';
+import { AnimalMark } from '../components/tarot/Animals';
 import { accentVar } from '../components/ui/MiniStamp';
 import type { MatchProfile, Quadrant } from '../types';
 import { useViewport } from '../lib/useViewport';
@@ -119,7 +119,7 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
             </div>
           </div>
           <p className="focus-intro serif">{mp.intro}</p>
-          <span className="mono focus-shape">story shape: {info.story}</span>
+          <span className="mono focus-shape">{info.axis}</span>
 
           <div className="focus-overlap">
             <div>
@@ -200,7 +200,7 @@ export default function MatchesPage() {
         <span className="mono-label">week of oct 12 · 2026</span>
         <h1 className="serif">Matches of the week</h1>
         <p className="serif">
-          Not a feed. Four people, picked from a small circle, each here to add something to your life. Read from what you <em>collect</em> and how you <em>connect</em> it.
+          Not a feed. Four people, picked from a small circle, each here to add something to your life. Sorted by two things: whether your media is similar or dissimilar, and whether your connections are.
         </p>
         <ul className="legend">
           {ordered.map((m) => {
@@ -210,7 +210,7 @@ export default function MatchesPage() {
                 <span className="legend-badge" style={{ background: accentVar(info.accent) }}>
                   <AnimalMark q={m.quadrant} size={20} color="var(--ink)" cut={accentVar(info.accent)} />
                 </span>
-                <span className="mono">{info.numeral}</span> {info.name} <span className="mono legend-axis">{ANIMAL_NAME[m.quadrant]} · {info.story}</span>
+                <span className="mono">{info.numeral}</span> {info.name} <span className="mono legend-axis">{info.axis}</span>
               </li>
             );
           })}
@@ -219,14 +219,14 @@ export default function MatchesPage() {
 
       <div className="tarot-field" style={vp.phone ? { height: 2 * (Math.round(cardW * 1.75) + 44) } : undefined}>
         <div className="axis axis-x" aria-hidden="true">
-          <span className="mono axis-end left">similar</span>
-          <span className="mono axis-title">how you connect →</span>
-          <span className="mono axis-end right">different</span>
+          <span className="mono axis-end left">similar connections</span>
+          <span className="mono axis-title">connections →</span>
+          <span className="mono axis-end right">dissimilar connections</span>
         </div>
         <div className="axis axis-y" aria-hidden="true">
-          <span className="mono axis-end top">similar</span>
-          <span className="mono axis-title">what you collect →</span>
-          <span className="mono axis-end bottom">different</span>
+          <span className="mono axis-end top">similar media</span>
+          <span className="mono axis-title">media →</span>
+          <span className="mono axis-end bottom">dissimilar media</span>
         </div>
         <div className="tarot-grid" key={dealKey}>
           {ordered.map((mp, i) => {

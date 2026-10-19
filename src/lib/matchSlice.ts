@@ -70,7 +70,7 @@ export function sliceFor(
       addM(c.from, sharedNote(c.from)); addM(c.to, sharedNote(c.to)); addC(c);
     }
     for (const id of shared) addM(id, sharedNote(id));
-    summary = 'things you both collect, tied the way you’d tie them';
+    summary = 'similar media, similar connections';
   } else if (quadrant === 2) {
     // a shared thing, then the different strings they ran from it
     // exact matches lead; a "different string" is any string to something you don't have exactly
@@ -84,7 +84,7 @@ export function sliceFor(
         addM(other, 'where they took it'); addC(c);
       }
     }
-    summary = 'the same starting point, a different string';
+    summary = 'similar media, dissimilar connections';
   } else if (quadrant === 3) {
     // strings whose whys use your words
     const myWords = new Set(mine.connections.flatMap((c) => words(c.why)).concat(mine.media.flatMap((m) => words(m.why))));
@@ -100,7 +100,7 @@ export function sliceFor(
       const note = hit.length ? `tied for your reason: “${hit[0]}”` : 'tied the way you tie things';
       addM(c.from, note); addM(c.to, note); addC(c);
     }
-    summary = 'different things, tied for the same reasons';
+    summary = 'dissimilar media, similar connections';
   } else {
     // one corner of their desk: their most-tied card and its neighbors
     const hub = [...theirs.media].sort((a, b) => degree(b.id) - degree(a.id))[0];
@@ -110,7 +110,7 @@ export function sliceFor(
         addM(c.from === hub.id ? c.to : c.from); addC(c);
       }
     }
-    summary = 'one small corner of their desk, to start';
+    summary = 'dissimilar media, dissimilar connections';
   }
 
   // only keep strings whose both ends made it in

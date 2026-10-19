@@ -54,7 +54,7 @@ export function Stamp({ s, scale = 1 }: { s: PassportStamp; scale?: number }) {
           <circle cx={w / 2} cy={h / 2} r={w / 2 - 3} {...common} strokeWidth={3} />
           <circle cx={w / 2} cy={h / 2} r={w / 2 - 10} {...common} strokeWidth={1} />
           <path id={`arc-${s.id}`} d={`M ${w / 2 - 66},${h / 2} A 66 66 0 0 1 ${w / 2 + 66},${h / 2}`} fill="none" />
-          <text fill={ink} fontFamily="IBM Plex Mono, monospace" fontSize="10.5" letterSpacing="1.5">
+          <text fill={ink} fontFamily="General Sans, sans-serif" fontSize="10.5" letterSpacing="1.5">
             <textPath href={`#arc-${s.id}`} startOffset="50%" textAnchor="middle">
               {`${p.name.toUpperCase()} · ${p.city.toUpperCase()}`}
             </textPath>
@@ -105,7 +105,7 @@ export function Stamp({ s, scale = 1 }: { s: PassportStamp; scale?: number }) {
           <path d={perforatedPath(w, h)} fill={ink} opacity={0.1} />
           <path d={perforatedPath(w, h)} {...common} strokeWidth={1.2} />
           <rect x={10} y={10} width={w - 20} height={h - 20} {...common} strokeWidth={2} />
-          <text x={w - 16} y={30} textAnchor="end" fill={ink} fontFamily="Newsreader, serif" fontSize="18">{info.numeral}</text>
+          <text x={w - 16} y={30} textAnchor="end" fill={ink} fontFamily="KoPub Batang, serif" fontSize="18">{info.numeral}</text>
         </>
       );
       text = { x: 18, y: 36, w: w - 36, h: h - 54 };

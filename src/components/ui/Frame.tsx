@@ -1,7 +1,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react';
-import { IconCards, IconGear, IconPassport } from './icons';
+import { IconCards, IconPassport } from './icons';
 import { useStore } from '../../store/store';
 import { MAYA } from '../../data/people';
 import { Logo } from './Logo';
@@ -11,7 +11,6 @@ export function TopNav() {
   const { state } = useStore();
   const loc = useLocation();
   const items = [
-    { to: '/settings', label: 'Settings', icon: <IconGear /> },
     { to: '/matches', label: 'Matches of the week', icon: <IconCards />, dot: !state.matchesSeen },
     { to: '/passport', label: 'Passport', icon: <IconPassport /> },
   ];
@@ -58,7 +57,7 @@ export function Avatar({ size = 44, label = MAYA.initial, color = 'var(--pink)',
 export function AvatarButton() {
   const nav = useNavigate();
   return (
-    <button className="avatar-btn" onClick={() => nav('/settings')} aria-label="Open settings">
+    <button className="avatar-btn" onClick={() => nav('/settings')} aria-label="Your profile and settings">
       <Avatar />
     </button>
   );

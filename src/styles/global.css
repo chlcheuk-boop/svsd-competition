@@ -11,7 +11,7 @@ body,
   margin: 0;
 }
 
-/* the wall: rough concrete, with a soft light falling from above.
+/* the wall: board-formed concrete (warmed to the cream base), with a soft light falling from above.
    It stays put behind everything; the cards and pages never catch the light. */
 body {
   background-color: #f4e7de;
@@ -21,8 +21,8 @@ body {
     radial-gradient(ellipse 140% 80% at 50% 125%, rgba(67, 32, 5, 0.13), rgba(67, 32, 5, 0) 62%),
     radial-gradient(ellipse 50% 90% at -8% 60%, rgba(67, 32, 5, 0.1), rgba(67, 32, 5, 0) 70%),
     radial-gradient(ellipse 50% 90% at 108% 60%, rgba(67, 32, 5, 0.12), rgba(67, 32, 5, 0) 70%),
-    url('/brand/concrete.svg');
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 480px 480px;
+    url('/brand/wall.webp');
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 1100px auto;
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--sans);

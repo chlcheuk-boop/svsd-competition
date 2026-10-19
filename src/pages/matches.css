@@ -342,8 +342,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   padding: 12px 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 .focus-overlap .thumbs {
   display: flex;

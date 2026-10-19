@@ -212,8 +212,8 @@ export default function PassportPage() {
   const toolbar = (
     <Toolbar
       tools={[
-        { id: 'prev', label: 'previous page', icon: <IconArrowLeft />, disabled: !open || atStart, onClick: () => turn('prev') },
-        { id: 'next', label: open ? 'next page' : 'open', icon: <IconArrowRight />, disabled: open && atEnd, onClick: () => (open ? turn('next') : openBook()) },
+        { id: 'prev', label: 'previous', icon: <IconArrowLeft />, disabled: !open || atStart, onClick: () => turn('prev') },
+        { id: 'next', label: open ? 'next' : 'open', icon: <IconArrowRight />, disabled: open && atEnd, onClick: () => (open ? turn('next') : openBook()) },
         { id: 'filter', label: filter ? person(filter)!.name.split(' ')[0].toLowerCase() : 'by person', icon: <IconPerson />, active: filterOpen || !!filter, onClick: () => setFilterOpen((o) => !o) },
       ]}
     >

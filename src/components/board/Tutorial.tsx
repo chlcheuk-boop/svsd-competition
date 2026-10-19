@@ -68,7 +68,7 @@ const ArtThread = () => (
       <g key={i}>
         <rect x={x} y={y} width="26" height="30" fill="var(--card-white)" stroke="var(--rule)" transform={`rotate(${i % 2 ? 4 : -4} ${x + 13} ${y + 15})`} />
         <circle cx={x + 2} cy={y + 1} r="7" fill="var(--tangerine)" />
-        <text x={x + 2} y={y + 4.5} textAnchor="middle" fontSize="9" fill="#fff" fontFamily="IBM Plex Mono">{i + 1}</text>
+        <text x={x + 2} y={y + 4.5} textAnchor="middle" fontSize="9" fill="#fff" fontFamily="General Sans">{i + 1}</text>
       </g>
     ))}
   </svg>
@@ -91,8 +91,8 @@ const ArtMatches = () => (
         </div>
       </foreignObject>
     ))}
-    <text x="214" y="54" fontSize="8" fill="var(--ink-soft)" fontFamily="IBM Plex Mono" textAnchor="end">connect →</text>
-    <text x="156" y="88" fontSize="8" fill="var(--ink-soft)" fontFamily="IBM Plex Mono">collect ↓</text>
+    <text x="214" y="54" fontSize="8" fill="var(--ink-soft)" fontFamily="General Sans" textAnchor="end">connections →</text>
+    <text x="156" y="88" fontSize="8" fill="var(--ink-soft)" fontFamily="General Sans">media ↓</text>
   </svg>
 );
 
@@ -106,7 +106,7 @@ const ArtPassport = () => (
       <rect x="122" y="18" width="40" height="28" rx="6" fill="none" stroke="#3F78AD" strokeWidth="2.5" transform="rotate(8 142 32)" />
       <path d="M126 56 h36 v24 h-36z" fill="none" stroke="#6F7C22" strokeWidth="2" strokeDasharray="3 2" transform="rotate(-6 144 68)" />
     </g>
-    <text x="78" y="47" textAnchor="middle" fontSize="8" fill="#D2552A" fontFamily="Newsreader" fontStyle="italic">K · II</text>
+    <text x="78" y="47" textAnchor="middle" fontSize="8" fill="#D2552A" fontFamily="KoPub Batang" fontStyle="italic">K · II</text>
   </svg>
 );
 
@@ -114,7 +114,7 @@ const Key = ({ x, w = 30, label, hot }: { x: number; w?: number; label: string; 
   <g>
     <rect x={x} y="30" width={w} height="30" rx="5" fill={hot ? 'var(--blush)' : 'var(--card-white)'} stroke="var(--rule)" />
     <rect x={x} y="56" width={w} height="4" rx="2" fill="rgba(67, 32, 5,.08)" />
-    <text x={x + w / 2} y="50" textAnchor="middle" fontSize="11" fontFamily="IBM Plex Mono" fill={hot ? 'var(--tangerine-deep)' : 'var(--ink)'}>{label}</text>
+    <text x={x + w / 2} y="50" textAnchor="middle" fontSize="11" fontFamily="General Sans" fill={hot ? 'var(--tangerine-deep)' : 'var(--ink)'}>{label}</text>
   </g>
 );
 
@@ -172,7 +172,7 @@ const STEPS: Step[] = [
     target: '[data-nav="matches"]',
     kicker: '5 · matching',
     title: 'A few people, not everyone',
-    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: <em>what do you collect</em>, and <em>how do you connect it</em>. The Mirror (butterfly), The Lens (dragonfly), The Parallel (bird), The Stranger (whale). You never see anyone’s whole board, only the slice where yours meets theirs. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s.</>,
+    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em> similar or dissimilar? The Mirror (butterfly), The Lens (dragonfly), The Parallel (bird), The Stranger (whale). You never see anyone’s whole board, only the slice where yours meets theirs. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s.</>,
     art: <ArtMatches />,
   },
   {

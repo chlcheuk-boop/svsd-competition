@@ -216,3 +216,11 @@
     height: 64px;
   }
 }
+
+/* breathing room between the logo and the nav buttons */
+.nav-logo {
+  text-decoration: none;
+  color: var(--ink);
+  display: inline-flex;
+  margin-right: 18px;
+}

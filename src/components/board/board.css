@@ -277,7 +277,6 @@
 /* labeled grid sections (arranged views) */
 .board-section {
   position: absolute;
-  border-top: 1.5px solid var(--ink);
   pointer-events: none;
 }
 .board-section h3 {

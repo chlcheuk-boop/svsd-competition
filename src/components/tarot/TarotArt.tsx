@@ -2,10 +2,10 @@ import { AnimalShapes } from './Animals';
 import type { Quadrant } from '../../types';
 
 export const QUADRANT_INFO: Record<Quadrant, { numeral: string; name: string; accent: string; story: string; axis: string; animal: string }> = {
-  1: { numeral: 'I', name: 'The Mirror', accent: 'sky', story: 'parallel roads', axis: 'similar collection · similar connections', animal: 'butterfly' },
-  2: { numeral: 'II', name: 'The Lens', accent: 'tangerine', story: 'a fork', axis: 'similar collection · different connections', animal: 'dragonfly' },
-  3: { numeral: 'III', name: 'The Parallel', accent: 'lime', story: 'convergence', axis: 'different collection · similar connections', animal: 'bird' },
-  4: { numeral: 'IV', name: 'The Stranger', accent: 'pink', story: 'an unmapped meeting', axis: 'different collection · different connections', animal: 'whale' },
+  1: { numeral: 'I', name: 'The Mirror', accent: 'sky', story: 'similar media · similar connections', axis: 'similar media · similar connections', animal: 'butterfly' },
+  2: { numeral: 'II', name: 'The Lens', accent: 'tangerine', story: 'similar media · dissimilar connections', axis: 'similar media · dissimilar connections', animal: 'dragonfly' },
+  3: { numeral: 'III', name: 'The Parallel', accent: 'lime', story: 'dissimilar media · similar connections', axis: 'dissimilar media · similar connections', animal: 'bird' },
+  4: { numeral: 'IV', name: 'The Stranger', accent: 'pink', story: 'dissimilar media · dissimilar connections', axis: 'dissimilar media · dissimilar connections', animal: 'whale' },
 };
 
 
