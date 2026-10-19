@@ -66,8 +66,7 @@ html body :is(
   .tc-title,
   .settings-form legend,
   .tarot-name,
-  .sp-title,
-  .pp-who h2
+  .sp-title
 ) {
   font-family: var(--serif);
   font-weight: 400;

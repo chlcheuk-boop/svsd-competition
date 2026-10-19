@@ -50,9 +50,7 @@ function Guilloche() {
 
 type PageSpec =
   | { kind: 'id' }
-  | { kind: 'profile' }
   | { kind: 'threads' }
-  | { kind: 'visibility' }
   | { kind: 'stamps'; stamps: PassportStamp[]; n: number }
   | { kind: 'blank' };
 
@@ -78,7 +76,8 @@ export default function PassportPage() {
   const people = useMemo(() => Array.from(new Set(stamps.map((s) => s.personId))), [stamps]);
 
   const pages: PageSpec[] = useMemo(() => {
-    const ps: PageSpec[] = [{ kind: 'id' }, { kind: 'profile' }, { kind: 'threads' }, { kind: 'visibility' }];
+    // first spread: you (ID + profile) | your threads and visibility; stamps start on the next spread
+    const ps: PageSpec[] = [{ kind: 'id' }, { kind: 'threads' }];
     for (let i = 0; i < stamps.length; i += PER_PAGE) ps.push({ kind: 'stamps', stamps: stamps.slice(i, i + PER_PAGE), n: i / PER_PAGE + 1 });
     if (ps.length % 2 === 1) ps.push({ kind: 'blank' });
     return ps;
@@ -90,7 +89,6 @@ export default function PassportPage() {
     const at = (k: PageSpec['kind']) => pages.findIndex((x) => x.kind === k);
     const t = [
       { id: 'id', label: 'ID', page: 0, accent: 'tangerine' },
-      { id: 'profile', label: 'profile', page: at('profile'), accent: 'sky' },
       { id: 'threads', label: 'threads', page: at('threads'), accent: 'lime' },
       { id: 'stamps', label: 'stamps', page: at('stamps'), accent: 'pink' },
     ].filter((x) => x.page >= 0);
@@ -355,9 +353,7 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
   if (spec.kind === 'blank') return <p className="pp-blank serif">space for the next people who change your mind</p>;
 
   if (spec.kind === 'id') return <IdPage state={state} />;
-  if (spec.kind === 'profile') return <ProfileLeaf state={state} />;
   if (spec.kind === 'threads') return <ThreadsPage state={state} />;
-  if (spec.kind === 'visibility') return <VisibilityPage state={state} />;
 
   if (spec.kind === 'stamps') {
     return (
@@ -393,7 +389,7 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
 
 type State = ReturnType<typeof useStore>['state'];
 
-/** The data page: everything about you, laid out like the photo page of a passport. Photo opens settings. */
+/** The data page: who you are, like the photo page of a passport, with your profile beneath. Photo opens settings. */
 function IdPage({ state }: { state: State }) {
   const nav = useNavigate();
   const share = state.settings.shareProfile ?? { username: true, demographic: false, origin: true, creative: true };
@@ -413,14 +409,14 @@ function IdPage({ state }: { state: State }) {
   ];
   const mrzName = `${surname.toUpperCase().replace(/[^A-Z]/g, '<')}<<${given.toUpperCase()}`.padEnd(32, '<');
   return (
-    <div className="pp-id">
-      <div className="pp-id-head">
-        <span className="mono-label">passport</span>
-        <span className="mono pp-id-no">P · RHY · no. RHY2025021</span>
+    <div className="pp-leaf pp-id">
+      <div className="pp-sec pp-id-head">
+        <span className="mono-label">passport · no. RHY2025021</span>
+        <span className="mono pp-legend"><span className="pp-shared" aria-hidden="true" /> shown to matches</span>
       </div>
-      <div className="pp-id-row">
+      <div className="pp-sec pp-id-row">
         <button className="pp-photo" onClick={() => nav('/settings')} aria-label="Edit your details in settings">
-          <Avatar size={116} />
+          <Avatar size={64} />
           <span className="pp-photo-hint mono">edit in settings</span>
         </button>
         <dl className="pp-fields">
@@ -435,9 +431,16 @@ function IdPage({ state }: { state: State }) {
           ))}
         </dl>
       </div>
-      <div className="pp-id-foot">
-        <span className="pp-signature serif">{MAYA.name}</span>
-        <span className="mono pp-legend"><span className="pp-shared" aria-hidden="true" /> shown to matches</span>
+      <div className="pp-sec">
+        <span className="mono-label">profile</span>
+        <p className="pp-bio">{MAYA.bio}</p>
+        <p className="mono pp-stats">
+          {state.media.length} references · {state.connections.length} strings · {state.stamps.length} stamps
+        </p>
+      </div>
+      <div className="pp-sec">
+        <span className="mono-label">taste fingerprint · themes, not images</span>
+        <Fingerprint media={state.media} />
       </div>
       <div className="pp-mrz mono" aria-hidden="true">
         {`P<RHY${mrzName}`}
@@ -448,82 +451,62 @@ function IdPage({ state }: { state: State }) {
   );
 }
 
-/** About you: bio, counts and the taste fingerprint matching works from. */
-function ProfileLeaf({ state }: { state: State }) {
-  return (
-    <div className="pp-profile">
-      <span className="mono-label">profile</span>
-      <p className="serif pp-bio">{MAYA.bio}</p>
-      <div className="pp-stats">
-        <span><strong>{state.media.length}</strong><span className="mono">references</span></span>
-        <span><strong>{state.connections.length}</strong><span className="mono">strings</span></span>
-        <span><strong>{state.stamps.length}</strong><span className="mono">stamps</span></span>
-      </div>
-      <span className="mono-label">taste fingerprint · what matching sees: themes, not your images</span>
-      <Fingerprint media={state.media} />
-    </div>
-  );
-}
-
-/** Published threads: how other people meet you. */
+/** Published threads (how other people meet you), then who can find you. */
 function ThreadsPage({ state }: { state: State }) {
   const { dispatch } = useStore();
+  const nav = useNavigate();
   const u = universe(state);
   const mine = state.threads.filter((t) => t.owner === 'maya');
   return (
-    <div className="pp-threads">
-      <span className="mono-label">threads · how other people meet you</span>
-      <ul>
-        {mine.map((t) => (
-          <li key={t.id}>
-            <Link to={`/thread/${t.id}`} className="pp-thread-link">
-              <span className="pp-thread-stack">
-                {t.mediaIds.slice(0, 3).map((id) => {
-                  const m = u.media.get(id);
-                  return m ? <Thumb key={id} m={m} size={40} title={false} /> : null;
-                })}
-              </span>
-              <span>
-                <strong>{t.title}</strong>
-                <span className="mono">{t.coAuthor ? 'shared thread' : 'thread'} · {t.mediaIds.length} refs · {fmtMonth(t.publishedAt)}</span>
-              </span>
-            </Link>
-            <Toggle
-              label={t.isPublic ? 'public' : 'private'}
-              checked={t.isPublic}
-              onChange={(v) => dispatch({ type: 'updateThread', id: t.id, patch: { isPublic: v } })}
-            />
-          </li>
-        ))}
-      </ul>
-      <p className="pp-thread-empty serif">
-        <IconThread size={18} /> Shift-click any chain of tied cards on your board to make a new thread.
-      </p>
-    </div>
-  );
-}
-
-/** Who can find you, and a way back through time. */
-function VisibilityPage({ state }: { state: State }) {
-  const { dispatch } = useStore();
-  const nav = useNavigate();
-  return (
-    <div className="pp-visibility">
-      <span className="mono-label">visibility</span>
-      <div className="pp-controls">
-        <Toggle label="Matchable this week" hint="you appear in other people’s four cards" checked={state.settings.matchable}
-          onChange={(v) => dispatch({ type: 'settings', patch: { matchable: v } })} />
-        <Toggle label="Board is private" hint="matches see a slice, threads and fingerprint, never the whole board" checked={state.settings.boardPrivate}
-          onChange={(v) => dispatch({ type: 'settings', patch: { boardPrivate: v } })} />
+    <div className="pp-leaf pp-threads">
+      <div className="pp-sec">
+        <span className="mono-label">threads · how other people meet you</span>
+        <ul>
+          {mine.map((t) => (
+            <li key={t.id}>
+              <Link to={`/thread/${t.id}`} className="pp-thread-link">
+                <span className="pp-thread-stack">
+                  {t.mediaIds.slice(0, 3).map((id) => {
+                    const m = u.media.get(id);
+                    return m ? <Thumb key={id} m={m} size={32} title={false} /> : null;
+                  })}
+                </span>
+                <span>
+                  <span className="pp-thread-title">{t.title}</span>
+                  <span className="mono">{t.coAuthor ? 'shared thread' : 'thread'} · {t.mediaIds.length} refs · {fmtMonth(t.publishedAt)}</span>
+                </span>
+              </Link>
+              <Toggle
+                label={t.isPublic ? 'public' : 'private'}
+                checked={t.isPublic}
+                onChange={(v) => dispatch({ type: 'updateThread', id: t.id, patch: { isPublic: v } })}
+              />
+            </li>
+          ))}
+        </ul>
+        <p className="mono pp-thread-empty">
+          <IconThread size={14} /> shift-click a chain of tied cards on your board to make a new thread
+        </p>
       </div>
-      <button className="pf-replay" onClick={() => nav('/?replay=1')}>
-        <IconClock size={22} />
-        <span>
-          <strong className="serif">Time replay</strong>
-          <span className="mono">watch your board grow from feb 2025 to now</span>
-        </span>
-      </button>
-      <button className="btn btn-ghost pp-settings-link" onClick={() => nav('/settings')}>all settings</button>
+      <div className="pp-sec">
+        <span className="mono-label">visibility</span>
+        <div className="pp-controls">
+          <Toggle label="Matchable this week" hint="you appear in other people’s four cards" checked={state.settings.matchable}
+            onChange={(v) => dispatch({ type: 'settings', patch: { matchable: v } })} />
+          <Toggle label="Board is private" hint="matches see a slice, threads and fingerprint" checked={state.settings.boardPrivate}
+            onChange={(v) => dispatch({ type: 'settings', patch: { boardPrivate: v } })} />
+        </div>
+      </div>
+      <div className="pp-sec pp-actions">
+        <button className="pf-replay" onClick={() => nav('/?replay=1')}>
+          <IconClock size={18} />
+          <span>
+            <span className="pp-replay-title">Time replay</span>
+            <span className="mono">watch your board grow from feb 2025 to now</span>
+          </span>
+        </button>
+        <button className="btn btn-ghost pp-settings-link" onClick={() => nav('/settings')}>all settings</button>
+      </div>
     </div>
   );
 }
