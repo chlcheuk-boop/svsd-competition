@@ -130,9 +130,14 @@ export default function BoardView(props: BoardViewProps) {
     const vh = el.clientHeight;
     const phone = vw < 640;
     const padX = phone ? 12 : 120;
-    // clear the top bar (logo and nav) so the first heading never sits under it
-    const padTop = phone ? 104 : 120;
-    const padBottom = phone ? 110 : 150;
+    // sit centred between the real top bar and the real toolbar, with the same clear gap above and below
+    const nav = document.querySelector<HTMLElement>('.topnav');
+    const tools = document.querySelector<HTMLElement>('.toolbar-wrap .toolbar'); // the strip itself, not hints above it
+    const barBottom = nav ? nav.offsetTop + nav.offsetHeight : 66;
+    const toolsTop = tools ? vh - 22 - tools.offsetHeight : vh - 108; // offsetHeight ignores its slide-in animation
+    const gap = 44;
+    const padTop = phone ? 104 : barBottom + gap;
+    const padBottom = phone ? 110 : vh - toolsTop + gap;
     const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
     let target = {
       z,
