@@ -29,7 +29,7 @@ const ArtTie = () => (
     <YarnStrand d="M50 40 C 90 78, 130 78, 168 46" color="tangerine" />
     <g transform="translate(108 64) rotate(6)">
       <path d="M0 0 v6" stroke="var(--ink-soft)" />
-      <path d="M-8 6 h16 v18 h-16z" fill="var(--peach)" />
+      <path d="M-8 6 h16 v18 h-16z" fill="var(--blush)" />
       <path d="M-5 13 h10 M-5 18 h7" stroke="var(--tangerine-deep)" strokeLinecap="round" />
     </g>
   </svg>
@@ -52,8 +52,8 @@ const ArtSnip = () => (
 const ArtNote = () => (
   <svg viewBox="0 0 220 90" aria-hidden="true">
     <g transform="rotate(-3 110 45)">
-      <path d="M62 10 h84 l14 14 v58 h-98z" fill="var(--peach)" />
-      <path d="M146 10 v14 h14" fill="var(--peach-deep)" />
+      <path d="M62 10 h84 l14 14 v58 h-98z" fill="var(--blush)" />
+      <path d="M146 10 v14 h14" fill="var(--blush-deep)" />
       <rect x="72" y="22" width="34" height="34" fill="var(--card-white)" />
       <path d="M80 44 l8 -10 l8 8 l4 -4 l6 6" stroke="var(--tangerine)" strokeWidth="1.5" fill="none" strokeLinejoin="round" />
       <path d="M114 28 h34 M114 38 h26 M72 66 h70 M72 74 h46" stroke="var(--tangerine-deep)" strokeWidth="1.3" strokeLinecap="round" opacity=".7" />
@@ -112,7 +112,7 @@ const ArtPassport = () => (
 
 const Key = ({ x, w = 30, label, hot }: { x: number; w?: number; label: string; hot?: boolean }) => (
   <g>
-    <rect x={x} y="30" width={w} height="30" rx="5" fill={hot ? 'var(--peach)' : 'var(--card-white)'} stroke="var(--rule)" />
+    <rect x={x} y="30" width={w} height="30" rx="5" fill={hot ? 'var(--blush)' : 'var(--card-white)'} stroke="var(--rule)" />
     <rect x={x} y="56" width={w} height="4" rx="2" fill="rgba(67, 32, 5,.08)" />
     <text x={x + w / 2} y="50" textAnchor="middle" fontSize="11" fontFamily="IBM Plex Mono" fill={hot ? 'var(--tangerine-deep)' : 'var(--ink)'}>{label}</text>
   </g>

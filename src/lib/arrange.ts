@@ -19,12 +19,12 @@ export interface Section {
   count: number;
 }
 
-const CELL_W = 262;
-const CELL_H = 276;
+const CELL_W = 280;
+const CELL_H = 300;
 const PER_ROW = 4;
-const LABEL_H = 74;
-const SECTION_GAP = 56;
-const COLUMN_GAP = 130;
+const LABEL_H = 84;
+const SECTION_GAP = 72;
+const COLUMN_GAP = 150;
 const COLUMNS = 3;
 
 const KIND_SECTIONS: { key: string; label: string; group: string; types: MediaType[] }[] = [
@@ -100,7 +100,9 @@ export function arrange(mode: Arrange, media: Media[]): { media: Media[]; sectio
     // name a group ("from your life", "media") once, on its first section
     const groupLabel = g.group !== lastGroup ? g.group : undefined;
     lastGroup = g.group;
-    sections.push({ key: g.key, label: g.label, group: groupLabel, x: x0 - 22, y: y - 10, w: colW + 44, h: h + 20, count: g.items.length });
+    // the label, the rule and the first card all start on the same left edge
+    const inset = (CELL_W - sizeOf(g.items[0]).w) / 2;
+    sections.push({ key: g.key, label: g.label, group: groupLabel, x: x0 + inset, y: y - 10, w: colW - inset * 2, h: h + 20, count: g.items.length });
     g.items.forEach((m, i) => {
       const { w, h: ch } = sizeOf(m);
       const cx = x0 + (i % PER_ROW) * CELL_W + CELL_W / 2;

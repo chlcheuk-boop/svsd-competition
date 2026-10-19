@@ -1,4 +1,4 @@
-# Rhyme
+# Purl
 
 A board for building your own identity out of your actual life: the places you go, photos you take, events you show up to, small things you notice, and the media you love. You tie them together with yarn and write why, both for each string and for each thing on its own. Instead of a feed of everyone, you meet four people a week, dealt as tarot cards, and the inspiration they bring gets added to your life with its story attached.
 

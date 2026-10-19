@@ -28,8 +28,8 @@ const words = (s?: string) =>
   (s ?? '').toLowerCase().replace(/[^a-z\s'’]/g, ' ').split(/\s+/).filter((w) => w.length > 3 && !STOP.has(w));
 
 const MAX = 7;
-const CELL_W = 300;
-const CELL_H = 320;
+const CELL_W = 280;
+const CELL_H = 300;
 
 export function sliceFor(
   quadrant: Quadrant,

@@ -16,7 +16,7 @@ import { today, uid, useStore } from '../store/store';
 import { sizeOf, type Pt } from '../lib/geometry';
 import type { Accent, Connection, Media } from '../types';
 
-export const YARN_COLORS: Accent[] = ['tangerine', 'pink', 'lime', 'sky', 'peach', 'ink'];
+export const YARN_COLORS: Accent[] = ['tangerine', 'pink', 'lime', 'peach', 'sky', 'ink'];
 
 export function YarnSwatches({ value, onChange }: { value: Accent; onChange: (c: Accent) => void }) {
   return (

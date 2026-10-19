@@ -45,7 +45,7 @@
   align-items: center;
   padding: 24px;
 }
-.sp-media.tint-peach { background: var(--peach); }
+.sp-media.tint-peach { background: var(--blush); }
 .sp-media.tint-lime { background: var(--lime); }
 .sp-media.tint-sky { background: var(--sky); }
 .sp-media blockquote {
@@ -120,7 +120,7 @@
   transition: background 0.15s;
 }
 .sp-conn:hover {
-  background: var(--peach);
+  background: var(--blush);
 }
 .sp-dir {
   padding-top: 1px;
@@ -207,7 +207,7 @@
   width: 100%;
   margin-top: 16px;
   padding: 14px 16px 12px;
-  background: var(--peach);
+  background: var(--blush);
   text-align: left;
   transform: rotate(-0.6deg);
   box-shadow: var(--shadow-paper);
@@ -228,7 +228,7 @@
 }
 .sp-own-why.add {
   background: transparent;
-  border: 1.5px dashed var(--peach-deep);
+  border: 1.5px dashed var(--blush-deep);
   box-shadow: none;
 }
 .sp-own-why.add .serif {
@@ -237,7 +237,7 @@
   color: var(--ink-soft);
 }
 .sp-own-why.add:hover {
-  background: var(--peach);
+  background: var(--blush);
 }
 .sp-own-why textarea {
   width: 100%;

@@ -49,7 +49,7 @@ const fmtDate = (iso?: string) => {
 };
 
 /** One card for everything on the board: a perforated stamp with an image window, title, date and its reason. */
-export function MediaCard({ m, showStamp = true }: { m: Media; showStamp?: boolean }) {
+export function MediaCard({ m, showStamp = true, reason }: { m: Media; showStamp?: boolean; reason?: Accent }) {
   const { w, h } = sizeOf(m);
   const via = m.via ? person(m.via) : undefined;
   const words = isWords(m.type) && !m.imageData;
@@ -79,7 +79,7 @@ export function MediaCard({ m, showStamp = true }: { m: Media; showStamp?: boole
         <span className="card-date">{fmtDate(m.when ?? m.addedAt)}</span>
       </div>
       {m.why && (
-        <span className="reason-tab" style={{ ['--reason' as string]: `var(--${reasonAccent(m)})` }}>
+        <span className="reason-tab" style={{ ['--reason' as string]: `var(--${reason ?? reasonAccent(m)})` }}>
           <span>{m.why}</span>
         </span>
       )}

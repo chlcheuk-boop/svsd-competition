@@ -43,26 +43,6 @@ export const IconPassport = (p: P) => (
     <path d="M8.8 10.6h5.4M11.5 7.9c-.8 1-.8 4.5 0 5.5M11.5 7.9c.9 1 .9 4.5 0 5.5M8.6 16.6h5.9" />
   </Svg>
 );
-export const IconYarn = (p: P) => (
-  <Svg {...p}>
-    <path d="M11 4.3c3.9-.2 7.1 2.9 7 6.8-.1 3.8-3.2 6.9-7 6.8-3.8 0-6.8-3.1-6.8-6.9C4.3 7.3 7.3 4.4 11 4.3z" />
-    <path d="M5.3 8.4c3.4.3 7.6 3.3 9.9 8.3M7.6 5.4c2.8 1.6 6.6 6.1 7.5 11.7M13.6 4.7c-2.7 1.8-6.5 6.5-8.5 9.5M17.5 9.3c-3.5-.4-8.5 3-10.2 7.2" />
-    <path d="M16.6 17c1.3 1.7 2.9 2.8 4.9 2.6" />
-  </Svg>
-);
-export const IconScissors = (p: P) => (
-  <Svg {...p}>
-    <path d="M6.4 4c1.5 0 2.6 1.2 2.6 2.6S7.8 9.2 6.4 9.2 3.8 8 3.8 6.6 4.9 4 6.4 4zM6.4 14.8c1.5 0 2.6 1.2 2.6 2.6S7.8 20 6.4 20s-2.6-1.2-2.6-2.6 1.1-2.6 2.6-2.6z" />
-    <path d="M8.4 8.3L20.2 17M8.4 15.7L20.1 7" />
-  </Svg>
-);
-export const IconNote = (p: P) => (
-  <Svg {...p}>
-    <path d="M5 4.2h14.1v10.4l-4.6 5.1H5.1z" />
-    <path d="M14.5 19.6l-.1-4.8 4.7-.1" />
-    <path d="M8 8.5c2 .3 4.2-.3 6.8 0M8 11.5c1.7.2 3 0 4.4.1" />
-  </Svg>
-);
 export const IconShuffle = (p: P) => (
   <Svg {...p}>
     <path d="M3.5 7.2h3.6c4.3 0 5.3 9.6 9.8 9.6h3.6M3.5 16.8h3.6c1.6 0 2.7-1.3 3.6-3M13.3 10c.9-1.6 2-2.8 3.6-2.8h3.6" />
@@ -152,12 +132,6 @@ export const IconEye = (p: P) => (
     <path d="M12 9.4c1.5 0 2.6 1.2 2.6 2.6 0 1.5-1.1 2.6-2.6 2.6s-2.6-1.1-2.6-2.6c0-1.4 1.1-2.6 2.6-2.6z" />
   </Svg>
 );
-export const IconThread = (p: P) => (
-  <Svg {...p}>
-    <path d="M5 4.4h4.2v4.3H5zM14.8 9.8H19v4.3h-4.2zM5 15.3h4.2v4.3H5z" />
-    <path d="M9.2 6.6c3.6 0 2.6 5.3 5.6 5.4M14.8 12c-3.2.1-2.4 5.4-5.6 5.4" />
-  </Svg>
-);
 export const IconClock = (p: P) => (
   <Svg {...p}>
     <path d="M12 3.6c4.7-.1 8.5 3.7 8.4 8.4 0 4.6-3.8 8.4-8.4 8.4-4.7 0-8.4-3.8-8.4-8.4S7.3 3.6 12 3.6z" />
@@ -181,8 +155,22 @@ export const IconTicket = (p: P) => (
     <path d="M14.6 7.4v9.2" strokeDasharray="1.4 1.8" />
   </Svg>
 );
-export const IconGrid = (p: P) => (
-  <Svg {...p}>
-    <path d="M4.2 4.3h6.1v6H4.3zM13.7 4.2h6.1v6.1h-6zM4.3 13.7h6v6.1H4.2zM13.8 13.8h6v6h-6.1z" />
-  </Svg>
-);
+
+/* ---------- hand-inked tool marks, cut from the style sheet ----------
+ * Each is a transparent brush-ink PNG used as a mask, so it takes the button's text color. */
+type InkP = { size?: number; className?: string };
+function Ink({ src, size = 22, ratio = 1, className }: InkP & { src: string; ratio?: number }) {
+  const h = Math.round(size * 1.3);
+  return (
+    <span
+      className={`ink-icon ${className ?? ''}`}
+      aria-hidden="true"
+      style={{ width: Math.round(h * ratio), height: h, WebkitMaskImage: `url(${src})`, maskImage: `url(${src})` }}
+    />
+  );
+}
+export const IconYarn = (p: InkP) => <Ink src="/brand/yarn.png" ratio={92 / 86} {...p} />;
+export const IconScissors = (p: InkP) => <Ink src="/brand/scissors.png" ratio={88 / 100} {...p} />;
+export const IconNote = (p: InkP) => <Ink src="/brand/note.png" ratio={70 / 81} {...p} />;
+export const IconThread = (p: InkP) => <Ink src="/brand/needle.png" ratio={77 / 96} {...p} />;
+export const IconGrid = (p: InkP) => <Ink src="/brand/arrange.png" ratio={65 / 63} {...p} />;

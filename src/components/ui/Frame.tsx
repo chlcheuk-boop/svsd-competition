@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useRef, useState, type ReactNod
 import { IconCards, IconGear, IconPassport } from './icons';
 import { useStore } from '../../store/store';
 import { MAYA } from '../../data/people';
+import { Logo } from './Logo';
 import './frame.css';
 
 export function TopNav() {
@@ -16,6 +17,9 @@ export function TopNav() {
   ];
   return (
     <nav className="topnav" aria-label="Main">
+      <NavLink to="/" className="nav-logo" aria-label="Purl, back to my board">
+        <Logo size={30} />
+      </NavLink>
       {items.map((it) => (
         <NavLink
           key={it.to}
@@ -38,7 +42,7 @@ export function TopNav() {
   );
 }
 
-export function Avatar({ size = 44, label = MAYA.initial, color = 'var(--peach)', ink = 'var(--tangerine)' }: {
+export function Avatar({ size = 44, label = MAYA.initial, color = 'var(--pink)', ink = 'var(--ink)' }: {
   size?: number; label?: string; color?: string; ink?: string;
 }) {
   return (

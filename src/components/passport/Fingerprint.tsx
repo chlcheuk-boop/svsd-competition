@@ -4,7 +4,8 @@ import { seeded } from '../../lib/geometry';
 import type { Accent, Media } from '../../types';
 import './fingerprint.css';
 
-const LOOP_COLORS: Accent[] = ['tangerine', 'pink', 'sky', 'lime', 'peach', 'ink'];
+// one color per loop position, picked so olive never touches red or brown (on the drawing or in the legend)
+const LOOP_COLORS: Accent[] = ['lime', 'peach', 'sky', 'pink', 'tangerine', 'ink', 'pink'];
 
 /** Abstract taste fingerprint: one scribbled yarn loop per theme, sized by how often it shows up. */
 export function Fingerprint({ media }: { media: Media[] }) {

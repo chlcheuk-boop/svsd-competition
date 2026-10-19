@@ -1,0 +1,41 @@
+.logo {
+  display: inline-flex;
+  color: var(--ink);
+  line-height: 1;
+}
+.logo-mark {
+  display: block;
+  flex: none;
+  height: var(--logo);
+  width: calc(var(--logo) * 117 / 89);
+  background: currentColor;
+  -webkit-mask: url('/brand/shell.png') center / contain no-repeat;
+  mask: url('/brand/shell.png') center / contain no-repeat;
+}
+.logo-word {
+  font-family: var(--title);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+/* row: the word's baseline sits on the clam's foot, cap height near the top of the shell */
+.logo-row {
+  align-items: flex-end;
+  gap: calc(var(--logo) * 0.16);
+}
+.logo-row .logo-word {
+  font-size: calc(var(--logo) * 0.98);
+  line-height: 0.74;
+  transform: translateY(calc(var(--logo) * -0.02));
+}
+/* stack: the word is centered under the pearl, tucked close */
+.logo-stack {
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--logo) * 0.04);
+}
+.logo-stack .logo-word {
+  font-size: calc(var(--logo) * 0.72);
+  /* the swash P reaches left; nudge so the word reads centered */
+  transform: translateX(calc(var(--logo) * 0.04));
+}

@@ -2,9 +2,7 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--paper);
-  background-image: radial-gradient(rgba(67, 32, 5, 0.06) 0.8px, transparent 0.9px);
-  background-size: 22px 22px;
+  background: transparent;
 }
 
 .book {
@@ -384,7 +382,7 @@
   width: 100%;
   text-align: left;
   padding: 16px 18px;
-  background: var(--peach);
+  background: var(--blush);
   color: var(--tangerine-deep);
   transition: transform 0.2s var(--ease-paper);
 }
@@ -695,7 +693,7 @@
   background: var(--card-white);
 }
 .pr-notes button.on {
-  background: var(--peach);
+  background: var(--blush);
 }
 .pr-notes .mono {
   flex: 0 0 150px;
@@ -780,4 +778,10 @@
   .pr-notes .mono {
     flex: none;
   }
+}
+
+/* the cover's clam and wordmark print in cream, never brown on the red cloth */
+.cover .cover-logo {
+  color: var(--paper);
+  margin-bottom: 4px;
 }

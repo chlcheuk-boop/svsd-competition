@@ -5,6 +5,7 @@ import { useStore } from '../store/store';
 import { Avatar, Toolbar } from '../components/ui/Frame';
 import { IconArrowLeft, IconArrowRight, IconClock, IconClose, IconPerson, IconThread } from '../components/ui/icons';
 import { Toggle } from '../components/ui/Toggle';
+import { Logo } from '../components/ui/Logo';
 import { Fingerprint } from '../components/passport/Fingerprint';
 import { fmtMonth } from '../components/board/BoardView';
 import { Stamp, stampSize } from '../components/passport/Stamp';
@@ -165,14 +166,7 @@ export default function PassportPage() {
 
   const coverFace = (
     <>
-      <span className="cover-name serif">Rhyme</span>
-      <svg className="cover-emblem" width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
-        <circle cx="48" cy="48" r="40" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="48" cy="48" r="33" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3" />
-        <path d="M22 54 C 34 30, 46 70, 58 44 S 74 40, 76 46" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx="22" cy="54" r="2.5" fill="currentColor" />
-        <circle cx="76" cy="46" r="2.5" fill="currentColor" />
-      </svg>
+      <Logo variant="stack" size={92} className="cover-logo" />
       <span className="cover-title mono">P A S S P O R T</span>
       <span className="cover-hint mono">{phone ? 'tap to open' : 'click to open'}</span>
     </>

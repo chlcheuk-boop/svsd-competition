@@ -38,6 +38,9 @@
   --ink-soft: #7d5f4a;
   --rule: #e6d2c4;
   --card-white: #fffaf6;
+  /* soft panels: a deeper cream, never an accent */
+  --blush: #f2dccd;
+  --blush-deep: #e2c2ad;
 
   /* accents: only for yarn, buttons, titles and the outlines of reason cards */
   --tangerine: #e14429; /* red */

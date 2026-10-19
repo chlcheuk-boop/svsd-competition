@@ -364,7 +364,7 @@
   align-items: center;
   margin: 18px 0 18px;
   padding: 12px 70px 12px 14px;
-  background: var(--peach);
+  background: var(--blush);
   color: var(--tangerine-deep);
   border-radius: 4px;
   -webkit-mask: radial-gradient(circle 7px at 0 50%, transparent 98%, #000) left / 51% 100% no-repeat,
@@ -391,7 +391,7 @@
   display: grid;
   place-items: center;
   text-align: center;
-  border-left: 1.5px dashed var(--peach-deep);
+  border-left: 1.5px dashed var(--blush-deep);
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }

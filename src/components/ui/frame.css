@@ -22,8 +22,8 @@
 }
 .nav-round:hover {
   transform: translateY(-2px) rotate(-3deg);
-  background: var(--peach);
-  border-color: var(--peach-deep);
+  background: var(--blush);
+  border-color: var(--blush-deep);
 }
 .nav-round.active {
   border-color: var(--tangerine);

@@ -15,7 +15,7 @@
   top: 32px;
   width: 320px;
   padding: 26px 20px 14px;
-  background: var(--peach);
+  background: var(--blush);
   box-shadow: var(--shadow-lift);
   clip-path: polygon(22px 0, 100% 0, 100% 100%, 0 100%, 0 22px);
 }

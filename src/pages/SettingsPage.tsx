@@ -23,7 +23,7 @@ export default function SettingsPage() {
     <div className="page settings-page">
       <form className="settings-form" onSubmit={(e) => e.preventDefault()}>
         <span className="mono-label">settings</span>
-        <h1 className="serif">How Rhyme treats your taste</h1>
+        <h1 className="serif">How Purl treats your taste</h1>
 
         <fieldset>
           <legend className="serif">Privacy</legend>
@@ -74,7 +74,7 @@ export default function SettingsPage() {
             <div className="share-card">
               <span className="share-avatar serif">{MAYA.initial}</span>
               <div>
-                <strong>{share.username ? MAYA.username : 'a Rhyme member'}</strong>
+                <strong>{share.username ? MAYA.username : 'a Purl member'}</strong>
                 {share.creative && <span className="mono">{MAYA.creative}</span>}
                 {share.origin && <span className="mono">{MAYA.origin}</span>}
                 {share.demographic && <span className="chip">{MAYA.demographic}</span>}
@@ -107,7 +107,7 @@ export default function SettingsPage() {
 
         <fieldset>
           <legend className="serif">Capture</legend>
-          <p className="mono helper">Rhyme never fills your desk from a public feed. things come from your life, or from the few people you cross paths with.</p>
+          <p className="mono helper">Purl never fills your desk from a public feed. things come from your life, or from the few people you cross paths with.</p>
           <Toggle label="Camera" hint="take a photo straight onto your board" checked={s.capture?.camera ?? true}
             onChange={(v) => set({ capture: { ...s.capture, camera: v } })} />
           <Toggle label="Photo library" hint="pick from your camera roll" checked={s.capture?.library ?? true}

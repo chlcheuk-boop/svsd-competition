@@ -7,7 +7,7 @@
   overflow: auto;
   z-index: 70;
   width: min(680px, calc(100vw - 32px));
-  background: var(--peach);
+  background: var(--blush);
   padding: 28px 32px 24px;
   box-shadow: var(--shadow-lift);
   clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
@@ -18,7 +18,7 @@
   right: 0;
   width: 40px;
   height: 40px;
-  background: linear-gradient(225deg, transparent 50%, var(--peach-deep) 50%);
+  background: linear-gradient(225deg, transparent 50%, var(--blush-deep) 50%);
 }
 .nc-close {
   position: absolute;
@@ -47,7 +47,7 @@
 }
 .nc-types .chip {
   background: rgba(255, 255, 255, 0.5);
-  border-color: var(--peach-deep);
+  border-color: var(--blush-deep);
   cursor: pointer;
 }
 .nc-grid {
@@ -110,7 +110,7 @@
   color: var(--tangerine-deep);
 }
 .note-composer .line-input {
-  border-bottom-color: var(--peach-deep);
+  border-bottom-color: var(--blush-deep);
 }
 .nc-origin {
   font-family: var(--serif);

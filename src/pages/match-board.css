@@ -31,7 +31,7 @@
   z-index: 46;
   width: 340px;
   padding: 16px 18px;
-  background: var(--peach);
+  background: var(--blush);
   box-shadow: var(--shadow-lift);
   transform: rotate(-0.6deg);
 }

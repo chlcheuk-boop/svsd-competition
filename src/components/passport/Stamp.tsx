@@ -7,7 +7,7 @@ export const STAMP_INK: Record<string, string> = {
   pink: '#D45C74',
   sky: '#3A8DB8',
   lime: '#B08A0D',
-  peach: '#66721F',
+  peach: '#D45C74',
   ink: '#432005',
 };
 

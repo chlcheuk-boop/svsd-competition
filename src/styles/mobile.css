@@ -359,3 +359,11 @@
     flex-basis: 100%;
   }
 }
+
+/* phones: the clam alone leads home, so the wordmark and the text link step aside */
+@media (max-width: 640px) {
+  .nav-logo .logo-word,
+  .nav-home {
+    display: none;
+  }
+}

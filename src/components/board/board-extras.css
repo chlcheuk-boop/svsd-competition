@@ -51,7 +51,7 @@
 .tc-thumb {
   height: 90px;
   overflow: hidden;
-  background: var(--peach);
+  background: var(--blush);
   padding: 4px;
   box-shadow: var(--shadow-paper);
   display: flex;
@@ -182,7 +182,7 @@
 }
 .path-bar .mono {
   font-size: 11px;
-  color: var(--peach);
+  color: var(--blush);
 }
 .path-bar .btn-quiet {
   color: rgba(249, 248, 246, 0.7);

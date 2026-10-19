@@ -154,7 +154,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 14px 12px 18px;
-  background: var(--peach);
+  background: var(--blush);
   box-shadow: var(--shadow-lift);
   margin-top: 6px;
   width: min(620px, 100%);

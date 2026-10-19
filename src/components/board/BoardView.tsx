@@ -11,6 +11,7 @@ import { MiniStamp } from '../ui/MiniStamp';
 import { person } from '../../data/people';
 import { IconMinus, IconPlus } from '../ui/icons';
 import type { Section } from '../../lib/arrange';
+import { reasonColors, yarnColors } from '../../lib/palette';
 import './board.css';
 
 export type BoardTool = 'select' | 'yarn' | 'scissors' | 'place';
@@ -205,6 +206,11 @@ export default function BoardView(props: BoardViewProps) {
     flyTo({ x: (b.minX + b.maxX) / 2 - 120 / z, y: (b.minY + b.maxY) / 2 }, z);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frame?.nonce]);
+
+  // olive never meets red or brown: on strings that share a card, or on neighboring reason tabs
+  const yarnShown = useMemo(() => yarnColors(connections), [connections]);
+  const yc = (c: Connection) => yarnShown.get(c.id) ?? c.color;
+  const reasonOf = useMemo(() => reasonColors(media), [media]);
 
   const traceColor = useMemo(() => {
     const m = new Map<string, Accent>();
@@ -488,7 +494,7 @@ export default function BoardView(props: BoardViewProps) {
     const t = closestT(g.curve, at);
     const cutPt = pointAt(g.curve, t);
     const sag = g.curve.c1.y - (g.curve.p1.y + (g.curve.p2.y - g.curve.p1.y) / 3);
-    setGhosts((gs) => [...gs, { id: c.id + Date.now(), color: c.color, a: g.ha.outer, b: g.hb.outer, cut: cutPt, sag }]);
+    setGhosts((gs) => [...gs, { id: c.id + Date.now(), color: yc(c), a: g.ha.outer, b: g.hb.outer, cut: cutPt, sag }]);
     setSnapKey((k) => k + 1);
     setCut(null);
     onSnip?.([c.id]);
@@ -553,7 +559,7 @@ export default function BoardView(props: BoardViewProps) {
         {(isGlow || isPulse) && (
           <path d={d} fill="none" className={isPulse ? 'yarn-pulse' : 'yarn-glow'} strokeWidth={14} strokeLinecap="round" mask={mask} />
         )}
-        <YarnStrand d={d} color={c.color} mask={mask} />
+        <YarnStrand d={d} color={yc(c)} mask={mask} />
       </g>
     );
   };
@@ -625,7 +631,7 @@ export default function BoardView(props: BoardViewProps) {
                 }}
                 style={{ boxShadow: lifted ? 'var(--shadow-lift)' : undefined }}
               >
-                <MediaCard m={m} />
+                <MediaCard m={m} reason={reasonOf.get(m.id)} />
                 {pathIdx >= 0 && <span className="path-badge mono">{pathIdx + 1}</span>}
               </motion.div>
               {badges?.get(m.id) && <span className="card-badge mono">{badges.get(m.id)}</span>}
@@ -666,10 +672,10 @@ export default function BoardView(props: BoardViewProps) {
             <g key={`st-${c.id}`} opacity={dimmed(c.id) ? 0.16 : 1} style={{ transition: 'opacity .3s' }}>
               {[ha, hb].map((h, i) => (
                 <g key={i}>
-                  <YarnStrand d={`M${h.outer.x},${h.outer.y} Q${(h.outer.x + h.inner.x) / 2 + 1},${(h.outer.y + h.inner.y) / 2 - 1.5} ${h.inner.x},${h.inner.y}`} color={c.color} width={2.6} />
+                  <YarnStrand d={`M${h.outer.x},${h.outer.y} Q${(h.outer.x + h.inner.x) / 2 + 1},${(h.outer.y + h.inner.y) / 2 - 1.5} ${h.inner.x},${h.inner.y}`} color={yc(c)} width={2.6} />
                   <circle cx={h.outer.x} cy={h.outer.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
                   <circle cx={h.inner.x} cy={h.inner.y} r={2.3} fill="rgba(67, 32, 5,.55)" />
-                  <circle cx={h.inner.x} cy={h.inner.y} r={1.2} fill={YARN_HEX[c.color].deep} />
+                  <circle cx={h.inner.x} cy={h.inner.y} r={1.2} fill={YARN_HEX[yc(c)].deep} />
                 </g>
               ))}
             </g>
@@ -751,7 +757,7 @@ export default function BoardView(props: BoardViewProps) {
                   <WhyTag
                     pt={mid}
                     text={c.why}
-                    color={c.color}
+                    color={yc(c)}
                     onClick={onTagClick ? () => onTagClick(c.id) : undefined}
                   />
                 )}
@@ -797,7 +803,15 @@ export const fmtMonth = (iso: string) =>
 
 function WhyTag({ pt, text, color, onClick }: { pt: Pt; text: string; color: Accent; onClick?: () => void }) {
   return (
-    <div className="why-tag" style={{ left: pt.x, top: pt.y }}>
+    <div
+      className="why-tag"
+      style={{
+        left: pt.x,
+        top: pt.y,
+        ['--tag' as string]: YARN_HEX[color].base,
+        ['--tag-ink' as string]: color === 'lime' || color === 'sky' || color === 'pink' ? 'var(--ink)' : '#fff',
+      }}
+    >
       <svg className="why-loop" width="14" height="18" viewBox="0 0 14 18" aria-hidden="true">
         <path d="M7 0 C 3 4, 11 7, 7 14" fill="none" stroke={YARN_HEX[color].deep} strokeWidth="1" strokeLinecap="round" />
       </svg>
@@ -808,8 +822,11 @@ function WhyTag({ pt, text, color, onClick }: { pt: Pt; text: string; color: Acc
         aria-label={`why: ${text}`}
         tabIndex={onClick ? 0 : -1}
       >
-        <span className="tag-hole" />
-        <span className="tag-lines" />
+        <svg viewBox="0 0 22 30" width="22" height="30" aria-hidden="true">
+          <path d="M11 1.2 L20.8 7.4 V28.8 H1.2 V7.4 Z" fill="var(--tag)" stroke="#fff" strokeWidth="2" strokeLinejoin="round" />
+          <circle cx="11" cy="7" r="2" fill="#fff" />
+          <path d="M5.5 14 H16.5 M5.5 18 H16.5 M5.5 22 H13" stroke="var(--tag-ink)" strokeWidth="1" opacity=".55" />
+        </svg>
       </button>
       <div className="tag-reveal" role="tooltip">
         <p>{text}</p>
