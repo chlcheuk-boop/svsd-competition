@@ -5,6 +5,7 @@ import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
 import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
 import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
+import { MY_PHOTOS, placeBeside } from '../data/myPhotos';
 
 const KEY = 'purl.state.v1';
 /** where boards were saved before the app was renamed Purl; read once, then moved */
@@ -33,6 +34,9 @@ export interface AppState {
   yarnColor: Accent;
 }
 
+/** the desk plus the real photos, placed on a grid beside it */
+const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_PHOTOS)];
+
 export function initialState(): AppState {
   return {
     version: 1,
@@ -41,9 +45,9 @@ export function initialState(): AppState {
     tutorialSeen: false,
     matchesSeen: false,
     matchesDealt: false,
-    media: withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA]),
+    media: withBeside(withWhys([...MAYA_MEDIA, ...MORE_MEDIA, ...LIFE_MEDIA])),
     connections: [...MAYA_CONNECTIONS, ...MORE_CONNECTIONS, ...LIFE_CONNECTIONS],
-    boardEdition: 5,
+    boardEdition: 6,
     arrange: 'kind',
     threads: MAYA_THREADS,
     stamps: PASSPORT_STAMPS,
@@ -102,7 +106,12 @@ function load(): AppState {
       merged.media = withWhys([...merged.media, ...LIFE_MEDIA.filter((m) => !haveM.has(m.id))]);
       merged.connections = [...merged.connections, ...LIFE_CONNECTIONS.filter((c) => !haveC.has(c.id))];
     }
-    merged.boardEdition = 5;
+    if (merged.boardEdition < 6) {
+      // real photos for the photo / image category
+      const haveM = new Set(merged.media.map((m) => m.id));
+      merged.media = [...merged.media, ...placeBeside(merged.media, MY_PHOTOS.filter((m) => !haveM.has(m.id)))];
+    }
+    merged.boardEdition = 6;
     // photos and images are one category now: anything saved as an image becomes a photo
     const asPhoto = (m: Media): Media => ((m.type as string) === 'image' ? { ...m, type: 'photo' } : m);
     merged.media = merged.media.map(asPhoto);
