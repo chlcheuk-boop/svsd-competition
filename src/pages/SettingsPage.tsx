@@ -11,6 +11,9 @@ import { MAYA } from '../data/people';
 import type { Quadrant, Settings } from '../types';
 import './settings.css';
 
+/** settings names each quadrant after its drawing: stones, spiral shell, cloud, wave */
+const DRAWING_NAME: Record<Quadrant, string> = { 1: 'Rock', 2: 'Shell', 3: 'Pearl', 4: 'Ocean' };
+
 export default function SettingsPage() {
   const { state, dispatch } = useStore();
   const nav = useNavigate();
@@ -98,7 +101,7 @@ export default function SettingsPage() {
             {([1, 2, 3, 4] as Quadrant[]).map((q) => (
               <label key={q} className={`quad ${s.quadrants[q] ? 'on' : ''}`} style={{ ['--q' as string]: accentVar(QUADRANT_INFO[q].accent) }}>
                 <input type="checkbox" checked={s.quadrants[q]} onChange={(e) => set({ quadrants: { ...s.quadrants, [q]: e.target.checked } })} />
-                <span className="serif">{QUADRANT_INFO[q].numeral} · {QUADRANT_INFO[q].name}</span>
+                <span className="serif">{QUADRANT_INFO[q].numeral} · {DRAWING_NAME[q]}</span>
                 <span className="mono">{QUADRANT_INFO[q].axis}</span>
               </label>
             ))}
