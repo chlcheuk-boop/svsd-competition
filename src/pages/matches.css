@@ -199,7 +199,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 10px 8px;
+  /* numeral, mark, person and name sit on even gaps, with the same inset top and bottom */
+  justify-content: space-evenly;
+  padding: 12px 12px;
   text-align: left;
 }
 .tarot-face.small {
@@ -218,7 +220,7 @@
   margin-top: 6px;
 }
 .tarot-art {
-  flex: 1;
+  flex: none;
   display: grid;
   place-items: center;
 }
@@ -227,7 +229,6 @@
   gap: 8px;
   align-items: center;
   width: 100%;
-  margin-bottom: 8px;
 }
 .tarot-who strong {
   display: block;
@@ -246,10 +247,10 @@
   text-transform: lowercase;
   letter-spacing: 0.24em;
   font-size: 15px;
-  border-top: 1px solid var(--ink);
   width: 100%;
   text-align: center;
-  padding-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ink);
 }
 .tarot-name.big {
   position: absolute;

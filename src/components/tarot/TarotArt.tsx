@@ -10,15 +10,11 @@ export const QUADRANT_INFO: Record<Quadrant, { numeral: string; name: string; ac
 
 
 
-/** The quadrant's hand-inked mark. viewBox 0 0 100 140. */
+/** The quadrant's hand-inked mark, trimmed to its own square so card spacing stays even. */
 export function TarotIllustration({ q, color = 'var(--ink)', size = 1 }: { q: Quadrant; color?: string; size?: number }) {
   return (
-    <svg viewBox="0 0 100 140" width={100 * size} height={140 * size} aria-hidden="true" style={{ overflow: 'visible' }}>
-      <g transform="translate(2 18) scale(0.96)">
-        <AnimalShapes q={q} fill={color} cut="var(--card-white)" />
-      </g>
-      <path d="M14 128 H86" stroke={color} strokeWidth="2.5" strokeLinecap="square" />
-      <path d="M26 134 H74" stroke={color} strokeWidth="1.2" strokeDasharray="2 3" />
+    <svg viewBox="0 0 100 100" width={100 * size} height={100 * size} aria-hidden="true" style={{ overflow: 'visible' }}>
+      <AnimalShapes q={q} fill={color} />
     </svg>
   );
 }

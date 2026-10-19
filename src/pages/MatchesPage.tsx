@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { MATCHES } from '../data/matches';
 import { person } from '../data/people';
 import { useStore } from '../store/store';
-import { Avatar, Toolbar, useToast } from '../components/ui/Frame';
-import { IconBookmark, IconClose, IconQuadrants, IconShuffle, IconTicket } from '../components/ui/icons';
+import { Avatar, useToast } from '../components/ui/Frame';
+import { IconClose, IconTicket } from '../components/ui/icons';
 import { QUADRANT_INFO, TarotBack, TarotIllustration } from '../components/tarot/TarotArt';
 import { Thumb } from '../components/ui/Thumb';
 import { AnimalMark } from '../components/tarot/Animals';
@@ -170,10 +170,7 @@ export default function MatchesPage() {
   const nav = useNavigate();
   const toast = useToast();
   const [focus, setFocus] = useState<string | null>(null);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [filter, setFilter] = useState<Record<Quadrant, boolean>>({ 1: true, 2: true, 3: true, 4: true });
   const [dealt] = useState(state.matchesDealt);
-  const [dealKey, setDealKey] = useState(0);
 
   useEffect(() => {
     dispatch({ type: 'patch', patch: { matchesSeen: true, matchesDealt: true } });
@@ -181,19 +178,7 @@ export default function MatchesPage() {
   }, []);
 
   const ordered = [...MATCHES].sort((a, b) => a.quadrant - b.quadrant);
-  const allFlipped = ordered.every((m) => state.matchState[m.personId]?.flipped);
   const focused = ordered.find((m) => m.personId === focus);
-
-  const flipAll = () => {
-    if (allFlipped) {
-      ordered.forEach((m) => dispatch({ type: 'setMatch', id: m.personId, patch: { flipped: false } }));
-      setDealKey((k) => k + 1);
-      return;
-    }
-    ordered.forEach((m, i) =>
-      window.setTimeout(() => dispatch({ type: 'setMatch', id: m.personId, patch: { flipped: true } }), i * 160),
-    );
-  };
 
   return (
     <div className="matches-page paper-grain">
@@ -229,7 +214,7 @@ export default function MatchesPage() {
           <span className="mono axis-title">media →</span>
           <span className="mono axis-end bottom">dissimilar media</span>
         </div>
-        <div className="tarot-grid" key={dealKey}>
+        <div className="tarot-grid">
           {ordered.map((mp, i) => {
             const st = state.matchState[mp.personId] ?? { flipped: false, status: 'new' };
             return (
@@ -238,17 +223,15 @@ export default function MatchesPage() {
                   cardW={cardW}
                   mp={mp}
                   index={i}
-                  dealt={dealt && dealKey === 0}
+                  dealt={dealt}
                   flipped={st.flipped}
                   passed={st.status === 'passed'}
-                  dimmed={!filter[mp.quadrant] || (!!focus && focus !== mp.personId)}
+                  dimmed={!!focus && focus !== mp.personId}
                   onClick={() => {
-                    if (!filter[mp.quadrant]) return;
                     if (!st.flipped) dispatch({ type: 'setMatch', id: mp.personId, patch: { flipped: true } });
                     else setFocus(mp.personId);
                   }}
                 />
-                {st.status === 'saved' && <span className="saved-flag mono">saved</span>}
                 {st.status === 'crossed' && <span className="saved-flag mono crossed">crossed</span>}
               </div>
             );
@@ -273,38 +256,6 @@ export default function MatchesPage() {
         )}
       </AnimatePresence>
 
-      <Toolbar
-        tools={[
-          { id: 'reveal', label: allFlipped ? 'shuffle' : 'reveal all', icon: <IconShuffle />, onClick: flipAll },
-          { id: 'filter', label: 'quadrants', icon: <IconQuadrants />, active: filterOpen, onClick: () => setFilterOpen((o) => !o) },
-          {
-            id: 'save', label: 'save for later', icon: <IconBookmark />, disabled: !focused,
-            onClick: () => {
-              if (!focused) return;
-              dispatch({ type: 'setMatch', id: focused.personId, patch: { status: 'saved' } });
-              toast({ text: `saved ${person(focused.personId)!.name.split(' ')[0]} for later` });
-              setFocus(null);
-            },
-          },
-        ]}
-      >
-        {filterOpen && (
-          <motion.div key="f" className="tool-popover" initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }}>
-            <span className="mono-label">show</span>
-            {([1, 2, 3, 4] as Quadrant[]).map((q) => (
-              <button
-                key={q}
-                className="chip"
-                aria-pressed={filter[q]}
-                onClick={() => setFilter((f) => ({ ...f, [q]: !f[q] }))}
-                style={filter[q] ? { background: accentVar(QUADRANT_INFO[q].accent), color: 'var(--ink)', borderColor: 'transparent' } : undefined}
-              >
-                {QUADRANT_INFO[q].numeral} · {QUADRANT_INFO[q].name.replace('The ', '')}
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </Toolbar>
     </div>
   );
 }

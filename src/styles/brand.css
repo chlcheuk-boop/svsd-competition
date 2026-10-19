@@ -3,22 +3,11 @@
  * Loaded after the page stylesheets (and before the phone overrides) so it wins over their defaults.
  */
 
-/* ---------- dividers: a row of knit stitches instead of a ruled line ---------- */
-:root {
-  --knit: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='9' viewBox='0 0 12 9'%3E%3Cg fill='none' stroke='%23432005' stroke-width='1' stroke-opacity='.55'%3E%3Cpath d='M6 8C3.2 7 1.6 4 2 1.2 4.3 2.2 5.6 4.6 6 8Z'/%3E%3Cpath d='M6 8C8.8 7 10.4 4 10 1.2 7.7 2.2 6.4 4.6 6 8Z'/%3E%3C/g%3E%3C/svg%3E");
-}
-.knit-rule,
-html body .board-section,
-html body .settings-form fieldset,
-html body .sp-section,
-html body .pp-id-head {
-  border-top: 0;
-  border-bottom: 0;
-  background: var(--knit) left top / 12px 9px repeat-x;
-}
-html body .settings-form fieldset { padding-top: 26px; }
-html body .sp-section { padding-top: 18px; }
-html body .pp-id-head { background-position: left bottom; padding-bottom: 14px; }
+/* ---------- dividers: one plain line ---------- */
+html body .board-section { border-top: 1px solid var(--ink); }
+html body .settings-form fieldset { border-top: 1px solid var(--rule); }
+html body .sp-section { border-top: 1px solid var(--rule); }
+html body .pp-id-head { border-bottom: 1px solid var(--ink); }
 /* lighter separations: space does the work */
 html body :is(.pp-stats, .pp-threads li, .import-row) { border-bottom: 0; }
 
@@ -52,7 +41,7 @@ html body .serif {
 }
 
 /* page titles */
-html body :is(h1, .tv-title-input, .cover-name, .mb-header strong, .tarot-name.big) {
+html body :is(h1, .tv-title-input, .cover-name, .mb-header strong) {
   font-family: var(--title);
   font-weight: 400;
   font-style: normal;
@@ -68,7 +57,6 @@ html body .ob-welcome h1 { font-size: clamp(42px, 6vw, 72px); max-width: 860px; 
 html body .settings-form h1 { font-size: 44px; }
 html body .cover-name { font-size: 64px; }
 html body .mb-header strong { font-size: 26px; }
-html body .tarot-name.big { font-size: 30px; }
 
 /* section headings */
 html body :is(
@@ -103,11 +91,17 @@ html body .tarot-name { font-size: 15px; }
 /* card titles and UI text: General Sans, medium */
 html body :is(.card-title, .btn, .tool-label) { font-family: var(--sans); font-weight: 500; }
 html body .btn { letter-spacing: 0.01em; }
-html body .tarot-numeral {
-  font-family: var(--sans);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+/* tarot cards: every word on the card face is in the heading face */
+html body :is(.tarot-numeral, .tarot-name, .tarot-who strong) {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
 }
+html body .tarot-numeral { letter-spacing: 0.08em; }
+html body .tarot-name { font-size: 15px; letter-spacing: 0.02em; }
+html body .tarot-name.big { font-size: 22px; }
+html body .tarot-who strong { font-size: 14px; }
 
 /* ---------- graphic image borders: a monochrome checker band ---------- */
 :root {
