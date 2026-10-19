@@ -59,7 +59,8 @@
   --serif: 'KoPub Batang', 'Iowan Old Style', Georgia, serif;
   --sans: 'General Sans', system-ui, -apple-system, sans-serif;
   --display: var(--sans);
-  --mono: var(--sans);
+  /* small labels: the heading face, small and light */
+  --mono: var(--serif);
   --green: #7f8c2f;
   --cobalt: #3f97c4;
 
