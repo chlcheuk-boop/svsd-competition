@@ -94,7 +94,8 @@
 .card-date {
   display: block;
   margin-top: 3px;
-  font-family: var(--sans);
+  font-family: var(--serif);
+  font-weight: 300;
   font-size: 12px;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
