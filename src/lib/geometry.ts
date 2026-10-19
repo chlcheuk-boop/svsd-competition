@@ -42,7 +42,17 @@ export function holesFor(m: Media, toward: Pt, rotDeg = m.rot) {
   const hh = h / 2 - 15;
   const t = 1 / Math.max(Math.abs(ux) / hw, Math.abs(uy) / hh);
   const outerL = { x: ux * t, y: uy * t };
-  const innerL = { x: outerL.x - ux * 16 - uy * 5, y: outerL.y - uy * 16 + ux * 5 };
+  // the title and date sit in a band across the bottom of the card; the sewing stays off them
+  const cap = { x0: -w / 2 + 12, x1: w / 2 - 12, y0: h / 2 - 74, y1: h / 2 - 15 };
+  const inCap = (p: Pt) => p.x > cap.x0 && p.x < cap.x1 && p.y > cap.y0 && p.y < cap.y1;
+  // on a side edge beside the caption, come in higher up, beside the image
+  if (Math.abs(outerL.x) > hw - 1 && outerL.y > cap.y0 - 8) outerL.y = cap.y0 - 8;
+  let innerL = { x: outerL.x - ux * 16 - uy * 5, y: outerL.y - uy * 16 + ux * 5 };
+  // on the bottom edge, run along the margin instead of diving into the date
+  if (inCap(innerL)) {
+    const dir = outerL.x > 0 ? -1 : 1;
+    innerL = { x: outerL.x + dir * 16, y: outerL.y };
+  }
   const toWorld = (p: Pt) => {
     const q = rotate(p, r);
     return { x: q.x + c.x, y: q.y + c.y };

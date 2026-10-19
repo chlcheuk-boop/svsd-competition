@@ -130,18 +130,19 @@ export default function BoardView(props: BoardViewProps) {
     const vh = el.clientHeight;
     const phone = vw < 640;
     const padX = phone ? 12 : 120;
-    const padTop = phone ? 70 : 110;
+    // clear the top bar (logo and nav) so the first heading never sits under it
+    const padTop = phone ? 104 : 120;
     const padBottom = phone ? 110 : 150;
     const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
     let target = {
       z,
       x: (vw - (b.maxX - b.minX) * z) / 2 - b.minX * z,
-      y: padTop + (vh - padTop - padBottom - (b.maxY - b.minY) * z) / 2 - b.minY * z,
+      y: padTop + Math.max(0, (vh - padTop - padBottom - (b.maxY - b.minY) * z) / 2) - b.minY * z,
     };
     if (phone && z < 0.3) {
       // a whole wide desk is unreadable on a phone: fit its height, start at the left edge, pan sideways
       const zh = Math.min(0.6, Math.max(0.3, (vh - padTop - padBottom) / (b.maxY - b.minY)));
-      target = { z: zh, x: padX - b.minX * zh, y: padTop + (vh - padTop - padBottom - (b.maxY - b.minY) * zh) / 2 - b.minY * zh };
+      target = { z: zh, x: padX - b.minX * zh, y: padTop + Math.max(0, (vh - padTop - padBottom - (b.maxY - b.minY) * zh) / 2) - b.minY * zh };
     }
     if (!animated) return setCam(target);
     const from = { ...camRef.current };
