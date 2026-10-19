@@ -14,7 +14,7 @@ body,
 /* the wall: board-formed concrete (warmed to the cream base), with a soft light falling from above.
    It stays put behind everything; the cards and pages never catch the light. */
 body {
-  background-color: var(--paper);
+  background-color: #efe2da;
   background-image:
     radial-gradient(ellipse 70% 85% at 40% -12%, rgba(255, 251, 245, 0.95), rgba(255, 249, 241, 0.55) 40%, rgba(255, 248, 238, 0) 72%),
     linear-gradient(112deg, rgba(255, 249, 240, 0) 28%, rgba(255, 249, 240, 0.32) 40%, rgba(255, 249, 240, 0) 54%),
