@@ -154,11 +154,21 @@ export default function BoardView(props: BoardViewProps) {
 
   // Fit once the viewport has a real size, and keep fitting on resize until the user moves the camera.
   const userMoved = useRef(!!initialCamera);
+  // the board stays hidden until it has been fitted once, so it never flashes at full size (headings up by the logo)
+  const [placed, setPlaced] = useState(!!initialCamera);
   useLayoutEffect(() => {
     const el = viewport.current;
     if (!el) return;
+    // fit before the first paint when the viewport already has a size
+    if (!userMoved.current && el.clientWidth > 300) {
+      fit(false);
+      setPlaced(true);
+    }
     const ro = new ResizeObserver(() => {
-      if (!userMoved.current && el.clientWidth > 300) fit(false);
+      if (!userMoved.current && el.clientWidth > 300) {
+        fit(false);
+        setPlaced(true);
+      }
     });
     ro.observe(el);
     return () => ro.disconnect();
@@ -627,7 +637,7 @@ export default function BoardView(props: BoardViewProps) {
       onDragStart={(e) => e.preventDefault()}
       style={{ backgroundPosition: `${cam.x}px ${cam.y}px`, backgroundSize: `${22 * cam.z}px ${22 * cam.z}px` }}
     >
-      <div className="board-world" style={{ transform: `translate(${cam.x}px, ${cam.y}px) scale(${cam.z})` }}>
+      <div className="board-world" style={{ transform: `translate(${cam.x}px, ${cam.y}px) scale(${cam.z})`, visibility: placed ? undefined : 'hidden' }}>
         {backdrop && <Backdrop board={backdrop} />}
 
         {sections?.map((sec) => (
