@@ -37,6 +37,22 @@ export const MY_PHOTOS: Media[] = [
   P('p14', 'san-sebastian-window', 'View from the hotel room, Spain', 'San Sebastián', ['travel', 'ocean', 'light']),
   P('p15', 'stormy-table', 'Restaurant in Biarritz', 'Biarritz', ['travel', 'ocean', 'quiet']),
   P('p16', 'wing-sunset', 'Airplane window view', 'above the clouds', ['light', 'travel', 'color']),
+  P('p17', 'florida-selfie', 'Selfie in Florida', 'Florida', ['friends', 'color', 'pattern']),
+  P('p18', 'miami-shadow', 'Shadows of the Miami apartments', 'Miami', ['architecture', 'ocean', 'light']),
+  P('p19', 'carpaccio', 'Beef carpaccio', 'dinner out', ['food', 'color', 'light']),
+  P('p20', 'soap-shop', 'Organic soap shop', 'San Diego', ['shops', 'pattern', 'objects']),
+  P('p21', 'riverwalk', 'San Antonio River Walk', 'San Antonio', ['nature', 'water', 'cities']),
+  P('p22', 'guest-room', 'Guest room, late at night', 'home', ['light', 'quiet', 'home']),
+  P('p23', 'watermelon', 'The juiciest watermelon', 'kitchen counter', ['food', 'color', 'home']),
+  P('p24', 'galleria', 'Upper level of the Galleria', 'Houston', ['architecture', 'grid', 'light']),
+  P('p25', 'raw-beef', 'Raw beef night', 'dinner out', ['food', 'color']),
+  P('p26', 'ikebana', 'Ikebana at the ICA', 'ICA, Philadelphia', ['flowers', 'color', 'philly']),
+  P('p27', 'glass-installation', 'Glass installation', 'museum stairwell', ['light', 'objects', 'quiet']),
+  P('p28', 'philly-museum', 'Museum in Philly', 'Philadelphia', ['painting', 'color', 'philly']),
+  P('p29', 'anthro-ceiling', 'Anthropologie ceiling, Rittenhouse', 'Rittenhouse, Philadelphia', ['light', 'pattern', 'philly']),
+  P('p30', 'biopond', 'More of the biopond', 'Penn, Philadelphia', ['nature', 'water', 'philly']),
+  P('p31', 'window-shadows', 'Window shadows', 'my room', ['light', 'pattern', 'quiet']),
+  P('p32', 'photo-booth', 'First real photo booth shoot', 'my room', ['friends', 'color', 'time']),
 ];
 
 /** Lay new cards out on a tidy grid beside the cards already on the desk, in "my layout". */
