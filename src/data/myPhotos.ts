@@ -55,6 +55,46 @@ export const MY_PHOTOS: Media[] = [
   P('p32', 'photo-booth', 'First real photo booth shoot', 'my room', ['friends', 'color', 'time']),
 ];
 
+/** Things you own or want, pictured. Files live in /public/objects. */
+const O = (id: string, file: string, title: string, subtitle: string, tags: string[]): Media => ({
+  id, type: 'object', title, subtitle, tags, imageData: `/objects/${file}.jpg`,
+  x: 0, y: 0, rot: 0, shape: 'polaroid', tint: 'white', addedAt: '2026-10-19',
+});
+
+export const MY_OBJECTS: Media[] = [
+  O('o1', 'cavalli-dress', 'Roberto Cavalli dress', 'Roberto Cavalli', ['fashion', 'color', 'pattern']),
+  O('o2', 'bloombowtique-top', 'Striped top', 'Bloombowtique', ['fashion', 'color', 'pattern']),
+  O('o3', 'ebay-lace-top', 'Vintage lace-up top', 'vintage, eBay', ['fashion', 'vintage', 'thrift']),
+  O('o4', 'bebe-top', 'Beaded top', 'vintage bebe', ['fashion', 'vintage', 'pink']),
+  O('o5', 'hermes-bolide', 'Seafoam croc Bolide', 'Hermès', ['fashion', 'objects', 'color']),
+  O('o6', 'market-shoes', 'Lucky Girl Market shoes', 'Lucky Girl Market', ['fashion', 'thrift', 'objects']),
+  O('o7', 'fruitpunch-tank', 'Tank top', 'Fruitpunch', ['fashion', 'color']),
+  O('o8', 'viet-top', 'Purple ribbon top', 'Vietnamese brand', ['fashion', 'color']),
+  O('o9', 'viet-two-piece', 'Two-piece set', 'Vietnamese brand', ['fashion', 'pink', 'color']),
+  O('o10', 'huelley-dress', 'Huelley Huelley dress', 'Huelley Huelley', ['fashion', 'pink']),
+  O('o11', 'coach-bag', 'Vintage Coach bag', 'vintage Coach', ['fashion', 'vintage', 'pink']),
+  O('o12', 'fuchsia-dress', 'Vintage fuchsia dress', 'vintage', ['fashion', 'vintage', 'color']),
+  O('o13', 'pink-set', 'Pink two-piece set', 'two-piece', ['fashion', 'pink']),
+];
+
+/** Albums, named from their covers. Files live in /public/music. */
+const A = (id: string, file: string, title: string, artist: string, tags: string[]): Media => ({
+  id, type: 'music', title, subtitle: artist, tags, imageData: `/music/${file}.jpg`,
+  x: 0, y: 0, rot: 0, shape: 'punched', tint: 'white', addedAt: '2026-10-19',
+});
+
+export const MY_MUSIC: Media[] = [
+  A('a1', 'hotel-california', 'Hotel California', 'Eagles', ['70s', 'rock', 'light']),
+  A('a2', 'news-of-the-world', 'News of the World', 'Queen', ['70s', 'rock']),
+  A('a3', 'whiplash-smile', 'Whiplash Smile', 'Billy Idol', ['80s', 'rock', 'color']),
+  A('a4', 'santana', 'Santana', 'Santana', ['60s', 'rock', 'drawing']),
+  A('a5', 'vanilla-fudge', 'Vanilla Fudge', 'Vanilla Fudge', ['60s', 'rock', 'color']),
+  A('a6', 'slice', 'Slice', 'Yella', ['80s', 'rap', 'drawing']),
+];
+
+/** everything real, in the order it joins a board */
+export const MY_THINGS: Media[] = [...MY_PHOTOS, ...MY_OBJECTS, ...MY_MUSIC];
+
 /** Lay new cards out on a tidy grid beside the cards already on the desk, in "my layout". */
 export function placeBeside(existing: Media[], fresh: Media[], cols = 4, cellW = 280, cellH = 300): Media[] {
   const maxX = existing.length ? Math.max(...existing.map((m) => m.x)) : 0;
