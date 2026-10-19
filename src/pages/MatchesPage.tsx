@@ -166,9 +166,9 @@ function FocusCard({ mp, onClose, onPass, onCross, onView }: {
 export default function MatchesPage() {
   const vp = useViewport();
   // side by side on desktop: shrink the 740x820 card field so the whole page fits without scrolling
-  // (80px above and 40px below; the intro column takes 380px plus the 24px gap)
+  // (80px above and 40px below; the intro column takes 360px plus the 64px gap)
   const fieldFit = vp.w > 1100
-    ? { zoom: Math.min(1, (vp.h - 120) / 820, (vp.w - 96 - 380 - 24) / 740) }
+    ? { zoom: Math.min(1, (vp.h - 120) / 820, (vp.w - 96 - 360 - 64) / 740) }
     : undefined;
   const cardW = vp.phone ? Math.min(CARD_W, Math.floor((vp.w - 24) / 2 - 34)) : CARD_W;
   const { state, dispatch } = useStore();

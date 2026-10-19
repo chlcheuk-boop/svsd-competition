@@ -3,9 +3,11 @@
   inset: 0;
   overflow: auto;
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
+  /* the intro and the cards travel together, centered as one group */
+  grid-template-columns: 360px auto;
+  justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 64px;
   /* everything sits in the vertical middle and fits on one screen (the card field scales to fit) */
   padding: 80px 48px 40px;
 }
