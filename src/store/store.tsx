@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type
 import type { Arrange } from '../lib/arrange';
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
-import { KENJI_GIFT_CONNECTION, KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
+import { KENJI_GIFT_CONNECTION, KENJI_PASSPORT_STAMP, PASSPORT_STAMPS } from '../data/stamps';
 import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 import { MY_THINGS, placeBeside } from '../data/myPhotos';
@@ -40,19 +40,16 @@ const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_THING
 /**
  * The drawn stand-ins that used to fill the photo / image, object and music categories. Real images
  * replaced them, so they, and any string tied to them, leave every board (new and saved).
- * Kenji's handbill (mk1) stays: it's his gift from the Crossing.
+ * Kenji's old handbill gift (mk1) goes too; his Crossing now ties a string between two real cards.
  */
 const DRAWN_OBJECTS_AND_MUSIC = ['m3', 'm9', 'm6', 'm10', 'm15', 'm22', 'm23', 'm27', 'm31', 'm36', 'm37', 'm42', 'm45', 'm47'];
-const DRAWN_PHOTOS = new Set([...DRAWN_OBJECTS_AND_MUSIC, 'm1', 'm2', 'm14', 'm7', 'm12', 'm16', 'm17', 'm19', 'm21', 'm25', 'm28', 'm29', 'm30', 'm33', 'm35', 'm38', 'm48', 'm50', 'm54']);
+const DRAWN_PHOTOS = new Set([...DRAWN_OBJECTS_AND_MUSIC, 'mk1', 'm1', 'm2', 'm14', 'm7', 'm12', 'm16', 'm17', 'm19', 'm21', 'm25', 'm28', 'm29', 'm30', 'm33', 'm35', 'm38', 'm48', 'm50', 'm54']);
 
 function dropDrawnPhotos(s: AppState): AppState {
-  const media = s.media
-    .filter((m) => !DRAWN_PHOTOS.has(m.id))
-    // Kenji's handbill is his gift, a printed object, not one of your photos
-    .map((m) => (m.id === KENJI_GIFT_MEDIA.id ? { ...m, type: KENJI_GIFT_MEDIA.type } : m));
+  const media = s.media.filter((m) => !DRAWN_PHOTOS.has(m.id));
   let connections = s.connections.filter((c) => !DRAWN_PHOTOS.has(c.from) && !DRAWN_PHOTOS.has(c.to));
   // a finished Crossing keeps Kenji's string, now tied to a real photo
-  if (media.some((m) => m.id === KENJI_GIFT_MEDIA.id) && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
+  if (s.crossings.kenji === 'complete' && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
     connections = [...connections, KENJI_GIFT_CONNECTION];
   }
   const mediaIds = new Set(media.map((m) => m.id));
@@ -66,7 +63,7 @@ function dropDrawnPhotos(s: AppState): AppState {
     })
     .filter((t) => t.mediaIds.length >= 2 && !t.mediaIds.some((id) => DRAWN_PHOTOS.has(id)));
   // a stamp whose card or string is gone keeps its note, just without "show on my board"
-  const stamps = s.stamps.map((st) =>
+  const stamps = s.stamps.map((old) => (old.id === KENJI_PASSPORT_STAMP.id ? { ...old, excerpt: KENJI_PASSPORT_STAMP.excerpt, full: KENJI_PASSPORT_STAMP.full } : old)).map((st) =>
     st.target && !(st.target.kind === 'media' ? mediaIds.has(st.target.id) : connIds.has(st.target.id)) ? { ...st, target: undefined } : st,
   );
   return { ...s, media, connections, threads, stamps };
@@ -128,7 +125,7 @@ function load(): AppState {
     }
     if (merged.boardEdition === 3) {
       // edition 3 briefly laid the desk out in rings; put the example cards back on the grid
-      const home = new Map([...MAYA_MEDIA, ...MORE_MEDIA, KENJI_GIFT_MEDIA].map((m) => [m.id, m]));
+      const home = new Map([...MAYA_MEDIA, ...MORE_MEDIA].map((m) => [m.id, m]));
       merged.media = merged.media.map((m) => {
         const h = home.get(m.id);
         return h ? { ...m, x: h.x, y: h.y } : m;

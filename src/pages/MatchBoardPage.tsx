@@ -14,7 +14,7 @@ import { AnimalMark } from '../components/tarot/Animals';
 import { YarnSwatches } from './BoardPage';
 import { matchFor } from '../data/matches';
 import { person } from '../data/people';
-import { KENJI_GIFT_CONNECTION, KENJI_GIFT_MEDIA, KENJI_PASSPORT_STAMP } from '../data/stamps';
+import { KENJI_GIFT_CONNECTION, KENJI_PASSPORT_STAMP } from '../data/stamps';
 import { today, uid, useStore } from '../store/store';
 import type { Connection, Media } from '../types';
 import type { Pt } from '../lib/geometry';
@@ -163,7 +163,6 @@ export default function MatchBoardPage() {
 
   const receiveGift = () => {
     if (id === 'kenji') {
-      if (!state.media.some((m) => m.id === KENJI_GIFT_MEDIA.id)) dispatch({ type: 'addMedia', media: KENJI_GIFT_MEDIA });
       if (!state.connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) dispatch({ type: 'addConnection', connection: KENJI_GIFT_CONNECTION });
       dispatch({ type: 'addStamp', stamp: KENJI_PASSPORT_STAMP });
     }
@@ -173,7 +172,7 @@ export default function MatchBoardPage() {
       thread: {
         id: `jt-${id}`, owner: 'maya', coAuthor: id, title: `Crossing with ${first}`,
         intro: 'A thread you’re both building.',
-        mediaIds: mine ? [mine.from, mine.to, 'p6', 'mk1'] : ['p6', 'mk1'],
+        mediaIds: mine ? [mine.from, mine.to, 'p6', 'o6'] : ['p6', 'o6'],
         publishedAt: today(), isPublic: false,
       },
     });
