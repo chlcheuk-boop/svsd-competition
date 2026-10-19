@@ -130,14 +130,18 @@ export default function BoardView(props: BoardViewProps) {
     const vh = el.clientHeight;
     const phone = vw < 640;
     const padX = phone ? 12 : 120;
-    // sit centred between the real top bar and the real toolbar, with the same clear gap above and below
+    // sit between the real top bar and the real toolbar
     const nav = document.querySelector<HTMLElement>('.topnav');
     const tools = document.querySelector<HTMLElement>('.toolbar-wrap .toolbar'); // the strip itself, not hints above it
     const barBottom = nav ? nav.offsetTop + nav.offsetHeight : 66;
-    const toolsTop = tools ? vh - 22 - tools.offsetHeight : vh - 108; // offsetHeight ignores its slide-in animation
+    const wrapBottom = tools?.parentElement ? parseFloat(getComputedStyle(tools.parentElement).bottom) || 22 : 22;
+    const toolsTop = tools ? vh - wrapBottom - tools.offsetHeight : vh - 108; // offsetHeight ignores its slide-in animation
     const gap = 44;
-    const padTop = phone ? 104 : barBottom + gap;
-    const padBottom = phone ? 110 : vh - toolsTop + gap;
+    // nudged up a little: the cards sit a bit closer to the top bar than to the toolbar
+    const lift = 15;
+    // phones: the board is taller than the screen, so start it just under the top bar and let it pan
+    const padTop = phone ? barBottom + 16 : barBottom + gap - lift;
+    const padBottom = phone ? vh - toolsTop + 16 : vh - toolsTop + gap + lift;
     const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
     let target = {
       z,
