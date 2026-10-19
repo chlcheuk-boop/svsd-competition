@@ -15,7 +15,8 @@ import { useViewport } from '../lib/useViewport';
 import './matches.css';
 
 const CARD_W = 172;
-const illoColor = (q: Quadrant) => (q === 2 ? 'var(--tangerine)' : 'var(--ink)');
+// every quadrant's mark prints in the same brown ink
+const illoColor = (_q: Quadrant) => 'var(--ink)';
 
 function SmallFace({ mp }: { mp: MatchProfile }) {
   const p = person(mp.personId)!;
