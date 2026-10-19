@@ -8,17 +8,18 @@ import { IconScissors } from '../components/ui/icons';
 import { bezierPath, sagCurve, sizeOf, type Pt } from '../lib/geometry';
 import { MAYA_MEDIA } from '../data/maya';
 import type { Media } from '../types';
+import { MY_PHOTOS } from '../data/myPhotos';
 import './onboarding.css';
 
 const PAIRS: [string, string][] = [
-  ['m9', 'm12'],
-  ['m10', 'm14'],
-  ['m5', 'm2'],
-  ['m11', 'm7'],
-  ['m13', 'm3'],
-  ['m6', 'm10'],
+  ['m9', 'p22'],
+  ['m10', 'p24'],
+  ['m5', 'p27'],
+  ['m11', 'p6'],
+  ['m13', 'p8'],
+  ['m6', 'p29'],
 ];
-const byId = new Map(MAYA_MEDIA.map((m) => [m.id, m]));
+const byId = new Map([...MAYA_MEDIA, ...MY_PHOTOS].map((m) => [m.id, m]));
 const STARTERS = ['this reminds me of… because…', 'both of these feel…', 'I found this one because of that one…'];
 
 type Step = 'welcome' | 'import' | 'game' | 'done';

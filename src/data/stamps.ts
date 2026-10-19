@@ -54,7 +54,7 @@ export const PASSPORT_STAMPS: PassportStamp[] = [
 
 /** What Kenji ties onto Maya's board when the Crossing completes. */
 export const KENJI_GIFT_MEDIA: Media = {
-  id: 'mk1', type: 'photo', title: 'Shinjuku handbill, 1969', subtitle: 'from Kenji’s board',
+  id: 'mk1', type: 'object', title: 'Shinjuku handbill, 1969', subtitle: 'from Kenji’s board',
   origin: 'Kenji tied this in during our Crossing', tags: ['protest', 'print', '70s'],
   x: -190, y: 300, rot: -3, shape: 'punched', tint: 'white',
   art: { kind: 'stencil', colors: [ART.cream, ART.red, ART.ink], seed: 21 },
@@ -62,16 +62,16 @@ export const KENJI_GIFT_MEDIA: Media = {
 };
 
 export const KENJI_GIFT_WHY =
-  'printed the same spring as your Expo poster. Hang them together and the nostalgia gets complicated.';
+  'printed in Shinjuku in 1969. It belongs on the wall of that thrift store you found in Japan, old paper sold back as decor.';
 
 export const KENJI_GIFT_CONNECTION: Connection = {
-  id: 'ck1', from: 'mk1', to: 'm1', color: 'tangerine', addedAt: '2026-10-15', via: 'kenji',
+  id: 'ck1', from: 'mk1', to: 'p6', color: 'tangerine', addedAt: '2026-10-15', via: 'kenji',
   why: `Kenji: ${KENJI_GIFT_WHY}`,
 };
 
 export const KENJI_PASSPORT_STAMP: PassportStamp = {
   id: 'sk1', personId: 'kenji', date: '2026-10-15', quadrant: 2, shape: 'circle', color: 'tangerine', kind: 'crossing',
-  excerpt: 'the nostalgia gets complicated',
+  excerpt: 'old paper sold back as decor',
   full: `Crossing with Kenji: “The Shinjuku handbill was ${KENJI_GIFT_WHY}”`,
   target: { kind: 'connection', id: 'ck1' }, fresh: true,
 };

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type
 import type { Arrange } from '../lib/arrange';
 import type { Accent, Board, Connection, MatchState, Media, PassportStamp, Settings, Thread } from '../types';
 import { MAYA_CONNECTIONS, MAYA_MEDIA, MAYA_THREADS } from '../data/maya';
-import { KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
+import { KENJI_GIFT_CONNECTION, KENJI_GIFT_MEDIA, PASSPORT_STAMPS } from '../data/stamps';
 import { LIFE_CONNECTIONS, LIFE_MEDIA, MORE_CONNECTIONS, MORE_MEDIA, withWhys } from '../data/mayaMore';
 import { MATCHES } from '../data/matches';
 import { MY_PHOTOS, placeBeside } from '../data/myPhotos';
@@ -37,8 +37,36 @@ export interface AppState {
 /** the desk plus the real photos, placed on a grid beside it */
 const withBeside = (media: Media[]) => [...media, ...placeBeside(media, MY_PHOTOS)];
 
+/**
+ * The drawn stand-ins that used to fill the photo / image category. Real photos replaced them,
+ * so they, and any string tied to them, leave every board (new and saved).
+ */
+const DRAWN_PHOTOS = new Set(['m1', 'm2', 'm14', 'm7', 'm12', 'm16', 'm17', 'm19', 'm21', 'm25', 'm28', 'm29', 'm30', 'm33', 'm35', 'm38', 'm48', 'm50', 'm54']);
+
+function dropDrawnPhotos(s: AppState): AppState {
+  const media = s.media
+    .filter((m) => !DRAWN_PHOTOS.has(m.id))
+    // Kenji's handbill is his gift, a printed object, not one of your photos
+    .map((m) => (m.id === KENJI_GIFT_MEDIA.id ? { ...m, type: KENJI_GIFT_MEDIA.type } : m));
+  let connections = s.connections.filter((c) => !DRAWN_PHOTOS.has(c.from) && !DRAWN_PHOTOS.has(c.to));
+  // a finished Crossing keeps Kenji's string, now tied to a real photo
+  if (media.some((m) => m.id === KENJI_GIFT_MEDIA.id) && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
+    connections = [...connections, KENJI_GIFT_CONNECTION];
+  }
+  const mediaIds = new Set(media.map((m) => m.id));
+  const connIds = new Set(connections.map((c) => c.id));
+  const threads = s.threads
+    .map((t) => ({ ...t, mediaIds: t.mediaIds.filter((id) => !DRAWN_PHOTOS.has(id)) }))
+    .filter((t) => t.mediaIds.length >= 2);
+  // a stamp whose card or string is gone keeps its note, just without "show on my board"
+  const stamps = s.stamps.map((st) =>
+    st.target && !(st.target.kind === 'media' ? mediaIds.has(st.target.id) : connIds.has(st.target.id)) ? { ...st, target: undefined } : st,
+  );
+  return { ...s, media, connections, threads, stamps };
+}
+
 export function initialState(): AppState {
-  return {
+  return dropDrawnPhotos({
     version: 1,
     onboarded: false,
     arrowSeen: false,
@@ -66,7 +94,7 @@ export function initialState(): AppState {
       shareProfile: { username: true, demographic: false, origin: true, creative: true },
     },
     yarnColor: 'tangerine',
-  };
+  });
 }
 
 function load(): AppState {
@@ -118,7 +146,7 @@ function load(): AppState {
     merged.contributions = Object.fromEntries(
       Object.entries(merged.contributions).map(([k, b]) => [k, { ...b, media: b.media.map(asPhoto) }]),
     );
-    return merged;
+    return dropDrawnPhotos(merged);
   } catch {
     return initialState();
   }

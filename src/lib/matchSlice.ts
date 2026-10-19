@@ -44,7 +44,9 @@ export function sliceFor(
 
   // exact (the same reference) or close (shares two or more of your tags)
   const exact = new Set(theirs.media.filter((m) => m.ref && myIds.has(m.ref)).map((m) => m.id));
-  const close = new Set(theirs.media.filter((m) => !exact.has(m.id) && tagOverlap(m) >= 2).map((m) => m.id));
+  // close = shares two of your tags; when that finds too little to show, one shared tag is enough
+  const closeAt = (n: number) => theirs.media.filter((m) => !exact.has(m.id) && tagOverlap(m) >= n).map((m) => m.id);
+  const close = new Set(exact.size + closeAt(2).length >= 3 ? closeAt(2) : closeAt(1));
   const shared = new Set([...exact, ...close]);
   const isShared = (id: string) => shared.has(id);
 

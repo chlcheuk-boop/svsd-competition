@@ -173,7 +173,7 @@ export default function MatchBoardPage() {
       thread: {
         id: `jt-${id}`, owner: 'maya', coAuthor: id, title: `Crossing with ${first}`,
         intro: 'A thread you’re both building.',
-        mediaIds: mine ? [mine.from, mine.to, 'm1', 'mk1'] : ['m1', 'mk1'],
+        mediaIds: mine ? [mine.from, mine.to, 'p6', 'mk1'] : ['p6', 'mk1'],
         publishedAt: today(), isPublic: false,
       },
     });
