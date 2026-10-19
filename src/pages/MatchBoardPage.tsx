@@ -213,7 +213,7 @@ export default function MatchBoardPage() {
           </span>
         </div>
         <span className="mb-animal" style={{ background: accentVar(info.accent) }}>
-          <AnimalMark q={mp.quadrant} size={26} color="var(--ink)" cut={accentVar(info.accent)} />
+          <AnimalMark q={mp.quadrant} size={28} color={info.accent === 'tangerine' ? 'var(--card-white)' : 'var(--ink)'} />
         </span>
       </div>
 

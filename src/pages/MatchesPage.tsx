@@ -208,7 +208,7 @@ export default function MatchesPage() {
             return (
               <li key={m.quadrant}>
                 <span className="legend-badge" style={{ background: accentVar(info.accent) }}>
-                  <AnimalMark q={m.quadrant} size={20} color="var(--ink)" cut={accentVar(info.accent)} />
+                  <AnimalMark q={m.quadrant} size={22} color={info.accent === 'tangerine' ? 'var(--card-white)' : 'var(--ink)'} />
                 </span>
                 <span className="mono">{info.numeral}</span> {info.name} <span className="mono legend-axis">{info.axis}</span>
               </li>

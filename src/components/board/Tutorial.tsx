@@ -172,7 +172,7 @@ const STEPS: Step[] = [
     target: '[data-nav="matches"]',
     kicker: '5 · matching',
     title: 'A few people, not everyone',
-    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em> similar or dissimilar? The Mirror (butterfly), The Lens (dragonfly), The Parallel (bird), The Stranger (whale). You never see anyone’s whole board, only the slice where yours meets theirs. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s.</>,
+    body: <>Instead of a feed of the whole world, each week you’re dealt four tarot cards, one from every corner of two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em> similar or dissimilar? The Mirror (stones), The Lens (a spiral shell), The Parallel (a cloud), The Stranger (a wave). You never see anyone’s whole board, only the slice where yours meets theirs. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s.</>,
     art: <ArtMatches />,
   },
   {

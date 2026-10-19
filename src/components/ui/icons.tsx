@@ -28,21 +28,6 @@ export const IconGear = (p: P) => (
     <path d="M12 2.6v2.6M12 18.8v2.6M2.7 12h2.6M18.7 12h2.6M5.4 5.5l1.9 1.8M16.7 16.8l1.8 1.8M5.5 18.6l1.8-1.9M16.8 7.2l1.7-1.8" />
   </Svg>
 );
-export const IconCards = (p: P) => (
-  <Svg {...p}>
-    <path d="M4.2 7.4l5.4-2.1 4.3 11.3-5.5 2.1z" />
-    <path d="M10.6 4.6l5.8-.1.1 12.1-5.6.1" />
-    <path d="M15.5 5.3l4.3 2.3-5.2 10.8" />
-    <path d="M7.2 9.6l.6 1.6" />
-  </Svg>
-);
-export const IconPassport = (p: P) => (
-  <Svg {...p}>
-    <path d="M6 3.4h10.8c.7 0 1.2.5 1.2 1.2v14.8c0 .7-.5 1.2-1.2 1.2H6.1c-.6 0-1.1-.5-1.1-1.1V4.5c0-.6.4-1.1 1-1.1z" />
-    <path d="M11.5 7.9c1.6 0 2.8 1.2 2.8 2.7 0 1.6-1.3 2.8-2.8 2.8-1.5 0-2.7-1.2-2.7-2.8 0-1.5 1.2-2.7 2.7-2.7z" />
-    <path d="M8.8 10.6h5.4M11.5 7.9c-.8 1-.8 4.5 0 5.5M11.5 7.9c.9 1 .9 4.5 0 5.5M8.6 16.6h5.9" />
-  </Svg>
-);
 export const IconShuffle = (p: P) => (
   <Svg {...p}>
     <path d="M3.5 7.2h3.6c4.3 0 5.3 9.6 9.8 9.6h3.6M3.5 16.8h3.6c1.6 0 2.7-1.3 3.6-3M13.3 10c.9-1.6 2-2.8 3.6-2.8h3.6" />
@@ -174,3 +159,5 @@ export const IconScissors = (p: InkP) => <Ink src="/brand/scissors.png" ratio={8
 export const IconNote = (p: InkP) => <Ink src="/brand/note.png" ratio={70 / 81} {...p} />;
 export const IconThread = (p: InkP) => <Ink src="/brand/needle.png" ratio={77 / 96} {...p} />;
 export const IconGrid = (p: InkP) => <Ink src="/brand/arrange.png" ratio={65 / 63} {...p} />;
+export const IconCards = (p: InkP) => <Ink src="/brand/matches.png" ratio={119 / 110} {...p} />;
+export const IconPassport = (p: InkP) => <Ink src="/brand/passport.png" ratio={74 / 98} {...p} />;

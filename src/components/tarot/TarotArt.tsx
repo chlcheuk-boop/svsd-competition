@@ -2,15 +2,15 @@ import { AnimalShapes } from './Animals';
 import type { Quadrant } from '../../types';
 
 export const QUADRANT_INFO: Record<Quadrant, { numeral: string; name: string; accent: string; story: string; axis: string; animal: string }> = {
-  1: { numeral: 'I', name: 'The Mirror', accent: 'sky', story: 'similar media · similar connections', axis: 'similar media · similar connections', animal: 'butterfly' },
-  2: { numeral: 'II', name: 'The Lens', accent: 'tangerine', story: 'similar media · dissimilar connections', axis: 'similar media · dissimilar connections', animal: 'dragonfly' },
-  3: { numeral: 'III', name: 'The Parallel', accent: 'lime', story: 'dissimilar media · similar connections', axis: 'dissimilar media · similar connections', animal: 'bird' },
-  4: { numeral: 'IV', name: 'The Stranger', accent: 'pink', story: 'dissimilar media · dissimilar connections', axis: 'dissimilar media · dissimilar connections', animal: 'whale' },
+  1: { numeral: 'I', name: 'The Mirror', accent: 'sky', story: 'similar media · similar connections', axis: 'similar media · similar connections', animal: 'stones' },
+  2: { numeral: 'II', name: 'The Lens', accent: 'tangerine', story: 'similar media · dissimilar connections', axis: 'similar media · dissimilar connections', animal: 'shell' },
+  3: { numeral: 'III', name: 'The Parallel', accent: 'lime', story: 'dissimilar media · similar connections', axis: 'dissimilar media · similar connections', animal: 'cloud' },
+  4: { numeral: 'IV', name: 'The Stranger', accent: 'pink', story: 'dissimilar media · dissimilar connections', axis: 'dissimilar media · dissimilar connections', animal: 'wave' },
 };
 
 
 
-/** The quadrant's animal, drawn as a solid geometric mark. viewBox 0 0 100 140. */
+/** The quadrant's hand-inked mark. viewBox 0 0 100 140. */
 export function TarotIllustration({ q, color = 'var(--ink)', size = 1 }: { q: Quadrant; color?: string; size?: number }) {
   return (
     <svg viewBox="0 0 100 140" width={100 * size} height={140 * size} aria-hidden="true" style={{ overflow: 'visible' }}>
