@@ -7,18 +7,23 @@
 
 .book {
   --bw: min(1100px, calc(100vw - 120px));
-  --bh: min(680px, calc(100vh - 210px));
+  --bh: min(660px, calc(100vh - 264px));
+  /* centered between the top bar (ends 66px down) and the toolbar (starts 78px up): ~60px clear on each side */
+  --top-bar: 66px;
+  --tool-room: 78px;
+  /* the side tabs add ~34px on the right; shift left by half so book + tabs sit in the middle */
+  --tab-nudge: 17px;
   position: absolute;
-  top: 84px;
+  top: calc(var(--top-bar) + (100vh - var(--top-bar) - var(--tool-room) - var(--bh)) / 2);
   left: 50%;
   width: var(--bw);
   height: var(--bh);
   perspective: 2400px;
-  transform: translateX(-50%);
+  transform: translateX(calc(-50% - var(--tab-nudge)));
   transition: transform 1.1s cubic-bezier(0.45, 0.05, 0.25, 1);
 }
 .book.is-closed {
-  transform: translateX(-75%);
+  transform: translateX(calc(-75% - var(--tab-nudge)));
 }
 .half {
   position: absolute;

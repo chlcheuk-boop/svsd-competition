@@ -2,11 +2,23 @@
   position: absolute;
   inset: 0;
   overflow: auto;
-  display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
+  /* one centered column: intro, then the four cards */
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: 90px 48px 150px;
+  gap: 56px;
+  padding: 104px 48px 96px;
+}
+.matches-head {
+  width: 100%;
+  max-width: 720px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.matches-page > .tarot-field {
+  flex: none;
 }
 .matches-head h1 {
   margin: 8px 0 12px;
@@ -28,10 +40,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  gap: 12px 40px;
   font-size: 13px;
+  text-align: left;
 }
 .legend li {
   display: flex;
@@ -401,13 +415,9 @@
   align-items: center;
 }
 
-@media (max-width: 1100px) {
-  .matches-page {
-    grid-template-columns: 1fr;
-  }
-  .tarot-field {
-    transform: scale(0.85);
-    transform-origin: top center;
+@media (max-width: 860px) and (min-width: 641px) {
+  .matches-page > .tarot-field {
+    zoom: 0.85;
   }
 }
 .legend-badge {
