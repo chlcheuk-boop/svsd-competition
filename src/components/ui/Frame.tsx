@@ -46,9 +46,6 @@ export function Avatar({ size = 44, label = MAYA.initial, color = 'var(--pink)',
 }) {
   return (
     <span className="avatar" style={{ width: size, height: size, background: color, color: ink, fontSize: size * 0.42 }}>
-      <svg viewBox="0 0 40 40" width={size} height={size} aria-hidden="true" className="avatar-doodle">
-        <path d="M6 30c4-3 9-4 14-4s10 1 14 4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity=".35" />
-      </svg>
       <span className="avatar-initial">{label}</span>
     </span>
   );

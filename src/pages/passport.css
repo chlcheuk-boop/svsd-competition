@@ -216,7 +216,8 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
   left: 5px;
   right: 5px;
   bottom: 5px;
-  padding: 3px 0;
+  padding: 6px 4px 5px;
+  line-height: 1.3;
   font-size: 9px;
   text-align: center;
   background: var(--ink);
