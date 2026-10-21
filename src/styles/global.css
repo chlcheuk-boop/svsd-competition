@@ -276,7 +276,7 @@ html::after {
     radial-gradient(ellipse 50% 90% at 108% 60%, rgba(67, 32, 5, 0.06), rgba(67, 32, 5, 0) 70%);
 }
 
-/* links and clickable things use the inked arrow */
+/* links and clickable things use the inked pointing finger */
 a[href],
 [role='button'],
 label[for],
