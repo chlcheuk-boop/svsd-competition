@@ -59,7 +59,7 @@
   padding: 10px 12px;
   border: 1px solid var(--rule);
   border-radius: 6px;
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 .radio.on {
   border-color: var(--tangerine);
@@ -87,7 +87,7 @@
   margin-bottom: 14px;
 }
 .segmented .chip {
-  cursor: pointer;
+  cursor: var(--cursor-point);
   height: 30px;
   padding: 0 14px;
 }
@@ -103,7 +103,7 @@
   padding: 12px 14px;
   border: 1px solid var(--rule);
   border-radius: 6px;
-  cursor: pointer;
+  cursor: var(--cursor-point);
   position: relative;
 }
 .quad input {

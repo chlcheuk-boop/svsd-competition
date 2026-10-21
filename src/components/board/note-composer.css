@@ -48,7 +48,7 @@
 .nc-types .chip {
   background: rgba(255, 255, 255, 0.5);
   border-color: var(--blush-deep);
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 .nc-grid {
   display: grid;
@@ -242,7 +242,7 @@
   display: block;
   width: 100%;
   padding: 0;
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 .nc-drop > .nc-box {
   margin-top: 2px;

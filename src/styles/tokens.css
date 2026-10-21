@@ -38,6 +38,8 @@
   --ink-soft: #7d5f4a;
   --rule: #e6d2c4;
   --card-white: #fffaf6;
+  /* inked cursors (brown line on cream): an arrow for anything you can click */
+  --cursor-point: url('/brand/cursor-arrow.svg') 6 4, pointer;
   /* soft panels: a deeper cream, never an accent */
   --blush: #f2dccd;
   --blush-deep: #e2c2ad;

@@ -5,7 +5,7 @@
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  /* an inked open hand; it closes into a fist while you drag the board or a card */
+  /* an inked open hand over empty board only (cards and buttons get the inked arrow); a fist while dragging */
   cursor: url('/brand/cursor-hand.svg') 16 16, grab;
 }
 .board-viewport.panning,
@@ -41,7 +41,7 @@
   transition: opacity 0.3s;
 }
 .board-viewport.tool-select .card-slot {
-  cursor: url('/brand/cursor-hand.svg') 16 16, grab;
+  cursor: var(--cursor-point);
 }
 .card-slot.dimmed {
   opacity: 0.22;

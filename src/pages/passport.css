@@ -208,7 +208,7 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
   flex: none;
   padding: 5px;
   background: var(--checker);
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 .pp-photo .avatar { border-radius: 2px; }
 .pp-photo-hint {
@@ -340,7 +340,7 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
   box-shadow: 2px 2px 0 rgba(29, 26, 23, 0.12);
   transform: translateX(-4px);
   transition: transform 0.2s var(--ease-paper), background 0.2s;
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 .pp-tab:hover {
   transform: translateX(0);
@@ -469,7 +469,7 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
   justify-content: center;
 }
 .pp-filter .chip {
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 
 @media (max-width: 900px) {

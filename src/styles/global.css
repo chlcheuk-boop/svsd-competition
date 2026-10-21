@@ -29,7 +29,7 @@ button {
   background: none;
   border: 0;
   padding: 0;
-  cursor: pointer;
+  cursor: var(--cursor-point);
 }
 
 input,
@@ -216,7 +216,7 @@ select {
   transition-duration: 0.001ms !important;
 }
 .arrange-pop .chip {
-  cursor: pointer;
+  cursor: var(--cursor-point);
   height: 30px;
   padding: 0 14px;
 }
@@ -274,4 +274,13 @@ html::after {
     radial-gradient(ellipse 140% 80% at 50% 125%, rgba(67, 32, 5, 0.07), rgba(67, 32, 5, 0) 62%),
     radial-gradient(ellipse 50% 90% at -8% 60%, rgba(67, 32, 5, 0.05), rgba(67, 32, 5, 0) 70%),
     radial-gradient(ellipse 50% 90% at 108% 60%, rgba(67, 32, 5, 0.06), rgba(67, 32, 5, 0) 70%);
+}
+
+/* links and clickable things use the inked arrow */
+a[href],
+[role='button'],
+label[for],
+select,
+summary {
+  cursor: var(--cursor-point);
 }
