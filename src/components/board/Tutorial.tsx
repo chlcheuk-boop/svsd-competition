@@ -172,7 +172,7 @@ const STEPS: Step[] = [
     target: '[data-nav="matches"]',
     kicker: '5 · matching',
     title: 'Four people a week',
-    body: <>Each week you’re dealt four tarot cards, one for each answer to two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em>? Each card is named after its drawing: Rock, Shell, Pearl and Ocean. You see the part of their board that meets yours. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s board.</>,
+    body: <>Each week you’re dealt four tarot cards, one for each answer to two questions: is your <em>media</em> similar or dissimilar, and are your <em>connections</em>? Each card is named after its drawing: Rock, Pearl, Shell and Ocean. You see the part of their board that meets yours. Start a <b>Crossing</b> and you each add one string, with a why, to the other’s board.</>,
     art: <ArtMatches />,
   },
   {

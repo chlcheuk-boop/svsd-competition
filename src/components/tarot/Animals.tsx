@@ -4,17 +4,17 @@ import type { Quadrant } from '../../types';
  * The four quadrant marks, hand-inked on the style sheet and cut out as white-ink masks
  * (so they take any color, in CSS and in SVG alike).
  *   I   Rock     similar media · similar connections        → stacked stones
- *   II  Shell    similar media · dissimilar connections     → spiral shell
- *   III Pearl    dissimilar media · similar connections     → cloud
+ *   II  Pearl    similar media · dissimilar connections     → cloud
+ *   III Shell    dissimilar media · similar connections     → spiral shell
  *   IV  Ocean    dissimilar media · dissimilar connections  → wave
  * The file keeps its old name; the marks used to be animals.
  */
-export const ANIMAL_NAME: Record<Quadrant, string> = { 1: 'stones', 2: 'shell', 3: 'cloud', 4: 'wave' };
+export const ANIMAL_NAME: Record<Quadrant, string> = { 1: 'stones', 2: 'cloud', 3: 'shell', 4: 'wave' };
 
 const SRC: Record<Quadrant, { src: string; w: number; h: number }> = {
   1: { src: '/brand/stones.png', w: 87, h: 104 },
-  2: { src: '/brand/spiral.png', w: 92, h: 92 },
-  3: { src: '/brand/cloud.png', w: 152, h: 115 },
+  2: { src: '/brand/cloud.png', w: 152, h: 115 },
+  3: { src: '/brand/spiral.png', w: 92, h: 92 },
   4: { src: '/brand/wave.png', w: 128, h: 110 },
 };
 

@@ -22,7 +22,7 @@ const c = (id: string, from: string, to: string, why: string, color: Connection[
   ({ id, from, to, why, color, addedAt: '2026-01-02' });
 const a = (kind: ArtSpec['kind'], colors: string[], seed: number): ArtSpec => ({ kind, colors, seed });
 
-/* ---------------- II · Shell · Kenji ---------------- */
+/* ---------------- II · Pearl · Kenji ---------------- */
 const kenjiMedia: Media[] = [
   mk('k1', 'photo', "Expo '70 poster", 'Osaka, 1970', a('sun', [ART.red, ART.cream, ART.ink], 3), 140, 140,
     { ref: 'm1', origin: "my grandfather's, rolled in a tube", tags: ['poster', '70s'] }),
@@ -100,7 +100,7 @@ const lenaThreads: Thread[] = [
   { id: 'lt1', owner: 'lena', title: 'Signs that forgot to be pretty', mediaIds: ['l1', 'l2', 'l3', 'l6'], publishedAt: '2026-07-20', isPublic: true },
 ];
 
-/* ---------------- III · Pearl · Marcus ---------------- */
+/* ---------------- III · Shell · Marcus ---------------- */
 const marcusMedia: Media[] = [
   mk('r1', 'music', 'Kind of Blue', 'Miles Davis', a('waves', [ART.navy, ART.sky, ART.cream], 4), 160, 140,
     { ref: 'm3', origin: 'the first record I owned' }),
