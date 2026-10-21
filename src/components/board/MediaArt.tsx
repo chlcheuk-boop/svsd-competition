@@ -1,5 +1,6 @@
 import type { ArtSpec } from '../../types';
 import { seeded } from '../../lib/geometry';
+import { asset } from '../../lib/asset';
 
 /**
  * Generated abstract placeholder imagery. Every reference without a real upload
@@ -7,7 +8,7 @@ import { seeded } from '../../lib/geometry';
  */
 export function MediaArt({ art, imageData, title }: { art?: ArtSpec; imageData?: string; title?: string }) {
   if (imageData) {
-    return <img src={imageData} alt={title ?? ''} draggable={false} decoding="async" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
+    return <img src={asset(imageData)} alt={title ?? ''} draggable={false} decoding="async" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
   }
   if (!art) return <div style={{ width: '100%', height: '100%', background: 'var(--paper-deep)' }} />;
   const r = seeded(art.seed);

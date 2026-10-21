@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import { asset } from '../../lib/asset';
 
 type P = SVGProps<SVGSVGElement> & { size?: number };
 
@@ -144,7 +145,8 @@ export const IconTicket = (p: P) => (
 /* ---------- hand-inked tool marks, cut from the style sheet ----------
  * Each is a transparent brush-ink PNG used as a mask, so it takes the button's text color. */
 type InkP = { size?: number; className?: string };
-function Ink({ src, size = 22, ratio = 1, className }: InkP & { src: string; ratio?: number }) {
+function Ink({ src: path, size = 22, ratio = 1, className }: InkP & { src: string; ratio?: number }) {
+  const src = asset(path);
   const h = Math.round(size * 1.3);
   return (
     <span

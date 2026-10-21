@@ -1,4 +1,5 @@
 import type { Quadrant } from '../../types';
+import { asset } from '../../lib/asset';
 
 /**
  * The four quadrant marks, hand-inked on the style sheet and cut out as white-ink masks
@@ -25,7 +26,7 @@ export function AnimalShapes({ q, fill }: { q: Quadrant; fill: string; cut?: str
     <g>
       <defs>
         <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
-          <image href={SRC[q].src} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet" />
+          <image href={asset(SRC[q].src)} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid meet" />
         </mask>
       </defs>
       <rect width="100" height="100" fill={fill} mask={`url(#${id})`} />
@@ -37,7 +38,7 @@ export function AnimalShapes({ q, fill }: { q: Quadrant; fill: string; cut?: str
 export function AnimalMark({ q, size = 24, color = 'var(--ink)', title }: {
   q: Quadrant; size?: number; color?: string; cut?: string; title?: string;
 }) {
-  const { src } = SRC[q];
+  const src = asset(SRC[q].src);
   return (
     <span
       className="ink-icon"
