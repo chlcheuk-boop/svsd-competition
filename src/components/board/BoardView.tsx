@@ -73,6 +73,10 @@ interface Ghost {
 }
 
 const DRAG_THRESHOLD = 4;
+/** zoom range and the size of one wheel notch / key press, close to Obsidian's canvas */
+const MIN_Z = 0.1;
+const MAX_Z = 3;
+const ZOOM_STEP = 1.2;
 
 export function connectionMidpoint(c: Connection, byId: Map<string, Media>): Pt | null {
   const a = byId.get(c.from);
@@ -244,23 +248,56 @@ export default function BoardView(props: BoardViewProps) {
     const px = sx ?? el.clientWidth / 2;
     const py = sy ?? el.clientHeight / 2;
     userMoved.current = true;
-    const z = Math.min(2.4, Math.max(0.15, c.z * factor));
+    const z = Math.min(MAX_Z, Math.max(MIN_Z, c.z * factor));
     const k = z / c.z;
     setCam({ z, x: px - (px - c.x) * k, y: py - (py - c.y) * k });
+  }, []);
+
+  // discrete zoom steps (wheel notches, keys, buttons) ease in over a short beat, like Obsidian's canvas
+  const stepAnim = useRef<{ stop: () => void } | null>(null);
+  const zoomStep = useCallback((factor: number, sx?: number, sy?: number) => {
+    const el = viewport.current!;
+    const from = { ...camRef.current };
+    const px = sx ?? el.clientWidth / 2;
+    const py = sy ?? el.clientHeight / 2;
+    const z = Math.min(MAX_Z, Math.max(MIN_Z, from.z * factor));
+    const k = z / from.z;
+    const to = { z, x: px - (px - from.x) * k, y: py - (py - from.y) * k };
+    userMoved.current = true;
+    stepAnim.current?.stop();
+    stepAnim.current = animate(0, 1, {
+      duration: 0.16,
+      ease: [0.2, 0.8, 0.2, 1],
+      onUpdate: (t) => setCam({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t, z: from.z + (to.z - from.z) * t }),
+    });
   }, []);
 
   useEffect(() => {
     const el = viewport.current;
     if (!el) return;
+    // Obsidian-style: scroll pans, Shift+scroll pans sideways, Ctrl/⌘+scroll or a pinch zooms around the pointer
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       const r = el.getBoundingClientRect();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1;
+      let dx = e.deltaX * unit;
+      let dy = e.deltaY * unit;
       if (e.ctrlKey || e.metaKey) {
-        zoomAt(Math.exp(-e.deltaY * 0.01), e.clientX - r.left, e.clientY - r.top);
-      } else {
-        userMoved.current = true;
-        setCam((c) => ({ ...c, x: c.x - e.deltaX, y: c.y - e.deltaY }));
+        const px = e.clientX - r.left;
+        const py = e.clientY - r.top;
+        // a mouse wheel notch is one even step; a trackpad pinch zooms continuously with the fingers
+        const notch = e.deltaMode !== 0 || (Math.abs(dy) >= 40 && Number.isInteger(e.deltaY));
+        if (notch) zoomStep(dy > 0 ? 1 / ZOOM_STEP : ZOOM_STEP, px, py);
+        else zoomAt(Math.exp(-Math.max(-60, Math.min(60, dy)) * 0.012), px, py);
+        return;
       }
+      if (e.shiftKey && dx === 0) {
+        dx = dy;
+        dy = 0;
+      }
+      stepAnim.current?.stop();
+      userMoved.current = true;
+      setCam((c) => ({ ...c, x: c.x - dx, y: c.y - dy }));
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     // a pinch over the toolbar or top bar would otherwise zoom the whole browser page;
@@ -269,7 +306,7 @@ export default function BoardView(props: BoardViewProps) {
       if (!(e.ctrlKey || e.metaKey) || el.contains(e.target as Node)) return;
       e.preventDefault();
       const r = el.getBoundingClientRect();
-      zoomAt(Math.exp(-e.deltaY * 0.01), r.width / 2, r.height / 2);
+      zoomAt(Math.exp(-Math.max(-60, Math.min(60, e.deltaY)) * 0.012), r.width / 2, r.height / 2);
     };
     const stopGesture = (e: Event) => e.preventDefault(); // Safari trackpad pinch
     window.addEventListener('wheel', onPinchElsewhere, { passive: false });
@@ -281,7 +318,7 @@ export default function BoardView(props: BoardViewProps) {
       window.removeEventListener('gesturestart', stopGesture);
       window.removeEventListener('gesturechange', stopGesture);
     };
-  }, [zoomAt]);
+  }, [zoomAt, zoomStep]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -292,8 +329,25 @@ export default function BoardView(props: BoardViewProps) {
         e.preventDefault();
       }
       if (e.key === 'Escape') setPending(null);
-      if (e.key === '+' || e.key === '=') zoomAt(1.15);
-      if (e.key === '-') zoomAt(1 / 1.15);
+      const mod = e.ctrlKey || e.metaKey;
+      // zoom keys (with or without Ctrl/⌘, so the browser page itself never zooms)
+      if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        zoomStep(ZOOM_STEP);
+      }
+      if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        zoomStep(1 / ZOOM_STEP);
+      }
+      // Ctrl/⌘+0 or Shift+0: actual size; Shift+1: fit the whole board (Obsidian's shortcuts)
+      if ((mod && e.key === '0') || (e.shiftKey && e.code === 'Digit0')) {
+        e.preventDefault();
+        zoomStep(1 / camRef.current.z);
+      }
+      if (e.shiftKey && e.code === 'Digit1') {
+        e.preventDefault();
+        fit(true);
+      }
     };
     const up = (e: KeyboardEvent) => {
       if (e.code === 'Space') setSpaceDown(false);
@@ -304,7 +358,7 @@ export default function BoardView(props: BoardViewProps) {
       window.removeEventListener('keydown', down);
       window.removeEventListener('keyup', up);
     };
-  }, [zoomAt]);
+  }, [zoomStep, fit]);
 
   useEffect(() => {
     if (tool !== 'yarn') setPending(null);
@@ -856,13 +910,13 @@ export default function BoardView(props: BoardViewProps) {
       {cursor && tool === 'scissors' && !spaceDown && <ScissorsCursor x={cursor.x} y={cursor.y} snapKey={snapKey} />}
 
       <div className="zoom-control" onPointerDown={(e) => e.stopPropagation()}>
-        <button onClick={() => zoomAt(1 / 1.2)} aria-label="Zoom out">
+        <button onClick={() => zoomStep(1 / ZOOM_STEP)} aria-label="Zoom out">
           <IconMinus size={16} />
         </button>
         <button className="mono zoom-pct" onClick={() => fit(true)} aria-label="Fit board to screen" title="fit to screen">
           {Math.round(cam.z * 100)}%
         </button>
-        <button onClick={() => zoomAt(1.2)} aria-label="Zoom in">
+        <button onClick={() => zoomStep(ZOOM_STEP)} aria-label="Zoom in">
           <IconPlus size={16} />
         </button>
       </div>
