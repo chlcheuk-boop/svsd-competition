@@ -9,7 +9,6 @@ import { MediaCard } from './MediaCard';
 import { YarnStrand, YARN_HEX } from './Yarn';
 import { MiniStamp } from '../ui/MiniStamp';
 import { person } from '../../data/people';
-import { IconMinus, IconPlus } from '../ui/icons';
 import type { Section } from '../../lib/arrange';
 import { reasonColors, yarnColors } from '../../lib/palette';
 import './board.css';
@@ -275,29 +274,21 @@ export default function BoardView(props: BoardViewProps) {
   useEffect(() => {
     const el = viewport.current;
     if (!el) return;
-    // Obsidian-style: scroll pans, Shift+scroll pans sideways, Ctrl/⌘+scroll or a pinch zooms around the pointer
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       const r = el.getBoundingClientRect();
       const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1;
-      let dx = e.deltaX * unit;
-      let dy = e.deltaY * unit;
-      if (e.ctrlKey || e.metaKey) {
-        const px = e.clientX - r.left;
-        const py = e.clientY - r.top;
-        // a mouse wheel notch is one even step; a trackpad pinch zooms continuously with the fingers
-        const notch = e.deltaMode !== 0 || (Math.abs(dy) >= 40 && Number.isInteger(e.deltaY));
-        if (notch) zoomStep(dy > 0 ? 1 / ZOOM_STEP : ZOOM_STEP, px, py);
-        else zoomAt(Math.exp(-Math.max(-60, Math.min(60, dy)) * 0.012), px, py);
-        return;
-      }
-      if (e.shiftKey && dx === 0) {
-        dx = dy;
-        dy = 0;
-      }
-      stepAnim.current?.stop();
-      userMoved.current = true;
-      setCam((c) => ({ ...c, x: c.x - dx, y: c.y - dy }));
+      const dx = e.deltaX * unit;
+      const dy = e.deltaY * unit;
+      // the trackpad zooms: two-finger scroll and pinch both zoom around the pointer, so the cards spread
+      // apart as you zoom in and settle back as you zoom out; you move the board by dragging it
+      void dx;
+      const px = e.clientX - r.left;
+      const py = e.clientY - r.top;
+      const notch = e.deltaMode !== 0 || (Math.abs(dy) >= 40 && Number.isInteger(e.deltaY)); // a mouse wheel click
+      if (notch) return zoomStep(dy > 0 ? 1 / ZOOM_STEP : ZOOM_STEP, px, py);
+      const speed = e.ctrlKey || e.metaKey ? 0.012 : 0.006; // a pinch is quicker than a two-finger scroll
+      zoomAt(Math.exp(-Math.max(-60, Math.min(60, dy)) * speed), px, py);
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     // a pinch over the toolbar or top bar would otherwise zoom the whole browser page;
@@ -691,7 +682,7 @@ export default function BoardView(props: BoardViewProps) {
   return (
     <div
       ref={viewport}
-      className={`board-viewport paper-grain ${cursorClass}`}
+      className={`board-viewport paper-grain ${cursorClass} ${dragging ? 'dragging-card' : ''}`}
       onPointerDownCapture={onPointerDownCapture}
       onPointerDown={onViewportPointerDown}
       onPointerMove={onViewportPointerMove}
@@ -909,17 +900,6 @@ export default function BoardView(props: BoardViewProps) {
       {cursor && tool === 'yarn' && !spaceDown && <NeedleCursor x={cursor.x} y={cursor.y} color={yarnColor} holding={!!pending} />}
       {cursor && tool === 'scissors' && !spaceDown && <ScissorsCursor x={cursor.x} y={cursor.y} snapKey={snapKey} />}
 
-      <div className="zoom-control" onPointerDown={(e) => e.stopPropagation()}>
-        <button onClick={() => zoomStep(1 / ZOOM_STEP)} aria-label="Zoom out">
-          <IconMinus size={16} />
-        </button>
-        <button className="mono zoom-pct" onClick={() => fit(true)} aria-label="Fit board to screen" title="fit to screen">
-          {Math.round(cam.z * 100)}%
-        </button>
-        <button onClick={() => zoomStep(ZOOM_STEP)} aria-label="Zoom in">
-          <IconPlus size={16} />
-        </button>
-      </div>
     </div>
   );
 }

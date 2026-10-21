@@ -194,9 +194,8 @@ const STEPS: Step[] = [
         <span><kbd>Ctrl</kbd>+<kbd>Z</kbd></span><span>undo the last string you tied or snipped</span>
         <span><kbd>T</kbd></span><span>show or hide your threads</span>
         <span><kbd>Esc</kbd></span><span>put the tool down</span>
-        <span>scroll</span><span>pan around the board (<kbd>Shift</kbd> to go sideways)</span>
-        <span><kbd>Space</kbd> + drag</span><span>pan around the board</span>
-        <span><kbd>Ctrl</kbd> + scroll</span><span>zoom in and out (or pinch)</span>
+        <span>drag</span><span>move the whole board</span>
+        <span>scroll or pinch</span><span>zoom in and out</span>
         <span><kbd>Shift</kbd>+<kbd>1</kbd></span><span>fit the whole board</span>
       </span>
     ),

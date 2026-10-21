@@ -5,11 +5,15 @@
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  cursor: grab;
+  /* an inked open hand; it closes into a fist while you drag the board or a card */
+  cursor: url('/brand/cursor-hand.svg') 16 16, grab;
 }
 .board-viewport.panning,
-.board-viewport.tool-pan {
-  cursor: grabbing;
+.board-viewport.tool-pan,
+.board-viewport.panning .card-slot,
+.board-viewport.dragging-card,
+.board-viewport.dragging-card .card-slot {
+  cursor: url('/brand/cursor-fist.svg') 16 16, grabbing !important;
 }
 .board-viewport.tool-yarn,
 .board-viewport.tool-scissors,
@@ -37,7 +41,7 @@
   transition: opacity 0.3s;
 }
 .board-viewport.tool-select .card-slot {
-  cursor: pointer;
+  cursor: url('/brand/cursor-hand.svg') 16 16, grab;
 }
 .card-slot.dimmed {
   opacity: 0.22;
