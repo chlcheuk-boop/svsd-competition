@@ -92,9 +92,26 @@ export default function BoardView(props: BoardViewProps) {
   } = props;
 
   const viewport = useRef<HTMLDivElement>(null);
-  const [cam, setCam] = useState<Camera>(initialCamera ?? { x: 0, y: 0, z: 1 });
+  const [cam, commitCam] = useState<Camera>(initialCamera ?? { x: 0, y: 0, z: 1 });
+  // the live camera. Pans, zooms and pinches move the board element directly through this ref and only
+  // commit to React state once the gesture settles, so the cards and strings aren't re-rendered every frame
   const camRef = useRef(cam);
-  camRef.current = cam;
+  const worldEl = useRef<HTMLDivElement>(null);
+  const settleTimer = useRef<number>();
+  const setCam = useCallback((next: Camera | ((c: Camera) => Camera)) => {
+    const c = typeof next === 'function' ? next(camRef.current) : next;
+    camRef.current = c;
+    const w = worldEl.current;
+    if (w) {
+      w.style.transform = `translate(${c.x}px, ${c.y}px) scale(${c.z})`;
+      w.classList.add('moving');
+    }
+    window.clearTimeout(settleTimer.current);
+    settleTimer.current = window.setTimeout(() => {
+      worldEl.current?.classList.remove('moving');
+      commitCam(camRef.current);
+    }, 140);
+  }, []);
   const [hovered, setHovered] = useState<string | null>(null);
   const [pending, setPending] = useState<{ from: string; pt: Pt; click: boolean } | null>(null);
   const [cut, setCut] = useState<{ id: string; pt: Pt } | null>(null);
@@ -392,7 +409,7 @@ export default function BoardView(props: BoardViewProps) {
       const [a, b] = [...touches.current.values()];
       const r = viewport.current.getBoundingClientRect();
       const mid = { x: (a.x + b.x) / 2 - r.left, y: (a.y + b.y) / 2 - r.top };
-      const z = Math.min(2.4, Math.max(0.15, p.c0.z * (Math.hypot(a.x - b.x, a.y - b.y) / p.d0)));
+      const z = Math.min(MAX_Z, Math.max(MIN_Z, p.c0.z * (Math.hypot(a.x - b.x, a.y - b.y) / p.d0)));
       // keep the world point under the starting midpoint under the fingers
       const wx = (p.mid0.x - p.c0.x) / p.c0.z;
       const wy = (p.mid0.y - p.c0.y) / p.c0.z;
@@ -422,9 +439,11 @@ export default function BoardView(props: BoardViewProps) {
     const sy = e.clientY;
     const c0 = { ...camRef.current };
     let moved = false;
+    let pinched = false;
     const move = (ev: PointerEvent) => {
       if (ev.pointerId !== e.pointerId) return;
-      if (pinch.current) {
+      if (pinch.current) pinched = true;
+      if (pinched) {
         moved = true;
         return;
       }
@@ -515,9 +534,12 @@ export default function BoardView(props: BoardViewProps) {
     const ox = m.x;
     const oy = m.y;
     let moved = false;
+    let pinched = false;
     const shift = e.shiftKey;
     const move = (ev: PointerEvent) => {
-      if (ev.pointerId !== e.pointerId || pinch.current) return;
+      if (ev.pointerId !== e.pointerId) return;
+      if (pinch.current) pinched = true;
+      if (pinched) return;
       const dx = (ev.clientX - sx) / camRef.current.z;
       const dy = (ev.clientY - sy) / camRef.current.z;
       if (!moved && Math.hypot(ev.clientX - sx, ev.clientY - sy) < DRAG_THRESHOLD) return;
@@ -531,7 +553,7 @@ export default function BoardView(props: BoardViewProps) {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       setDragging(null);
-      if (!moved && !pinch.current) onCardClick?.(m.id, { shift });
+      if (!moved && !pinched && !pinch.current) onCardClick?.(m.id, { shift });
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -690,7 +712,7 @@ export default function BoardView(props: BoardViewProps) {
       onDragStart={(e) => e.preventDefault()}
       style={{ backgroundPosition: `${cam.x}px ${cam.y}px`, backgroundSize: `${22 * cam.z}px ${22 * cam.z}px` }}
     >
-      <div className="board-world" style={{ transform: `translate(${cam.x}px, ${cam.y}px) scale(${cam.z})`, visibility: placed ? undefined : 'hidden' }}>
+      <div ref={worldEl} className="board-world" style={{ transform: `translate(${camRef.current.x}px, ${camRef.current.y}px) scale(${camRef.current.z})`, visibility: placed ? undefined : 'hidden' }}>
         {backdrop && <Backdrop board={backdrop} />}
 
         {sections?.map((sec) => (
@@ -759,8 +781,8 @@ export default function BoardView(props: BoardViewProps) {
           <div
             className="place-ghost"
             style={{
-              left: (cursor.x - cam.x) / cam.z - sizeOf(placeGhost).w / 2,
-              top: (cursor.y - cam.y) / cam.z - sizeOf(placeGhost).h / 2,
+              left: (cursor.x - camRef.current.x) / camRef.current.z - sizeOf(placeGhost).w / 2,
+              top: (cursor.y - camRef.current.y) / camRef.current.z - sizeOf(placeGhost).h / 2,
               transform: `rotate(${placeGhost.rot}deg)`,
             }}
           >

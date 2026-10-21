@@ -53,7 +53,7 @@ html body :is(h1, .tv-title-input, .cover-name, .mb-header strong) {
 html body .matches-head h1 { font-size: 54px; }
 html body .tv-head h1,
 html body .tv-title-input { font-size: clamp(44px, 6vw, 72px); }
-html body .ob-welcome h1 { font-size: clamp(42px, 6vw, 72px); max-width: 860px; }
+html body .ob-welcome h1 { font-size: clamp(32px, 9vw, 72px); max-width: 860px; overflow-wrap: break-word; }
 html body .settings-form h1 { font-size: 44px; }
 html body .cover-name { font-size: 64px; }
 html body .mb-header strong { font-size: 26px; }

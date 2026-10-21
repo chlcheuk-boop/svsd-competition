@@ -247,3 +247,24 @@
 .nc-drop > .nc-box {
   margin-top: 2px;
 }
+
+/* the title and its line underneath stay clear of the close button and the folded corner */
+.note-composer .nc-title,
+.note-composer .nc-sub {
+  padding-right: 92px;
+}
+@media (max-width: 640px) {
+  .note-composer {
+    padding: 22px 20px 20px;
+  }
+  html body .note-composer .nc-title {
+    font-size: 22px;
+  }
+  .note-composer .nc-sub {
+    padding-right: 0;
+  }
+  .nc-close {
+    top: 12px;
+    right: 46px;
+  }
+}

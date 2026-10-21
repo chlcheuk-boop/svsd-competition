@@ -223,7 +223,7 @@ export default function MatchesPage() {
           {ordered.map((mp, i) => {
             const st = state.matchState[mp.personId] ?? { flipped: false, status: 'new' };
             return (
-              <div key={mp.personId} className={`tarot-cell q${mp.quadrant}`}>
+              <div key={mp.personId} className={`tarot-cell q${mp.quadrant}`} style={{ ['--card-h' as string]: `${Math.round(cardW * 1.75)}px` }}>
                 <TarotCard
                   cardW={cardW}
                   mp={mp}

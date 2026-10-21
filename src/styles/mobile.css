@@ -193,6 +193,17 @@
   .axis .mono {
     font-size: 9px;
   }
+  /* the end labels say what each axis means; the middle titles only crowd the cards on a phone */
+  .axis .axis-title {
+    display: none;
+  }
+  /* the crossed / saved tag sits on the card's top edge, clear of the axis labels */
+  .tarot-cell .saved-flag {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(calc(var(--card-h) / -2 - 50%));
+    z-index: 2;
+  }
   .focus-layer {
     padding: 12px 0 100px;
   }
@@ -337,5 +348,16 @@
   .nav-logo .logo-word,
   .nav-home {
     display: none;
+  }
+}
+
+/* phones: the per-card SVG shadows are the costliest thing to repaint while zooming; drop them */
+@media (max-width: 640px) {
+  .stamp-edge {
+    filter: none;
+  }
+  .stamp-edge path {
+    stroke: rgba(67, 32, 5, 0.14);
+    stroke-width: 1;
   }
 }

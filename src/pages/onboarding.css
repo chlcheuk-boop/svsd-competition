@@ -3,6 +3,8 @@
   inset: 0;
   overflow: auto;
   display: grid;
+  /* the column is the screen's width, never the content's, so long headlines wrap instead of overflowing */
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding: 60px 24px;
 }
@@ -124,7 +126,13 @@
   width: 100%;
   max-width: 860px;
   margin-top: 6px;
+  /* the page scrolls through the stage; only the thread handles hold the finger */
+  touch-action: pan-y;
+}
+.ob-grab,
+.ob-needle {
   touch-action: none;
+  cursor: grab;
 }
 .ob-stage-svg {
   width: 100%;

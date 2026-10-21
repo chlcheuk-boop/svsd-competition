@@ -176,6 +176,13 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
     setCursor(null);
   }, [round]);
 
+  // on a phone the why box opens below the cards; bring it up into view
+  useEffect(() => {
+    if (phase !== 'tied') return;
+    const t = window.setTimeout(() => document.querySelector('.ob-why')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 250);
+    return () => window.clearTimeout(t);
+  }, [phase]);
+
   const next = () => (round >= PAIRS.length - 1 ? onDone() : setRound((r) => r + 1));
 
   const toLocal = (e: { clientX: number; clientY: number }): Pt => {
@@ -186,6 +193,7 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
 
   const startDrag = (e: React.PointerEvent) => {
     if (phase !== 'idle') return;
+    e.preventDefault();
     setPhase('dragging');
     setCursor(toLocal(e));
     const move = (ev: PointerEvent) => setCursor(toLocal(ev));
@@ -236,13 +244,15 @@ function Game({ onTie, onDone }: { onTie: (a: string, b: string, why: string) =>
       <div className="ob-stage" ref={stage} style={{ aspectRatio: `${W} / ${H}`, maxWidth: stacked ? 360 : undefined }}>
         <svg viewBox={`0 0 ${W} ${H}`} className="ob-stage-svg">
           <foreignObject x={left.x} y={left.y} width={sizeOf(a).w + 10} height={sizeOf(a).h + 10}>
-            <div style={{ transform: `rotate(${a.rot}deg)`, margin: 4 }}><MediaCard m={a} /></div>
+            {/* the whole first card picks up the thread (easier with a finger than the small needle) */}
+            <div className="ob-grab" style={{ transform: `rotate(${a.rot}deg)`, margin: 4 }} onPointerDown={startDrag}><MediaCard m={a} /></div>
           </foreignObject>
           <foreignObject x={right.x} y={right.y} width={sizeOf(b).w + 10} height={sizeOf(b).h + 10}>
             <div style={{ transform: `rotate(${b.rot}deg)`, margin: 4 }} className={phase === 'dragging' ? 'ob-target' : ''}><MediaCard m={b} /></div>
           </foreignObject>
           {yarn}
           <g className={`ob-needle ${phase === 'idle' ? 'pulse' : ''}`} onPointerDown={startDrag} style={{ cursor: phase === 'idle' ? 'grab' : 'default' }}>
+            <circle cx={anchorA.x} cy={anchorA.y} r="30" fill="transparent" />
             <circle cx={anchorA.x} cy={anchorA.y} r="18" fill="var(--tangerine)" opacity={phase === 'idle' ? 0.18 : 0} />
             <circle cx={anchorA.x} cy={anchorA.y} r="6" fill="var(--tangerine)" />
           </g>

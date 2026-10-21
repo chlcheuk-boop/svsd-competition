@@ -254,6 +254,8 @@
   width: 100%;
   text-align: center;
   padding-top: 10px;
+  /* room between the person's role and the line above the card's name */
+  margin-top: 18px;
   border-top: 1px solid var(--ink);
 }
 .tarot-name.big {

@@ -339,3 +339,8 @@
   background: var(--lime);
   color: var(--ink);
 }
+
+/* while the board is moving, it's one layer that slides and scales; cards re-draw crisp once it settles */
+.board-world.moving {
+  will-change: transform;
+}
