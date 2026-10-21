@@ -35,6 +35,22 @@ const ArtTie = () => (
   </svg>
 );
 
+const ArtZoom = () => (
+  <svg viewBox="0 0 220 90" aria-hidden="true">
+    {/* zoomed out: cards close together */}
+    <g transform="translate(14 28) scale(0.5)">
+      <MiniCard x={0} y={0} />
+      <MiniCard x={50} y={0} />
+      <MiniCard x={0} y={58} />
+      <MiniCard x={50} y={58} />
+    </g>
+    <path d="M78 45 h34 M104 39 l8 6 l-8 6" stroke="var(--ink-soft)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    {/* zoomed in: the same cards, spread apart */}
+    <MiniCard x={122} y={2} rot={-2} />
+    <MiniCard x={172} y={8} rot={2} />
+  </svg>
+);
+
 const ArtSnip = () => (
   <svg viewBox="0 0 220 90" aria-hidden="true">
     <MiniCard x={14} y={14} rot={-4} />
@@ -136,6 +152,13 @@ const ArtDone = () => (
 );
 
 const STEPS: Step[] = [
+  {
+    target: null,
+    kicker: 'moving around',
+    title: 'Zoom and move',
+    body: <>Scroll with two fingers or pinch to zoom in and out. Drag anywhere empty to move the board.</>,
+    art: <ArtZoom />,
+  },
   {
     target: '[data-tool="yarn"]',
     kicker: '1 · connections',
