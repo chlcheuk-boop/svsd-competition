@@ -95,7 +95,6 @@ export function initialState(): AppState {
     contributions: {},
     crossings: {},
     settings: {
-      boardPrivate: true,
       matchable: true,
       shareMode: 'threads',
       frequency: 'weekly',

@@ -27,7 +27,10 @@ export default function SettingsPage() {
 
         <fieldset>
           <legend className="serif">Privacy</legend>
-          <Toggle label="Keep my board private" hint="default · only you see the whole desk" checked={s.boardPrivate} onChange={(v) => set({ boardPrivate: v })} />
+          <p className="privacy-note">
+            Your board is always private
+            <span className="mono">only you see the whole desk · matches see a slice, threads and fingerprint</span>
+          </p>
           <Toggle label="Matchable" hint="appear in other people’s weekly four" checked={s.matchable} onChange={(v) => set({ matchable: v })} />
           <div className="radio-group" role="radiogroup" aria-label="What matches can see">
             <span className="field-label">what matches can see</span>

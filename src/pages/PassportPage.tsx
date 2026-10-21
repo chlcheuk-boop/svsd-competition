@@ -493,8 +493,6 @@ function ThreadsPage({ state }: { state: State }) {
         <div className="pp-controls">
           <Toggle label="Matchable this week" hint="you appear in other people’s four cards" checked={state.settings.matchable}
             onChange={(v) => dispatch({ type: 'settings', patch: { matchable: v } })} />
-          <Toggle label="Board is private" hint="matches see a slice, threads and fingerprint" checked={state.settings.boardPrivate}
-            onChange={(v) => dispatch({ type: 'settings', patch: { boardPrivate: v } })} />
         </div>
       </div>
       <div className="pp-sec pp-actions">

@@ -105,7 +105,6 @@ export interface MatchProfile {
 }
 
 export interface Settings {
-  boardPrivate: boolean;
   matchable: boolean;
   shareMode: 'fingerprint' | 'threads';
   frequency: 'weekly' | 'biweekly' | 'monthly';

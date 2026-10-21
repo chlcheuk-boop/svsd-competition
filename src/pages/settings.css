@@ -217,3 +217,14 @@
   font-style: italic;
   font-size: 20px;
 }
+
+.privacy-note {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 4px 0 8px;
+}
+.privacy-note .mono {
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
