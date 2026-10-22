@@ -24,52 +24,20 @@
   color: var(--ink-soft);
 }
 
-.crossing-banner {
-  position: fixed;
-  top: 84px;
-  left: 24px;
-  z-index: 46;
-  width: 340px;
-  padding: 16px 18px;
-  background: var(--blush);
-  box-shadow: var(--shadow-lift);
-  transform: rotate(-0.6deg);
-}
-.crossing-banner .mono-label {
-  color: var(--tangerine-deep);
-}
-.crossing-banner p {
-  margin: 6px 0 10px;
-  font-size: 18px;
-  line-height: 1.3;
-}
-.crossing-banner em {
-  color: var(--tangerine);
-}
-.crossing-steps {
-  display: flex;
-  gap: 12px;
-  font-size: 10.5px;
-  margin-bottom: 10px;
-  color: rgba(67, 32, 5, 0.45);
-}
-.crossing-steps .now {
-  color: var(--tangerine-deep);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.crossing-steps .done {
-  color: var(--ink);
-}
-.crossing-steps .done::before {
-  content: '✓ ';
-}
 .tray {
-  overflow: hidden;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(560px, calc(100vw - 32px));
+}
+.tray .mono-label {
+  color: var(--tangerine-deep);
+}
+.tray-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 12px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
 }
 .tray-item {
   display: flex;
@@ -233,15 +201,14 @@
   margin-top: 10px;
 }
 @media (max-width: 900px) {
-  .crossing-banner {
-    width: calc(100vw - 48px);
+  .tray-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (max-width: 1100px) {
   .mb-header {
     top: 78px;
   }
-  .crossing-banner,
   .threads-drawer,
   .drawer-tab {
     top: 136px;

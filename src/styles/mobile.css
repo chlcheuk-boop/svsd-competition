@@ -219,20 +219,6 @@
   .mb-header .chip {
     display: none;
   }
-  .crossing-banner {
-    top: 118px;
-    left: 8px;
-    right: 8px;
-    width: auto;
-    padding: 12px 14px;
-  }
-  .crossing-banner p {
-    font-size: 15px;
-    margin: 4px 0 8px;
-  }
-  .crossing-banner .btn {
-    height: 32px;
-  }
   .drawer-tab {
     top: 126px;
     right: 16px;

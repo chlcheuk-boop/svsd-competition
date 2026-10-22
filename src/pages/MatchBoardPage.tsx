@@ -48,6 +48,7 @@ export default function MatchBoardPage() {
     if (crossingParam && state.crossings[id] !== 'complete') {
       setCrossing(true);
       setTool('yarn');
+      toast({ text: `crossing with ${person(id)?.name.split(' ')[0] ?? 'them'}: tie two cards, or add media of yours. A why is required.` });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [crossingParam, id]);
@@ -217,38 +218,6 @@ export default function MatchBoardPage() {
       </div>
 
       <AnimatePresence>
-        {crossing && !crossingDone && (
-          <motion.div className="crossing-banner" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -30, opacity: 0 }}>
-            <span className="mono-label">crossing with {first}</span>
-            <p className="serif">
-              Add <em>one</em> string to {first}’s board. Tie two of their cards, or bring one of yours. A why is required.
-            </p>
-            <div className="crossing-steps mono">
-              <span className={alreadyTied ? 'done' : 'now'}>1 · your string</span>
-              <span className={phase === 'arrived' ? 'done' : alreadyTied ? 'now' : ''}>2 · {first}’s string</span>
-            </div>
-            {!alreadyTied && (
-              <button className="btn btn-ghost" onClick={() => setTray((t) => !t)}>
-                bring one of yours
-              </button>
-            )}
-            <AnimatePresence>
-              {tray && (
-                <motion.div className="tray" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                  {state.media.filter((m) => !m.via).slice(0, 12).map((m) => (
-                    <button key={m.id} className="tray-item" onClick={() => bringOne(m)} title={m.title}>
-                      <Thumb m={m} size={54} title={false} />
-                      <span className="mono">{m.title}</span>
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
         {drawer && (
           <motion.aside className="threads-drawer" initial={{ x: 300 }} animate={{ x: 0 }} exit={{ x: 320 }}>
             <button className="sp-close" onClick={() => setDrawer(false)} aria-label="Close threads">
@@ -316,13 +285,15 @@ export default function MatchBoardPage() {
 
       <Toolbar
         tools={[
-          { id: 'overlay', label: 'what’s shared', icon: <IconOverlay />, active: overlay, onClick: () => setOverlay((o) => !o) },
+          crossing && !crossingDone
+            ? { id: 'add', label: 'add media', icon: <IconOverlay />, active: tray, disabled: alreadyTied, onClick: () => setTray((t) => !t) }
+            : { id: 'overlay', label: 'what’s shared', icon: <IconOverlay />, active: overlay, onClick: () => setOverlay((o) => !o) },
           {
             id: 'yarn', label: crossing ? 'yarn · crossing' : 'yarn', icon: <IconYarn />, active: tool === 'yarn',
             onClick: () => {
               if (!crossing && !crossingDone) {
                 setCrossing(true);
-                toast({ text: `starting a Crossing with ${first}` });
+                toast({ text: `crossing with ${first}: tie two cards, or add media of yours. A why is required.` });
               }
               setTool((t) => (t === 'yarn' ? 'select' : 'yarn'));
             },
@@ -330,7 +301,20 @@ export default function MatchBoardPage() {
           { id: 'stamp', label: 'leave a stamp', icon: <IconStamp />, active: stampOpen, onClick: () => setStampOpen((o) => !o) },
         ]}
       >
-        {tool === 'yarn' && <YarnSwatches key="sw" value={state.yarnColor} onChange={(c) => dispatch({ type: 'patch', patch: { yarnColor: c } })} />}
+        {tray && crossing && !crossingDone && (
+          <motion.div key="tray" className="tool-popover tray" initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 12, opacity: 0 }}>
+            <span className="mono-label">bring one of yours to {first}’s board</span>
+            <div className="tray-grid">
+              {state.media.filter((m) => !m.via && m.imageData).slice(0, 12).map((m) => (
+                <button key={m.id} className="tray-item" onClick={() => bringOne(m)} title={m.title}>
+                  <Thumb m={m} size={54} title={false} />
+                  <span className="mono">{m.title}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+        {tool === 'yarn' && !tray && <YarnSwatches key="sw" value={state.yarnColor} onChange={(c) => dispatch({ type: 'patch', patch: { yarnColor: c } })} />}
       </Toolbar>
     </>
   );
