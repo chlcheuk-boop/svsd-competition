@@ -7,11 +7,11 @@
 
 .book {
   --bw: min(1100px, calc(100vw - 120px));
-  /* the book reaches up toward the top bar (28px clear) and keeps 60px above the toolbar */
+  /* the same clear space above the book (under the top bar) as below it (over the toolbar) */
   --top-bar: 66px;
-  --tool-room: 78px;
-  --gap-top: 28px;
-  --gap-bottom: 60px;
+  --tool-room: 128px; /* the 106px toolbar plus its 22px off the bottom */
+  --gap-top: 36px;
+  --gap-bottom: 36px;
   --bh: min(760px, calc(100vh - var(--top-bar) - var(--tool-room) - var(--gap-top) - var(--gap-bottom)));
   /* the book itself sits on the page's center line, the same line as the toolbar; the tabs hang off its edge */
   --tab-nudge: 0px;
@@ -481,6 +481,11 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
 /* phones: one page at a time */
 .book.phone-book {
   --bw: calc(100vw - 24px);
+  /* phones: a shorter top bar and toolbar; the index tabs (26px) ride above the book, so its top edge is theirs */
+  --top-bar: 52px;
+  --tool-room: 98px;
+  --gap-top: 46px;
+  --gap-bottom: 20px;
   width: var(--bw);
   transform: translateX(-50%);
   perspective: 1600px;
