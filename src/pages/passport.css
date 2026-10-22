@@ -481,11 +481,6 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
 /* phones: one page at a time */
 .book.phone-book {
   --bw: calc(100vw - 24px);
-  /* phones: a shorter top bar and toolbar; the index tabs (26px) ride above the book, so its top edge is theirs */
-  --top-bar: 52px;
-  --tool-room: 98px;
-  --gap-top: 46px;
-  --gap-bottom: 20px;
   width: var(--bw);
   transform: translateX(-50%);
   perspective: 1600px;

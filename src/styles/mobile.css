@@ -239,8 +239,9 @@
 
   /* passport */
   .book {
+    /* 20px clear under the top bar (above the index tabs, which ride 24px over the book) and 20px over the toolbar */
     top: 96px;
-    --bh: calc(100dvh - 206px);
+    --bh: calc(100dvh - 214px);
   }
   /* one page at a time: the fingerprint stacks over its legend */
   .pp-id .fingerprint {
