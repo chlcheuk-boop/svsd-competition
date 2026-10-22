@@ -153,15 +153,18 @@ export default function BoardView(props: BoardViewProps) {
     // sit between the real top bar and the real toolbar
     const nav = document.querySelector<HTMLElement>('.topnav');
     const tools = document.querySelector<HTMLElement>('.toolbar-wrap .toolbar'); // the strip itself, not hints above it
-    const barBottom = nav ? nav.offsetTop + nav.offsetHeight : 66;
+    // a match board's "where you meet" header hangs below the top bar: clear that instead
+    const matchHead = document.querySelector<HTMLElement>('.mb-header');
+    const barBottom = Math.max(nav ? nav.offsetTop + nav.offsetHeight : 66, matchHead ? matchHead.offsetTop + matchHead.offsetHeight : 0);
     const wrapBottom = tools?.parentElement ? parseFloat(getComputedStyle(tools.parentElement).bottom) || 22 : 22;
     const toolsTop = tools ? vh - wrapBottom - tools.offsetHeight : vh - 108; // offsetHeight ignores its slide-in animation
-    const gap = 44;
+    const gap = matchHead ? 72 : 44;
     // nudged up a little: the cards sit a bit closer to the top bar than to the toolbar
     const lift = 15;
     // phones: the board is taller than the screen, so start it just under the top bar and let it pan
     const padTop = phone ? barBottom + 16 : barBottom + gap - lift;
-    const padBottom = phone ? vh - toolsTop + 16 : vh - toolsTop + gap + lift;
+    // on a match board, also clear the yarn popover above the toolbar and the tags that hang under the cards
+    const padBottom = phone ? vh - toolsTop + 16 : vh - toolsTop + gap + lift + (matchHead ? 56 : 0);
     const z = Math.max(0.15, Math.min(1.05, (vw - padX * 2) / (b.maxX - b.minX), (vh - padTop - padBottom) / (b.maxY - b.minY)));
     let target = {
       z,
