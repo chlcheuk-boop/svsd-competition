@@ -476,9 +476,6 @@ html body :is(.pp-page, .person-recap) :is(.mono, .mono-label) { font-weight: 30
   .book {
     --bw: calc(100vw - 72px);
   }
-  .pp-stamps {
-    zoom: 0.7;
-  }
 }
 
 /* phones: one page at a time */

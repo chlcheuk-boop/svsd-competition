@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/store';
 import { Avatar, Toolbar } from '../components/ui/Frame';
@@ -20,13 +20,82 @@ import { useViewport } from '../lib/useViewport';
 import './passport.css';
 
 const PER_PAGE = 5;
-const SLOTS = [
-  { x: 6, y: 5 },
-  { x: 50, y: 9 },
-  { x: 10, y: 37 },
-  { x: 52, y: 42 },
-  { x: 22, y: 69 },
-];
+// clear paper between any two stamps (measured on their rotated outlines) and from the page edge
+const STAMP_GAP = 16;
+const EDGE = 12;
+
+/**
+ * Lay a page's stamps out in rows of two (the last may hold one). Each stamp owns one cell and shrinks,
+ * never grows, until its rotated outline fits the cell less the gap, so no two stamps ever touch at any
+ * page size. Leftover room in the cell becomes a little scatter, so the page still looks hand-stamped.
+ */
+function layoutStamps(stamps: PassportStamp[], W: number, H: number) {
+  const rows: number[] = [];
+  for (let i = 0; i < stamps.length; i += 2) rows.push(Math.min(2, stamps.length - i));
+  const iw = W - EDGE * 2;
+  const rowH = (H - EDGE * 2) / Math.max(1, rows.length);
+  let i = 0;
+  return rows.flatMap((cols, r) => {
+    const cellW = iw / cols;
+    return Array.from({ length: cols }, (_, c) => {
+      const st = stamps[i++];
+      const h = hash(st.id);
+      const rot = (h % 28) - 14;
+      const { w, h: sh } = stampSize(st.shape);
+      // the "new" tag pokes 6px past the corner
+      const bw = w + (st.fresh ? 12 : 0), bh = sh + (st.fresh ? 12 : 0);
+      const rad = (Math.abs(rot) * Math.PI) / 180;
+      const rw = bw * Math.cos(rad) + bh * Math.sin(rad);
+      const rh = bw * Math.sin(rad) + bh * Math.cos(rad);
+      const scale = Math.min(1, (cellW - STAMP_GAP) / rw, (rowH - STAMP_GAP) / rh);
+      const slackX = Math.max(0, cellW - STAMP_GAP - rw * scale);
+      const slackY = Math.max(0, rowH - STAMP_GAP - rh * scale);
+      const cx = EDGE + cellW * (c + 0.5) + (((h >> 3) % 100) / 100 - 0.5) * slackX;
+      const cy = EDGE + rowH * (r + 0.5) + (((h >> 5) % 100) / 100 - 0.5) * slackY;
+      return { s: st, rot, scale, left: cx - (w * scale) / 2, top: cy - (sh * scale) / 2, width: w * scale };
+    });
+  });
+}
+
+function StampPage({ stamps, filter, onStamp, freshPress }: {
+  stamps: PassportStamp[]; filter: string | null; onStamp: (s: PassportStamp) => void; freshPress: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => setSize({ w: el.clientWidth, h: el.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const placed = useMemo(() => (size ? layoutStamps(stamps, size.w, size.h) : []), [stamps, size]);
+  return (
+    <div className="pp-stamps" ref={ref}>
+      {placed.map(({ s, rot, scale, left, top, width }) => {
+        const faded = filter && filter !== s.personId;
+        return (
+          <motion.button
+            key={s.id}
+            className={`pp-stamp ${faded ? 'faded' : ''} ${s.fresh ? 'fresh' : ''}`}
+            style={{ left, top, width }}
+            initial={s.fresh && freshPress ? { scale: 1.9, opacity: 0, rotate: rot - 10 } : false}
+            animate={{ scale: 1, opacity: faded ? 0.14 : 1, rotate: rot }}
+            transition={s.fresh ? { type: 'spring', stiffness: 420, damping: 13, delay: 1.05 } : { duration: 0.3 }}
+            whileHover={{ scale: 1.05, rotate: rot * 0.6 }}
+            onClick={() => onStamp(s)}
+          >
+            <Stamp s={s} scale={scale} />
+            {s.fresh && <span className="fresh-tag mono">new</span>}
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+}
+
 const hash = (s: string) => s.split('').reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 9973, 7);
 
 function Guilloche() {
@@ -355,34 +424,7 @@ function PageContent({ spec, filter, onStamp, freshPress, state }: {
   if (spec.kind === 'id') return <IdPage state={state} />;
   if (spec.kind === 'threads') return <ThreadsPage state={state} />;
 
-  if (spec.kind === 'stamps') {
-    return (
-      <div className="pp-stamps">
-        {spec.stamps.map((s, i) => {
-          const h = hash(s.id);
-          const slot = SLOTS[i % SLOTS.length];
-          const rot = (h % 28) - 14;
-          const faded = filter && filter !== s.personId;
-          const { w } = stampSize(s.shape);
-          return (
-            <motion.button
-              key={s.id}
-              className={`pp-stamp ${faded ? 'faded' : ''} ${s.fresh ? 'fresh' : ''}`}
-              style={{ left: `${slot.x + ((h >> 3) % 6) - 3}%`, top: `${slot.y + ((h >> 5) % 5) - 2}%`, width: w }}
-              initial={s.fresh && freshPress ? { scale: 1.9, opacity: 0, rotate: rot - 10 } : false}
-              animate={{ scale: 1, opacity: faded ? 0.14 : 1, rotate: rot }}
-              transition={s.fresh ? { type: 'spring', stiffness: 420, damping: 13, delay: 1.05 } : { duration: 0.3 }}
-              whileHover={{ scale: 1.05, rotate: rot * 0.6 }}
-              onClick={() => onStamp(s)}
-            >
-              <Stamp s={s} />
-              {s.fresh && <span className="fresh-tag mono">new</span>}
-            </motion.button>
-          );
-        })}
-      </div>
-    );
-  }
+  if (spec.kind === 'stamps') return <StampPage stamps={spec.stamps} filter={filter} onStamp={onStamp} freshPress={freshPress} />;
 
   return null;
 }
