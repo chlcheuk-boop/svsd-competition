@@ -259,10 +259,9 @@
   border-top: 1px solid var(--ink);
 }
 .tarot-name.big {
-  position: absolute;
-  bottom: 18px;
-  left: 30px;
-  right: 30px;
+  position: static;
+  margin-top: auto;
+  flex: none;
   width: auto;
   font-size: 22px;
   padding-top: 10px;
@@ -291,7 +290,9 @@
   top: 0;
   left: 0;
   transform-origin: 0 0;
-  padding: 18px 30px;
+  padding: 18px 30px 22px;
+  display: flex;
+  flex-direction: column;
 }
 .focus-inner::before {
   content: '';
@@ -313,7 +314,8 @@
 .focus-art {
   display: grid;
   place-items: center;
-  height: 160px;
+  flex: none;
+  height: 140px;
   margin-top: 4px;
 }
 .focus-who {
@@ -335,7 +337,7 @@
 .focus-intro {
   margin: 0;
   font-style: italic;
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.3;
 }
 .focus-shape {
@@ -404,6 +406,7 @@
   display: flex;
   gap: 6px;
   align-items: center;
+  margin-bottom: 18px;
 }
 
 @media (max-width: 1100px) {

@@ -22,7 +22,7 @@ export const PEOPLE: Record<string, Person> = {
   lena: { id: 'lena', name: 'Lena Hoffmann', city: 'Berlin', craft: 'graphic designer', color: 'sky', initial: 'L' },
   kenji: { id: 'kenji', name: 'Kenji Morita', city: 'Osaka', craft: 'illustrator', color: 'tangerine', initial: 'K' },
   marcus: { id: 'marcus', name: 'Marcus Bell', city: 'Chicago', craft: 'jazz drummer', color: 'lime', initial: 'M' },
-  ama: { id: 'ama', name: 'Ama Owusu', city: 'Accra', craft: 'fashion photographer', color: 'pink', initial: 'A' },
+  ama: { id: 'ama', name: 'Ama Owusu', city: 'Accra', craft: 'sound recordist', color: 'pink', initial: 'A' },
   // past crossings
   ines: { id: 'ines', name: 'Inés Calderón', city: 'Mexico City', craft: 'textile designer', color: 'pink', initial: 'I' },
   theo: { id: 'theo', name: 'Theo Adeyemi', city: 'Lagos', craft: 'type designer', color: 'sky', initial: 'T' },
