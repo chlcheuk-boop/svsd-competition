@@ -13,6 +13,20 @@ npm run dev
 
 Open http://localhost:5173. It is designed for a 1440×900 presentation screen and still works at tablet width.
 
+## Deploy (GitHub Pages)
+
+Live at https://chlcheuk-boop.github.io/svsd-competition/
+
+Every push to `main` runs `.github/workflows/deploy.yml`, which builds the site with `--base=/svsd-competition/` and publishes `dist/` to the `gh-pages` branch. Routes use a hash (`/#/matches`), so no 404 fallback is needed.
+
+One-time setup: in the repo's **Settings → Pages**, set **Source** to *Deploy from a branch*, **Branch** to `gh-pages` and the folder to `/ (root)`. If Pages serves `main` instead, the live page is blank, because it gets the unbuilt `index.html` that points at `/src/main.tsx`.
+
+To check a Pages build locally:
+
+```bash
+npx vite build --base=/svsd-competition/ && npx vite preview --base=/svsd-competition/
+```
+
 ## Demo script (the pitch path)
 
 1. **Board.** Press **Note** (or `n`) to add a reference, then click anywhere to drop it. Press **Yarn** (`y`), click the new card and then an existing one, and write a why on the tag. Press **Scissors** (`x`) and snip an old string. You can undo the snip from the toast.
