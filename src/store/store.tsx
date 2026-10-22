@@ -55,8 +55,11 @@ function dropDrawnPhotos(s: AppState): AppState {
     // places briefly saved as l1–l3 (Lena's card ids) get their own ids
     .map((m) => (m.type === 'place' && /^l[123]$/.test(m.id) && m.imageData?.startsWith('/places/') ? { ...m, id: `p${m.id}` } : m));
   let connections = s.connections.filter((c) => !DRAWN_PHOTOS.has(c.from) && !DRAWN_PHOTOS.has(c.to));
+  // a Crossing left mid-wait (reload while Kenji was "tying one on") counts as finished
+  const crossings = s.crossings.kenji === 'sent' ? { ...s.crossings, kenji: 'complete' as const } : s.crossings;
+  const kenjiDone = crossings.kenji === 'complete';
   // a finished Crossing keeps Kenji's string, now tied to a real photo
-  if (s.crossings.kenji === 'complete' && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
+  if (kenjiDone && !connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) {
     connections = [...connections, KENJI_GIFT_CONNECTION];
   }
   const mediaIds = new Set(media.map((m) => m.id));
@@ -71,10 +74,12 @@ function dropDrawnPhotos(s: AppState): AppState {
     })
     .filter((t) => t.mediaIds.length >= 2 && !t.mediaIds.some((id) => DRAWN_PHOTOS.has(id)));
   // a stamp whose card or string is gone keeps its note, just without "show on my board"
-  const stamps = s.stamps.map((old) => (old.id === KENJI_PASSPORT_STAMP.id ? { ...old, excerpt: KENJI_PASSPORT_STAMP.excerpt, full: KENJI_PASSPORT_STAMP.full } : old)).map((st) =>
+  // ...and his stamp in the passport, even if the Crossing was closed with "stay here"
+  const withKenji = kenjiDone && !s.stamps.some((x) => x.id === KENJI_PASSPORT_STAMP.id) ? [...s.stamps, KENJI_PASSPORT_STAMP] : s.stamps;
+  const stamps = withKenji.map((old) => (old.id === KENJI_PASSPORT_STAMP.id ? { ...old, excerpt: KENJI_PASSPORT_STAMP.excerpt, full: KENJI_PASSPORT_STAMP.full } : old)).map((st) =>
     st.target && !(st.target.kind === 'media' ? mediaIds.has(st.target.id) : connIds.has(st.target.id)) ? { ...st, target: undefined } : st,
   );
-  return { ...s, media, connections, threads, stamps };
+  return { ...s, media, connections, threads, stamps, crossings };
 }
 
 export function initialState(): AppState {

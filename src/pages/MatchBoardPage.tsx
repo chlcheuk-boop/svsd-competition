@@ -162,7 +162,9 @@ export default function MatchBoardPage() {
     toast({ text: `placed on ${first}’s board · now tie it in` });
   };
 
-  const receiveGift = () => {
+  // the Crossing completes the moment their string arrives, whichever button you press next
+  useEffect(() => {
+    if (phase !== 'arrived' || state.crossings[id] === 'complete') return;
     if (id === 'kenji') {
       if (!state.connections.some((c) => c.id === KENJI_GIFT_CONNECTION.id)) dispatch({ type: 'addConnection', connection: KENJI_GIFT_CONNECTION });
       dispatch({ type: 'addStamp', stamp: KENJI_PASSPORT_STAMP });
@@ -179,8 +181,10 @@ export default function MatchBoardPage() {
     });
     dispatch({ type: 'patch', patch: { crossings: { ...state.crossings, [id]: 'complete' } } });
     dispatch({ type: 'setMatch', id, patch: { status: 'crossed' } });
-    nav(id === 'kenji' ? `/?focus=connection:${KENJI_GIFT_CONNECTION.id}` : '/');
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, id]);
+
+  const receiveGift = () => nav(id === 'kenji' ? `/?focus=connection:${KENJI_GIFT_CONNECTION.id}` : '/');
 
   const selectedMedia = selected ? byId.get(selected) : undefined;
 
